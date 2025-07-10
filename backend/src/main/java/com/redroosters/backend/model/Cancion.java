@@ -3,6 +3,7 @@ package com.redroosters.backend.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "canciones")
 public class Cancion {
 
     @Id

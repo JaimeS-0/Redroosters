@@ -2,7 +2,10 @@ package com.redroosters.backend.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
+@Table(name = "artistas")
 public class Artista {
 
     @Id
