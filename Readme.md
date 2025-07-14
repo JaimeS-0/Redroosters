@@ -1,6 +1,6 @@
-# 🎵 RedRosters – Plataforma musical
+# 🎵 RedRoosters – Plataforma musical
 
-**RedRosters** es una plataforma musical profesional que permite gestionar artistas, canciones y usuarios registrados.  
+**RedRoosters** es una plataforma musical profesional que permite gestionar artistas, canciones y usuarios registrados.  
 Incluye un panel de administración protegido, sistema de autenticación con JWT, gestión de favoritos.
 
 Este proyecto está desarrollado para un productor musical y se ha construido con buenas prácticas en seguridad, arquitectura REST y despliegue con Docker y NGINX.
