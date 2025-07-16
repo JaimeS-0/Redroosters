@@ -24,10 +24,13 @@ public class Cancion {
     @JoinColumn(name = "artista_id")
     private Artista artista;
 
+    @ManyToOne
+    private Album album;
+
     public Cancion() {
     }
 
-    public Cancion(Long id, String titulo, String descripcion, String duracion, String portada, String urlAudio, Artista artista) {
+    public Cancion(Long id, String titulo, String descripcion, String duracion, String portada, String urlAudio, Artista artista, Album album) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
@@ -35,6 +38,7 @@ public class Cancion {
         this.portada = portada;
         this.urlAudio = urlAudio;
         this.artista = artista;
+        this.album = album;
     }
 
     public Long getId() {
@@ -91,5 +95,13 @@ public class Cancion {
 
     public void setArtista(Artista artista) {
         this.artista = artista;
+    }
+
+    public Album getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(Album album) {
+        this.album = album;
     }
 }
