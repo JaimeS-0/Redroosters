@@ -2,6 +2,8 @@ package com.redroosters.backend.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "likes")
 public class Like {
@@ -16,13 +18,16 @@ public class Like {
     @ManyToOne
     private Cancion cancion;
 
+    private LocalDateTime fecha;
+
     public Like() {
     }
 
-    public Like(Long id, Usuario usuario, Cancion cancion) {
+    public Like(Long id, Usuario usuario, Cancion cancion, LocalDateTime fecha) {
         this.id = id;
         this.usuario = usuario;
         this.cancion = cancion;
+        this.fecha = fecha;
     }
 
     public Long getId() {
@@ -47,5 +52,13 @@ public class Like {
 
     public void setCancion(Cancion cancion) {
         this.cancion = cancion;
+    }
+
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDateTime fecha) {
+        this.fecha = fecha;
     }
 }
