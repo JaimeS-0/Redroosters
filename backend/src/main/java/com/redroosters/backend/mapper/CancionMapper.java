@@ -5,10 +5,11 @@ import com.redroosters.backend.dto.CancionResponseDTO;
 import com.redroosters.backend.model.Cancion;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CancionMapper {
 
     @Mapping(target = "id", ignore = true)
