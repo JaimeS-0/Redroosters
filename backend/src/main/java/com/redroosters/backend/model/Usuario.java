@@ -21,7 +21,7 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public Usuario() {}
 

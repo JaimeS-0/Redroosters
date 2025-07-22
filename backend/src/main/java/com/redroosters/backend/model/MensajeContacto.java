@@ -18,7 +18,7 @@ public class MensajeContacto {
 
     private String mensaje;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public MensajeContacto() {
     }

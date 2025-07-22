@@ -23,15 +23,21 @@ public class Artista {
     @OneToMany(mappedBy = "artista", cascade = CascadeType.ALL)
     private List<Cancion> canciones;
 
+    @OneToMany(mappedBy = "artista", cascade = CascadeType.ALL)
+    private List<Album> albumes;
+
+
     public Artista() {
     }
 
-    public Artista(Long id, String nombre, String descripcion, String portada, boolean destacado) {
+    public Artista(Long id, String nombre, String descripcion, String portada, boolean destacado, List<Cancion> canciones, List<Album> albumes) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.portada = portada;
         this.destacado = destacado;
+        this.canciones = canciones;
+        this.albumes = albumes;
     }
 
     public Long getId() {
@@ -80,5 +86,13 @@ public class Artista {
 
     public void setCanciones(List<Cancion> canciones) {
         this.canciones = canciones;
+    }
+
+    public List<Album> getAlbumes() {
+        return albumes;
+    }
+
+    public void setAlbumes(List<Album> albumes) {
+        this.albumes = albumes;
     }
 }
