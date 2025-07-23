@@ -34,23 +34,10 @@ Este proyecto está desarrollado para un productor musical y se ha construido co
 ```
 git clone [URL del repositorio]
 ```
-2. Crea un archivo `.env` ( Faltan por añadir )
-```
-# Variables de entorno para la configuración de la aplicación
+2. Crea un archivo `.env` -> Mirar el `.env.example`
 
-# Puertos de la aplicación
-FRONT_PORT=
-BACK_PORT=
-NGINX_PORT=
 
-# Configuración de la base de datos
-DB_HOST=
-DB_PORT=
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_DB=
-```
-4. Ejecuta con Docker:
+3. Ejecuta la app con Docker:
 ```
 docker compose up --build
 ```
