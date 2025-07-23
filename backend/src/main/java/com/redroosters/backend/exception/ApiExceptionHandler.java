@@ -36,5 +36,14 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    // Maneja errores cuando no se encuentra un Usuario
+    @ExceptionHandler(UsuarioNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleUsuarioNotFound(UsuarioNotFoundException ex) {
+        ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        error.setTitle("Usuario no encontrado");
+        error.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
 
 }
