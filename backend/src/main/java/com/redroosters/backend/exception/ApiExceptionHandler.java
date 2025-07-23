@@ -45,5 +45,23 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    // Maneja errores cuando ya existe el Like
+    @ExceptionHandler(LikeYaExisteException.class)
+    public ResponseEntity<ProblemDetail> LikeYaExisteException(LikeYaExisteException ex) {
+        ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        error.setTitle("Like ya marcado");
+        error.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    // Maneja errores cuando ya existe el Like
+    @ExceptionHandler(LikeNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleLikeNotFound(LikeNotFoundException ex) {
+        ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        error.setTitle("Recurso no encontrado de favoritos");
+        error.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
 
 }
