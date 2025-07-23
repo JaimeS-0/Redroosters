@@ -27,5 +27,14 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    // Maneja errores cuando no se encuentra una Cancion
+    @ExceptionHandler(CancionNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleCancionNotFound(CancionNotFoundException ex) {
+        ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        error.setTitle("Cancion no encontrado");
+        error.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
 
 }
