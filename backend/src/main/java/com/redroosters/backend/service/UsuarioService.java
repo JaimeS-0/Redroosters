@@ -41,12 +41,6 @@ public class UsuarioService {
         nuevo.setRole(Role.USER); // Por defecto
         Usuario guardado = usuarioRepository.save(nuevo);
 
-        return new UsuarioResponseDTO(
-                guardado.getId(),
-                guardado.getUsername(),
-                guardado.getEmail(),
-                guardado.getRole()
-        );
-
+        return usuarioMapper.toDto(guardado);
     }
 }
