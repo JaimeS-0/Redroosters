@@ -46,22 +46,48 @@ public class ApiExceptionHandler {
     }
 
     // Maneja errores cuando ya existe el Like
-    @ExceptionHandler(LikeYaExisteException.class)
-    public ResponseEntity<ProblemDetail> LikeYaExisteException(LikeYaExisteException ex) {
-        ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-        error.setTitle("Like ya marcado");
+    @ExceptionHandler(LikeAlreadyExistsException.class)
+    public ResponseEntity<ProblemDetail> LikeYaExisteException(LikeAlreadyExistsException ex) {
+        ProblemDetail error = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        error.setTitle("Ya has dado like a la cancion");
         error.setDetail(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
     // Maneja errores cuando ya existe el Like
     @ExceptionHandler(LikeNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleLikeNotFound(LikeNotFoundException ex) {
         ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-        error.setTitle("Recurso no encontrado de favoritos");
+        error.setTitle("Like no encontrado");
         error.setDetail(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    // Maneja errores cuando ya existe el mismo nombre de usuario
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<ProblemDetail> handleUsernameExists(UsernameAlreadyExistsException ex) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problem.setTitle("Nombre de usuario duplicado");
+        problem.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
+    }
 
+    // Maneja errores cuando ya existe el mismo email
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ProblemDetail> handleEmailExists(EmailAlreadyExistsException ex) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problem.setTitle("Email duplicado");
+        problem.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
+    }
+
+    // Fallo inesperado del servidor 500
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ProblemDetail> handleGeneralException(Exception ex) {
+        ProblemDetail error = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        error.setTitle("Error interno");
+        error.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+    
 }

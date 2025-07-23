@@ -3,10 +3,9 @@ package com.redroosters.backend.service;
 import com.redroosters.backend.dto.CancionResponseDTO;
 import com.redroosters.backend.exception.CancionNotFoundException;
 import com.redroosters.backend.exception.LikeNotFoundException;
-import com.redroosters.backend.exception.LikeYaExisteException;
+import com.redroosters.backend.exception.LikeAlreadyExistsException;
 import com.redroosters.backend.exception.UsuarioNotFoundException;
 import com.redroosters.backend.mapper.CancionMapper;
-import com.redroosters.backend.mapper.LikeMapper;
 import com.redroosters.backend.model.Cancion;
 import com.redroosters.backend.model.Like;
 import com.redroosters.backend.model.Usuario;
@@ -37,7 +36,7 @@ public class LikeService {
 
         // Verificamos si ya exite el like
         if (likeRepository.existsByUsuarioIdAndCancionId(usuarioId, cancionId)){
-            throw new LikeYaExisteException();
+            throw new LikeAlreadyExistsException();
         }
 
         // Buscamos el usuario y la canción
