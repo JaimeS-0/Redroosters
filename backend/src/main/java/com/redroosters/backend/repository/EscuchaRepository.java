@@ -17,5 +17,5 @@ public interface EscuchaRepository extends JpaRepository<Escucha, Long> {
     List<Escucha> findByUsuarioId(Long usuarioId);
 
     // Devuelve las 5 canciones mas escuchadas (numero de veces)
-    List<Escucha> findTopByOrderByVecesEscuchadaDesc();
+    List<Escucha> findTop10ByOrderByVecesEscuchadaDesc();
 }

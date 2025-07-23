@@ -50,7 +50,7 @@ public class EscuchaService {
             escuchaRepository.save(escucha);
         } else {
 
-            // Si no exite crear nueva escucha, Buscamos usuario y cancion
+            // Si no exite crear nueva escucha, Buscamos usuario y cancion y añadimos
             Usuario usuario = usuarioRepository.findById(usuarioId)
                     .orElseThrow(() -> new UsuarioNotFoundException(nombre));
 
@@ -77,7 +77,11 @@ public class EscuchaService {
         // Obtenemos todas las escuchas de ese usuasrio
         List<Escucha> escuchas = escuchaRepository.findByUsuarioId(usuarioId);
 
-        // Concertimos a DTOs y devolvemos
         return escuchaMapper.toDtoList(escuchas);
+    }
+
+    public List<EscuchaResponseDTO> topCancionesMasEscuchadas() {
+        List<Escucha> top = escuchaRepository.findTop10ByOrderByVecesEscuchadaDesc();
+        return escuchaMapper.toDtoList(top);
     }
 }
