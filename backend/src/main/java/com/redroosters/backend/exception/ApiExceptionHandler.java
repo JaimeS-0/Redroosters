@@ -9,15 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
-    // Maneja errores cuando no se encuentra un Artista
-    @ExceptionHandler(ArtistaNotFoundException.class)
-    public ResponseEntity<ProblemDetail> handleArtistaNotFound(ArtistaNotFoundException ex) {
-        ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-        error.setTitle("Artista no encontrado");
-        error.setDetail(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-
     // Maneja errores cuando no se encuentra un Album
     @ExceptionHandler(AlbumNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleAlbumNotFound(AlbumNotFoundException ex) {
@@ -27,20 +18,20 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    // Maneja errores cuando no se encuentra un Artista
+    @ExceptionHandler(ArtistaNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleArtistaNotFound(ArtistaNotFoundException ex) {
+        ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        error.setTitle("Artista no encontrado");
+        error.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     // Maneja errores cuando no se encuentra una Cancion
     @ExceptionHandler(CancionNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleCancionNotFound(CancionNotFoundException ex) {
         ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
         error.setTitle("Cancion no encontrado");
-        error.setDetail(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-
-    // Maneja errores cuando no se encuentra un Usuario
-    @ExceptionHandler(UsuarioNotFoundException.class)
-    public ResponseEntity<ProblemDetail> handleUsuarioNotFound(UsuarioNotFoundException ex) {
-        ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-        error.setTitle("Usuario no encontrado");
         error.setDetail(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
@@ -59,6 +50,15 @@ public class ApiExceptionHandler {
     public ResponseEntity<ProblemDetail> handleLikeNotFound(LikeNotFoundException ex) {
         ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
         error.setTitle("Like no encontrado");
+        error.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    // Maneja errores cuando no se encuentra un Usuario
+    @ExceptionHandler(UsuarioNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleUsuarioNotFound(UsuarioNotFoundException ex) {
+        ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        error.setTitle("Usuario no encontrado");
         error.setDetail(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
