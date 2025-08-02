@@ -22,7 +22,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      BACK_PORT: ${BACK_PORT}   
+      BACK_PORT: ${BACK_PORT}
+      JWT_SECRET: ${JWT_SECRET}
     ports:
       - "${BACK_PORT}:${BACK_PORT}"
     depends_on:

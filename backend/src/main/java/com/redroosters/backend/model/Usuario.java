@@ -1,11 +1,16 @@
 package com.redroosters.backend.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "usuarios")
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -81,4 +86,37 @@ public class Usuario {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+
+    // Implementación de métodos de UserDetails para Utenticar con Spring Security
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(() -> "ROLE_" + role.name());
+    }
+
+    // Si la cuenta ha caducado
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    // Si el usuario ha sido bloqueado
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    // Si la contraseña ha caducado
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    // Si el usuario está habilitado
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
+

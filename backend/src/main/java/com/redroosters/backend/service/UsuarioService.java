@@ -38,7 +38,7 @@ public class UsuarioService {
 
         Usuario nuevo = usuarioMapper.toEntity(dto);
         nuevo.setPassword(passwordEncoder.encode(dto.password()));
-        nuevo.setRole(Role.USER); // Por defecto
+        nuevo.setRole(Role.USER); // Por defectooo
         Usuario guardado = usuarioRepository.save(nuevo);
 
         return usuarioMapper.toDto(guardado);
