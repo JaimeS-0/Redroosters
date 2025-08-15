@@ -63,15 +63,6 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    // Maneja errores cuando ya existe el mismo nombre de usuario
-    @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<ProblemDetail> handleUsernameExists(UsernameAlreadyExistsException ex) {
-        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
-        problem.setTitle("Nombre de usuario duplicado");
-        problem.setDetail(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
-    }
-
     // Maneja errores cuando ya existe el mismo email
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ProblemDetail> handleEmailExists(EmailAlreadyExistsException ex) {

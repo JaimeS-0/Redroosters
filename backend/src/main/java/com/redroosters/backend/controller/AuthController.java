@@ -1,9 +1,11 @@
 package com.redroosters.backend.controller;
 
+import com.redroosters.backend.docs.AuthApi;
 import com.redroosters.backend.dto.LoginRequestDTO;
 import com.redroosters.backend.dto.LoginResponseDTO;
 import com.redroosters.backend.dto.RegistroRequestDTO;
 import com.redroosters.backend.dto.UsuarioResponseDTO;
+import com.redroosters.backend.exception.UsuarioNotFoundException;
 import com.redroosters.backend.model.Usuario;
 import com.redroosters.backend.repository.UsuarioRepository;
 import com.redroosters.backend.security.JwtService;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthController implements AuthApi {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -35,6 +37,7 @@ public class AuthController {
     }
 
     // 🟢 Iniciar sesión
+    @Override
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO request) {
 
@@ -46,7 +49,7 @@ public class AuthController {
 
         // Buscar el usuario en la base de datos
         Usuario usuario = usuarioRepository.findByEmail(request.email())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new UsuarioNotFoundException(request.email()));
 
         // Generar token con su username
         String token = jwtService.generateToken(usuario.getUsername());
@@ -61,6 +64,7 @@ public class AuthController {
     }
 
     // 🟢 Registro de usuario
+    @Override
     @PostMapping("/register")
     public ResponseEntity<UsuarioResponseDTO> register(@RequestBody @Valid RegistroRequestDTO request) {
         UsuarioResponseDTO registrado = usuarioService.registrar(

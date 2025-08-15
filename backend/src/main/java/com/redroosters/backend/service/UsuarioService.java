@@ -3,7 +3,6 @@ package com.redroosters.backend.service;
 import com.redroosters.backend.dto.RegistroRequestDTO;
 import com.redroosters.backend.dto.UsuarioResponseDTO;
 import com.redroosters.backend.exception.EmailAlreadyExistsException;
-import com.redroosters.backend.exception.UsernameAlreadyExistsException;
 import com.redroosters.backend.mapper.UsuarioMapper;
 import com.redroosters.backend.model.Role;
 import com.redroosters.backend.model.Usuario;
@@ -28,9 +27,10 @@ public class UsuarioService {
 
     public UsuarioResponseDTO registrar(RegistroRequestDTO dto, String username, String email) {
 
+        /*
         if (usuarioRepository.existsByUsername(dto.username())) {
             throw new UsernameAlreadyExistsException(username);
-        }
+        }*/
 
         if (usuarioRepository.existsByEmail(dto.email())) {
             throw new EmailAlreadyExistsException(email);

@@ -4,13 +4,17 @@ import com.redroosters.backend.model.Role;
 import com.redroosters.backend.model.Usuario;
 import com.redroosters.backend.repository.UsuarioRepository;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class AdminConfig {
 
+    private static final Logger log = LoggerFactory.getLogger(AdminConfig.class);
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -29,10 +33,10 @@ public class AdminConfig {
     private String adminPassword;
 
     @PostConstruct
-    public void initData() {
-        // Comprobamos si ya existe el usuario por email
+    void initData() {
+
         if (usuarioRepository.existsByEmail(adminEmail)) {
-            System.out.println("Admin ya existe no se crea nuevo");
+            System.out.println("Admin ya existe no se puede crear uno nuevo");
             return;
         }
 
@@ -44,6 +48,11 @@ public class AdminConfig {
         admin.setRole(Role.ADMIN);
 
         usuarioRepository.save(admin);
-        System.out.println("Usuario ADMIN creado correctamente");
+
+        log.info(" ✅ Usuario ADMIN creado correctamente + " +
+                "Nombre: " + adminUsername +
+                "Email: " + adminEmail +
+                "Password: " + adminPassword +
+                "Rol: " + admin.getRole());
     }
 }

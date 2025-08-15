@@ -51,6 +51,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
 
+                        // Prueba OpenApi
+                        // 👉 Swagger / OpenAPI (correcto)
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
+
                         // Rutas de usuarios registrados
                         .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
 
