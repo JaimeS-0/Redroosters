@@ -3,8 +3,13 @@ package com.redroosters.backend.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
@@ -70,6 +75,24 @@ public class ApiExceptionHandler {
         problem.setTitle("Email duplicado");
         problem.setDetail(ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
+    }
+
+
+    // Maneja errores 400 de validacion
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ProblemDetail> handleValidation(MethodArgumentNotValidException ex) {
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        pd.setTitle("Datos inválidos");
+        pd.setDetail("Los datos enviados no son validos");
+
+        Map<String, String> errors = new HashMap<>();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errors.put(error.getField(), error.getDefaultMessage());
+        }
+
+        pd.setProperty("errors", errors);
+
+        return ResponseEntity.badRequest().body(pd);
     }
 
     // Fallo inesperado del servidor 500

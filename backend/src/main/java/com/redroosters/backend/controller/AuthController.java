@@ -36,7 +36,7 @@ public class AuthController implements AuthApi {
         this.usuarioService = usuarioService;
     }
 
-    // 🟢 Iniciar sesión
+    // Iniciar sesión
     @Override
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO request) {
@@ -47,14 +47,12 @@ public class AuthController implements AuthApi {
 
         );
 
-        // Buscar el usuario en la base de datos
         Usuario usuario = usuarioRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UsuarioNotFoundException(request.email()));
 
         // Generar token con su username
         String token = jwtService.generateToken(usuario.getUsername());
 
-        // Devolver el token y informacion del usuario
         return ResponseEntity.ok(new LoginResponseDTO(
                 token,
                 usuario.getUsername(),
@@ -63,7 +61,7 @@ public class AuthController implements AuthApi {
         ));
     }
 
-    // 🟢 Registro de usuario
+    // Registro de usuario
     @Override
     @PostMapping("/register")
     public ResponseEntity<UsuarioResponseDTO> register(@RequestBody @Valid RegistroRequestDTO request) {
@@ -72,9 +70,6 @@ public class AuthController implements AuthApi {
                 request.username(),
                 request.email()
         );
-
-
         return ResponseEntity.ok(registrado);
     }
-
 }
