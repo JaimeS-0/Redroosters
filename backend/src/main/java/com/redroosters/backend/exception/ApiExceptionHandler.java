@@ -3,11 +3,14 @@ package com.redroosters.backend.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +46,7 @@ public class ApiExceptionHandler {
 
     // Maneja errores cuando ya existe el Like
     @ExceptionHandler(LikeAlreadyExistsException.class)
-    public ResponseEntity<ProblemDetail> LikeYaExisteException(LikeAlreadyExistsException ex) {
+    public ResponseEntity<ProblemDetail> LikeAlreadyExistsException(LikeAlreadyExistsException ex) {
         ProblemDetail error = ProblemDetail.forStatus(HttpStatus.CONFLICT);
         error.setTitle("Ya has dado like a la cancion");
         error.setDetail(ex.getMessage());
@@ -91,9 +94,18 @@ public class ApiExceptionHandler {
         }
 
         pd.setProperty("errors", errors);
-
         return ResponseEntity.badRequest().body(pd);
     }
+
+    // 401 - credenciales incorrectas o usuario no encontrado
+    @ExceptionHandler({ BadCredentialsException.class, UsernameNotFoundException.class })
+    public ResponseEntity<ProblemDetail> handleAuthErrors(RuntimeException ex) {
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+        pd.setTitle("Credenciales inválidas");
+        pd.setDetail("Email o contraseña incorrectos.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(pd);
+    }
+
 
     // Fallo inesperado del servidor 500
     @ExceptionHandler(Exception.class)

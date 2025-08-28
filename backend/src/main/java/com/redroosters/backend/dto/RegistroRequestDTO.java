@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Size;
 public record RegistroRequestDTO(
 
         @NotBlank(message = "El nombre de usuario es obligatorio.")
-        @Size(min = 3, max = 50, message = "Debe tene entre 3 y 15 caracteres.")
+        @Size(min = 3, max = 15, message = "Debe tene entre 3 y 15 caracteres.")
         @Pattern(
                 regexp = "^[A-Za-z][A-Za-z0-9_-]{2,14}$",
                 message = "El usuario debe empezar con una letra y solo puede contener letras, números y guiones"
