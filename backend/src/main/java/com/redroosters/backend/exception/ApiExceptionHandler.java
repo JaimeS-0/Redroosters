@@ -3,6 +3,7 @@ package com.redroosters.backend.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +39,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(CancionNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleCancionNotFound(CancionNotFoundException ex) {
         ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-        error.setTitle("Cancion no encontrado");
+        error.setTitle("Cancion no encontrada");
         error.setDetail(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
@@ -53,7 +53,7 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
-    // Maneja errores cuando ya existe el Like
+    // Maneja errores cuando no se encuentra el Like
     @ExceptionHandler(LikeNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleLikeNotFound(LikeNotFoundException ex) {
         ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
@@ -80,7 +80,6 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
     }
 
-
     // Maneja errores 400 de validacion
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleValidation(MethodArgumentNotValidException ex) {
@@ -106,14 +105,21 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(pd);
     }
 
+    // 403 - autenticado pero sin permisos
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ProblemDetail> handleAccessDenied(AccessDeniedException ex) {
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.FORBIDDEN);
+        pd.setTitle("Acceso denegado");
+        pd.setDetail("No tienes permisos para acceder a este recurso.");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(pd);
+    }
 
-    // Fallo inesperado del servidor 500
+    // 500 - fallo del servidor
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleGeneralException(Exception ex) {
         ProblemDetail error = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         error.setTitle("Error interno");
-        error.setDetail(ex.getMessage());
+        error.setDetail("Se ha producido un error inesperado.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
-
 }
