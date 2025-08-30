@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
 
         // Sacamos el username del token
-        String username = jwtService.extractUsername(token);
+        String username = jwtService.extractEmail(token);
 
         // Comprobamos que no haya ya alguien autenticado en el contexto
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

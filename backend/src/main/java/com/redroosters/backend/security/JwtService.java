@@ -33,25 +33,25 @@ public class JwtService {
     private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
 
 
-    // Crear tocken con el username
-    public String generateToken(String username) {
+    // Crear tocken con el email
+    public String generateToken(String email) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Extraer el username del token
-    public String extractUsername(String token) {
+    // Extraer el enmail del token
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     // Validar si el token no es valido
-    public boolean isTokenValid(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return extractedUsername.equals(username) && !isTokenExpired(token);
+    public boolean isTokenValid(String token, String email) {
+        final String extractedEmail = extractEmail(token);
+        return extractedEmail.equals(email) && !isTokenExpired(token);
 
     }
 

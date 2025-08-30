@@ -51,7 +51,7 @@ public class AuthController implements AuthApi {
                 .orElseThrow(() -> new UsuarioNotFoundException(request.email()));
 
         // Generar token con su username
-        String token = jwtService.generateToken(usuario.getUsername());
+        String token = jwtService.generateToken(usuario.getEmail());
 
         return ResponseEntity.ok(new LoginResponseDTO(
                 token,
