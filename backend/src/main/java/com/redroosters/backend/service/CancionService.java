@@ -54,11 +54,11 @@ public class CancionService {
     }
 
     // Privado ADMIN
-    public CancionResponseDTO editarCancion(Long id, CancionRequestDTO dto, String titulo) {
+    public CancionResponseDTO editarCancion(Long id, CancionRequestDTO dto) {
 
         // Buscamos la cancion
         Cancion cancion = cancionRepository.findById(id)
-                .orElseThrow(() -> new CancionNotFoundException(titulo));
+                .orElseThrow(() -> new CancionNotFoundException(id));
 
         // Buscamos el nuevo artista
         Artista artista = artistaRepository.findById(dto.artistaId())

@@ -62,6 +62,15 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    // Maneja errores cuando no se encuentra un Mensaje de Contacto
+    @ExceptionHandler(MensajeContactoNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleMensajeContactoNotFound(MensajeContactoNotFoundException ex) {
+        ProblemDetail error = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        error.setTitle("Mensaje de contacto no encontrado");
+        error.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     // Maneja errores cuando no se encuentra un Usuario
     @ExceptionHandler(UsuarioNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleUsuarioNotFound(UsuarioNotFoundException ex) {
