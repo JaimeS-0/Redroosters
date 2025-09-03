@@ -17,12 +17,12 @@ public interface MensajeContactoAdminApi {
     @ApiResponse(responseCode = "200", description = "Listado de mensajes",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = MensajeContactoResponseDTO.class)))
-    ResponseEntity<List<MensajeContactoResponseDTO>> listarMensajes();
+    ResponseEntity<List<MensajeContactoResponseDTO>> verMensaje();
 
     @Operation(summary = "Obtener mensaje por ID", description = "Devuelve el detalle de un mensaje específico.")
     @ApiResponse(responseCode = "200", description = "Mensaje encontrado",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = MensajeContactoResponseDTO.class)))
     @ApiResponse(responseCode = "404", description = "Mensaje no encontrado", content = @Content)
-    ResponseEntity<MensajeContactoResponseDTO> obtenerMensaje(Long id);
+    ResponseEntity<MensajeContactoResponseDTO> verMensajeId(Long id);
 }

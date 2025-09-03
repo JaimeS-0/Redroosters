@@ -1,5 +1,6 @@
 package com.redroosters.backend.controller.admin;
 
+import com.redroosters.backend.docs.admin.MensajeContactoAdminApi;
 import com.redroosters.backend.dto.MensajeContactoResponseDTO;
 import com.redroosters.backend.service.MensajeContactoService;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
-public class MensajeContactoAdminController {
+public class MensajeContactoAdminController implements MensajeContactoAdminApi {
 
     private final MensajeContactoService mensajeContactoService;
 
