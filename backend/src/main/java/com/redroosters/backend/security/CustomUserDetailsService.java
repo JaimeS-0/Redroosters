@@ -1,16 +1,14 @@
 package com.redroosters.backend.security;
 
-import com.redroosters.backend.model.Usuario;
 import com.redroosters.backend.repository.UsuarioRepository;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 // Servicio que Spring Security usa para cargar los usuarios desde la BBDD
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
 

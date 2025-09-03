@@ -15,7 +15,7 @@ public record RegistroRequestDTO(
                 regexp = "^[A-Za-z][A-Za-z0-9_-]{2,14}$",
                 message = "El usuario debe empezar con una letra y solo puede contener letras, números y guiones"
         )
-        String username,
+        String name,
 
         @NotBlank(message = "El email es obligatorio.")
         @Email(message = "Debe ser un email válido.")

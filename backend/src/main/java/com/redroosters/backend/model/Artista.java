@@ -16,7 +16,7 @@ public class Artista {
 
     private String descripcion;
 
-    private String portada;  // URL a imagen
+    private String portadaUrl;  // URL a imagen
 
     private boolean destacado;
 
@@ -30,11 +30,11 @@ public class Artista {
     public Artista() {
     }
 
-    public Artista(Long id, String nombre, String descripcion, String portada, boolean destacado, List<Cancion> canciones, List<Album> albumes) {
+    public Artista(Long id, String nombre, String descripcion, String portadaUrl, boolean destacado, List<Cancion> canciones, List<Album> albumes) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.portada = portada;
+        this.portadaUrl = portadaUrl;
         this.destacado = destacado;
         this.canciones = canciones;
         this.albumes = albumes;
@@ -64,12 +64,12 @@ public class Artista {
         this.descripcion = descripcion;
     }
 
-    public String getPortada() {
-        return portada;
+    public String getPortadaUrl() {
+        return portadaUrl;
     }
 
-    public void setPortada(String portada) {
-        this.portada = portada;
+    public void setPortadaUrl(String portadaUrl) {
+        this.portadaUrl = portadaUrl;
     }
 
     public boolean isDestacado() {

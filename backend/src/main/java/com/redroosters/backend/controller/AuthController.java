@@ -50,12 +50,12 @@ public class AuthController implements AuthApi {
         Usuario usuario = usuarioRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UsuarioNotFoundException(request.email()));
 
-        // Generar token con su username
+        // Generar token con su email
         String token = jwtService.generateToken(usuario.getEmail());
 
         return ResponseEntity.ok(new LoginResponseDTO(
                 token,
-                usuario.getUsername(),
+                usuario.getName(),
                 usuario.getEmail(),
                 usuario.getRole().name()
         ));
@@ -67,7 +67,7 @@ public class AuthController implements AuthApi {
     public ResponseEntity<UsuarioResponseDTO> register(@RequestBody @Valid RegistroRequestDTO request) {
         UsuarioResponseDTO registrado = usuarioService.registrar(
                 request,
-                request.username(),
+                request.name(),
                 request.email()
         );
         return ResponseEntity.ok(registrado);

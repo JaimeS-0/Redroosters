@@ -34,23 +34,24 @@ public class AlbumService {
     }
 
     // Privado ADMIN
-    public Album crearAlbum(AlbumRequestDTO dto) {
+    public AlbumResponseDTO crearAlbum(AlbumRequestDTO dto) {
 
         // Buscar el artista
         Artista artista = artistaRepository.findById(dto.artistaId())
                 .orElseThrow(() -> new ArtistaNotFoundException(dto.artistaId()));
 
         // Busca canciones por el Id
-        List<Cancion> cancions = cancionRepository.findAllById(dto.cancionesIds());
+        List<Cancion> canciones = cancionRepository.findAllById(dto.cancionesIds());
 
         // Mapear el DTO a la entidad Album
         Album album = albumMapper.toEntity(dto);
 
         // Asignar relaciones
         album.setArtista(artista);
-        album.setCanciones(cancions);
+        album.setCanciones(canciones);
 
-        return albumRepository.save(album);
+        Album guardado = albumRepository.save(album);
+        return albumMapper.toDto(guardado);
     }
 
     // publico USER
@@ -73,11 +74,11 @@ public class AlbumService {
     }
 
     // Privado admin
-    public AlbumResponseDTO editarAlbum(Long id,String titulo, AlbumRequestDTO dto) {
+    public AlbumResponseDTO editarAlbum(Long id, AlbumRequestDTO dto) {
 
         // Buscar el album exsitente
         Album existente = albumRepository.findById(id)
-                .orElseThrow(() -> new AlbumNotFoundException(id, titulo));
+                .orElseThrow(() -> new AlbumNotFoundException(id));
 
         // Actualizar los campos editables
         existente.setTitulo(dto.titulo());
@@ -98,11 +99,11 @@ public class AlbumService {
     }
 
     // Privado admin
-    public void eliminarAlbum(Long id, String titulo) {
+    public void eliminarAlbum(Long id) {
 
         // Verificamos si el album existe
         if (!albumRepository.existsById(id)) {
-            throw new AlbumNotFoundException(id, titulo);
+            throw new AlbumNotFoundException(id);
         }
 
         // Eliminamos por Id

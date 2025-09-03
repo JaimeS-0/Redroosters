@@ -6,7 +6,7 @@ import com.redroosters.backend.model.Role;
 public record UsuarioResponseDTO(
 
         Long id,
-        String username,
+        String name,
         String email,
         Role role
 ) {}

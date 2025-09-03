@@ -15,7 +15,7 @@ public class Usuario implements UserDetails {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    private String username;
+    private String name;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -30,9 +30,9 @@ public class Usuario implements UserDetails {
 
     public Usuario() {}
 
-    public Usuario(Long id, String username, String email, String password, Role role, LocalDateTime createdAt) {
+    public Usuario(Long id, String name, String email, String password, Role role, LocalDateTime createdAt) {
         this.id = id;
-        this.username = username;
+        this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -47,12 +47,12 @@ public class Usuario implements UserDetails {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -88,8 +88,15 @@ public class Usuario implements UserDetails {
     }
 
 
-    // Implementación de métodos de UserDetails para Utenticar con Spring Security
+    // Usado por UserDetails: para autenticar con el email al iniciar sesion
+    public String getUsername() {
+        return this.email;
+    }
 
+
+    // Implementación de métodos de UserDetails para Autenticar con Spring Security
+
+    // Devuelve los roles del usuario
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(() -> "ROLE_" + role.name());

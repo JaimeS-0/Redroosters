@@ -66,7 +66,7 @@ public class ArtistaService {
         // Actualizar los campos
         existente.setNombre(dto.nombre());
         existente.setDescripcion(dto.descripcion());
-        existente.setPortada(dto.portadaUrl());
+        existente.setPortadaUrl(dto.portadaUrl());
         existente.setDestacado(dto.destacado());
 
         // Guardar cambios
