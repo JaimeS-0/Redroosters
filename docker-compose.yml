@@ -11,6 +11,8 @@ services:
       - "${DB_PORT}:${DB_PORT}" # Quitar en produccion
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - redroosters_audio:/app/uploads/audio
+
 
   backend:
     build:
@@ -27,8 +29,11 @@ services:
       ADMIN_USERNAME: ${ADMIN_USERNAME}
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      AUDIO_DIR: /app/uploads/audio
     ports:
       - "${BACK_PORT}:${BACK_PORT}"
+    volumes:
+      - redroosters_audio:/app/uploads/audio
     depends_on:
       - db
 
@@ -56,3 +61,5 @@ services:
 
 volumes:
   postgres_data:
+  redroosters_audio:
+

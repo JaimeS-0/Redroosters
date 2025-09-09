@@ -9,7 +9,6 @@ public record CancionRequestDTO(
 
         @NotBlank String titulo,
         String descripcion,
-        String duracion,
         String portadaUrl,
         @NotBlank String urlAudio,
         @NotNull Long artistaId,

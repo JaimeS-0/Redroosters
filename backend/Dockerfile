@@ -14,6 +14,9 @@ RUN ./mvnw package -DskipTests
 # Una imagen más ligera solo con JRE para ejecutar el jar
 FROM eclipse-temurin:21-jre
 
+#  Instalamos ffmpeg en la imagen runtime para calcular la duración de las canciones automaticamente
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+
 # Directorio donde se colocará el jar final
 WORKDIR /app
 

@@ -1,5 +1,6 @@
 package com.redroosters.backend.exception;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -122,6 +123,17 @@ public class ApiExceptionHandler {
         pd.setDetail("No tienes permisos para acceder a este recurso.");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(pd);
     }
+
+    // Validacion en el controlador para crear la cancion sin artistaId o albumId
+    @ExceptionHandler(org.springframework.web.server.ResponseStatusException.class)
+    public ResponseEntity<ProblemDetail> handleResponseStatus(org.springframework.web.server.ResponseStatusException ex) {
+        ProblemDetail pd = ProblemDetail.forStatus(ex.getStatusCode());
+        pd.setTitle(ex.getStatusCode().is4xxClientError() ? "Datos inválidos" : "Error");
+        pd.setDetail(ex.getReason());
+        return ResponseEntity.status(ex.getStatusCode()).body(pd);
+    }
+
+
 
     // 500 - fallo del servidor
     @ExceptionHandler(Exception.class)
