@@ -6,6 +6,7 @@ public record ArtistaResponseDTO(
 
         Long id,
         String nombre,
+        String urlNombre,
         String descripcion,
         String portadaUrl,
         boolean destacado

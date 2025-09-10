@@ -12,7 +12,12 @@ public class Artista {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Foto para nombre
+    // Buscador global canciones albumes y artistas
     private String nombre;
+
+    // Foto destacado de home
+    private String urlNombre;
 
     private String descripcion;
 
@@ -30,9 +35,10 @@ public class Artista {
     public Artista() {
     }
 
-    public Artista(Long id, String nombre, String descripcion, String portadaUrl, boolean destacado, List<Cancion> canciones, List<Album> albumes) {
+    public Artista(Long id, String nombre, String urlNombre, String descripcion, String portadaUrl, boolean destacado, List<Cancion> canciones, List<Album> albumes) {
         this.id = id;
         this.nombre = nombre;
+        this.urlNombre = urlNombre;
         this.descripcion = descripcion;
         this.portadaUrl = portadaUrl;
         this.destacado = destacado;
@@ -50,6 +56,14 @@ public class Artista {
 
     public String getNombre() {
         return nombre;
+    }
+
+    public String getUrlNombre() {
+        return urlNombre;
+    }
+
+    public void setUrlNombre(String urlNombre) {
+        this.urlNombre = urlNombre;
     }
 
     public void setNombre(String nombre) {

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 public record ArtistaRequestDTO(
 
         @NotBlank String nombre,
+        String urlNombre,
         String descripcion,
         String portadaUrl,
         boolean destacado
