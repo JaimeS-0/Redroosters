@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-// Ver mensajes que pone los usuarios al admin
+// Ver mensajes que ponen los usuarios al admin
 
 @RestController
 @RequestMapping("/api/admin")
@@ -31,7 +31,7 @@ public class MensajeContactoAdminController implements MensajeContactoAdminApi {
         return ResponseEntity.ok(mensajes);
     }
 
-    // GET /VerMensajes/{id}
+    // Ver un mensaje especifico
     @GetMapping("/VerMensajes/{id}")
     @Override
     public ResponseEntity<MensajeContactoResponseDTO> verMensajeId(@PathVariable Long id) {

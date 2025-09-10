@@ -52,6 +52,6 @@ public class AdminConfig {
                 "Nombre: " + adminUsername +
                 "Email: " + adminEmail +
                 "Password: " + adminPassword +
-                "Rol: " + admin.getRole());
+                "Rol: " + admin.getRole() + " ✅ ");
     }
 }

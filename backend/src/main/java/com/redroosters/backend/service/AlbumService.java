@@ -11,6 +11,10 @@ import com.redroosters.backend.model.Cancion;
 import com.redroosters.backend.repository.AlbumRepository;
 import com.redroosters.backend.repository.ArtistaRepository;
 import com.redroosters.backend.repository.CancionRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,20 +58,20 @@ public class AlbumService {
         return albumMapper.toDto(guardado);
     }
 
-    // publico USER
-    public List<AlbumResponseDTO> listarAlbum() {
-
-        // Devuelve todos los albumes
-        List<Album> albumes = albumRepository.findAll();
-        return albumMapper.toDtoList(albumes);
+    // publico USER con paginación
+    public Page<AlbumResponseDTO> listarAlbumes(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return albumRepository.findAll(pageable)
+                .map(albumMapper::toDto);
     }
 
+
     // publico USER mostrar detalles
-    public AlbumResponseDTO getAlbumPorId(Long id, String titulo) {
+    public AlbumResponseDTO obtenerAlbumPorId(Long id) {
 
         // Buscar album por Id
         Album album = albumRepository.findById(id)
-                .orElseThrow(() -> new AlbumNotFoundException(titulo));
+                .orElseThrow(() -> new AlbumNotFoundException(id));
 
         // Tranforma a DTO y devolcer
         return albumMapper.toDto(album);
