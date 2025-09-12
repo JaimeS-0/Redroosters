@@ -1,9 +1,28 @@
 package com.redroosters.backend.controller.publico;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.redroosters.backend.dto.MensajeContactoRequestDTO;
+import com.redroosters.backend.dto.MensajeContactoResponseDTO;
+import com.redroosters.backend.service.MensajeContactoService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/public")
 public class MensajeContactoController {
+
+    private final MensajeContactoService mensajeContactoService;
+
+    public MensajeContactoController(MensajeContactoService mensajeContactoService) {
+        this.mensajeContactoService = mensajeContactoService;
+    }
+
+
+    @PostMapping("/contacto")
+    public ResponseEntity<MensajeContactoResponseDTO> crearMensaje(
+            @Valid @RequestBody MensajeContactoRequestDTO dto
+    ) {
+        MensajeContactoResponseDTO res = mensajeContactoService.crearMensaje(dto);
+        return ResponseEntity.ok(res);
+    }
 }
