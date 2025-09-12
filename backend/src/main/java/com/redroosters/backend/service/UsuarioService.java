@@ -27,10 +27,6 @@ public class UsuarioService {
 
     public UsuarioResponseDTO registrar(RegistroRequestDTO dto, String username, String email) {
 
-        /*
-        if (usuarioRepository.existsByUsername(dto.username())) {
-            throw new UsernameAlreadyExistsException(username);
-        }*/
 
         if (usuarioRepository.existsByEmail(dto.email())) {
             throw new EmailAlreadyExistsException(email);
