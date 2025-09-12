@@ -3,9 +3,9 @@ package com.redroosters.backend.mapper;
 import com.redroosters.backend.dto.*;
 import com.redroosters.backend.model.MensajeContacto;
 import org.mapstruct.*;
+import java.time.LocalDateTime;
 
-
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = { LocalDateTime.class })
 public interface MensajeContactoMapper {
 
     MensajeContactoResponseDTO toDto(MensajeContacto entity);
@@ -14,4 +14,3 @@ public interface MensajeContactoMapper {
     @Mapping(target = "createdAt", expression = "java(LocalDateTime.now())")
     MensajeContacto toEntity(MensajeContactoRequestDTO dto);
 }
-
