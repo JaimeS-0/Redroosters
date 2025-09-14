@@ -19,7 +19,7 @@ Este proyecto está desarrollado para un productor musical y se ha construido co
 ### 🌐 Frontend
 - Astro
 - Tailwind CSS
-- JavaScript (fetch/Axios)
+- JavaScript
 
 ### 🧰 DevOps
 - Docker + Docker Compose
@@ -34,10 +34,11 @@ Este proyecto está desarrollado para un productor musical y se ha construido co
 ```
 git clone [URL del repositorio]
 ```
-2. Crea un archivo `.env` -> Mirar el `.env.example`
+2. Crea un archivo `.env` -> Mirar el `.env.example` para guia
 
 
 3. Ejecuta la app con Docker:
 ```
-docker compose up --build
+docker compose up -d --build 
 ```
+
