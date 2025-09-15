@@ -4,6 +4,7 @@ import com.redroosters.backend.dto.AlbumRequestDTO;
 import com.redroosters.backend.dto.AlbumResponseDTO;
 import com.redroosters.backend.exception.AlbumNotFoundException;
 import com.redroosters.backend.exception.ArtistaNotFoundException;
+import com.redroosters.backend.exception.CancionNotFoundException;
 import com.redroosters.backend.mapper.AlbumMapper;
 import com.redroosters.backend.model.Album;
 import com.redroosters.backend.model.Artista;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,6 +39,8 @@ public class AlbumService {
         this.albumMapper = albumMapper;
     }
 
+    // CRUD
+
     // Privado ADMIN
     public AlbumResponseDTO crearAlbum(AlbumRequestDTO dto) {
 
@@ -45,37 +49,30 @@ public class AlbumService {
                 .orElseThrow(() -> new ArtistaNotFoundException(dto.artistaId()));
 
         // Busca canciones por el Id
-        List<Cancion> canciones = cancionRepository.findAllById(dto.cancionesIds());
+        //List<Cancion> canciones = cancionRepository.findAllById(dto.cancionesIds());
 
         // Mapear el DTO a la entidad Album
         Album album = albumMapper.toEntity(dto);
 
-        // Asignar relaciones
+        // Asignar relaciones de album
         album.setArtista(artista);
+
+
+        // Manejo seguro de canciones
+        List<Long> ids = dto.cancionesIds() == null ? List.of() : dto.cancionesIds();
+        List<Cancion> canciones = ids.isEmpty() ? List.of() : cancionRepository.findAllById(ids);
+
+        if (canciones.size() != ids.size()) {
+            throw new CancionNotFoundException("La cancion no existe: " + ids);
+        }
+
+        // Asignar relaciones de canciones
         album.setCanciones(canciones);
 
         Album guardado = albumRepository.save(album);
         return albumMapper.toDto(guardado);
     }
 
-    // publico USER con paginación
-    public Page<AlbumResponseDTO> listarAlbumes(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        return albumRepository.findAll(pageable)
-                .map(albumMapper::toDto);
-    }
-
-
-    // publico USER mostrar detalles
-    public AlbumResponseDTO obtenerAlbumPorId(Long id) {
-
-        // Buscar album por Id
-        Album album = albumRepository.findById(id)
-                .orElseThrow(() -> new AlbumNotFoundException(id));
-
-        // Tranforma a DTO y devolcer
-        return albumMapper.toDto(album);
-    }
 
     // Privado admin
     public AlbumResponseDTO editarAlbum(Long id, AlbumRequestDTO dto) {
@@ -114,15 +111,36 @@ public class AlbumService {
         albumRepository.deleteById(id);
     }
 
-    // Consultas Personalizadas del repositorio
+    // Listar los albumes
 
-    public List<AlbumResponseDTO> listarAlbumesPorArtista(Long artistaId) {
-
-        // Busca todos los albumes de un artista
-        List<Album> albumes = albumRepository.findByArtistaId(artistaId);
-
-        // Tranformar a DTO
-        return albumMapper.toDtoList(albumes);
+    // publico USER con paginación
+    @Transactional(readOnly = true)
+    public Page<AlbumResponseDTO> listarAlbumes(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return albumRepository.findAll(pageable)
+                .map(albumMapper::toDto);
     }
 
+
+    // publico USER mostrar detalles
+    @Transactional(readOnly = true)
+    public AlbumResponseDTO obtenerAlbumPorId(Long id) {
+
+        // Buscar album por Id
+        Album album = albumRepository.findById(id)
+                .orElseThrow(() -> new AlbumNotFoundException(id));
+
+        // Tranforma a DTO y devolcer
+        return albumMapper.toDto(album);
+    }
+
+
+    // Consultas Personalizadas del repositorio
+
+    // Publico USER → Listar por artista (con paginación)
+    @Transactional(readOnly = true)
+    public Page<AlbumResponseDTO> listarAlbumesPorArtista(Long artistaId, int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return albumRepository.findByArtistaId(artistaId, pageable).map(albumMapper::toDto);
+    }
 }
