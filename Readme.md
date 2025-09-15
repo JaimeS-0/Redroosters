@@ -42,7 +42,8 @@ git clone [URL del repositorio]
 docker compose up -d --build 
 ```
 
-#### La documentacion de todo el proyecto la tengo por separada en Notion.
+#### 📋 La documentacion de todo el proyecto la tengo por separada en Notion.
+
 
 
 
