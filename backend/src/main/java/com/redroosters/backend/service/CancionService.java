@@ -15,6 +15,10 @@ import com.redroosters.backend.repository.CancionRepository;
 import com.redroosters.backend.utils.AudioUtils;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+
 
 @Service
 public class CancionService {
@@ -45,11 +49,13 @@ public class CancionService {
         this.cancionMapper = cancionMapper;
     }
 
-    // CRUD
-/*
-    @Transactional
-    public CancionResponseDTO crearCancion(CancionRequestDTO dto) {
 
+     // Crear cancion SUBIENDO archivo. Guarda el fichero en disco, calcula duración con ffprobe,
+
+    @Transactional
+    public CancionResponseDTO crearConArchivo(CancionRequestDTO dto, MultipartFile audio) {
+
+        // Validaciones de dominio (404 si no existen)
         Artista artista = artistaRepository.findById(dto.artistaId())
                 .orElseThrow(() -> new ArtistaNotFoundException(dto.artistaId()));
 
@@ -59,48 +65,38 @@ public class CancionService {
                     .orElseThrow(() -> new AlbumNotFoundException(dto.albumId()));
         }
 
-        // Mapear DTO → Entidad
-        Cancion cancion = cancionMapper.toEntity(dto);
+        // Validaciones de request (400 si falta algo)
+        if (audio == null || audio.isEmpty()) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.BAD_REQUEST,
+                    "Debes adjuntar el archivo de audio en la parte 'audio'");
+        }
+        if (audioDir == null || audioDir.isBlank()) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR,
+                    "app.uploads.audio-dir no está configurado");
+        }
 
-        cancion.setArtista(artista);
-        cancion.setAlbum(album);
-
-        Cancion guardada = cancionRepository.save(cancion);
-        return cancionMapper.toDto(guardada);
-    }
-    */
-
-
-     // Crear cancion SUBIENDO archivo. Guarda el fichero en disco, calcula duración con ffprobe,
-
-    @Transactional
-    public CancionResponseDTO crearConArchivo(CancionRequestDTO dto, MultipartFile audio) {
+        // manejo específico del archivo
         try {
-            Artista artista = artistaRepository.findById(dto.artistaId())
-                    .orElseThrow(() -> new ArtistaNotFoundException(dto.artistaId()));
-
-            Album album = null;
-            if (dto.albumId() != null) {
-                album = albumRepository.findById(dto.albumId())
-                        .orElseThrow(() -> new AlbumNotFoundException(dto.albumId()));
-            }
-
-            // Guardar el fichero
             Path folder = Paths.get(audioDir).toAbsolutePath().normalize();
             Files.createDirectories(folder);
 
             String original = (audio.getOriginalFilename() != null) ? audio.getOriginalFilename() : "audio.mp3";
             String safeName = buildSafeFileName(original);
             Path dest = folder.resolve(safeName);
+
             audio.transferTo(dest.toFile());
 
-            // Calcular duración (segundos) con ffprobe
-            int duracionSeg = AudioUtils.getAudioDuracionSegundos(dest);
+            int duracionSeg;
+            try {
+                duracionSeg = AudioUtils.getAudioDuracionSegundos(dest);
+            } catch (Exception e) {
+                duracionSeg = 0; // no reventar si ffprobe falla
+            }
 
-            // URL pública servida por tu app/NGINX
             String urlAudio = "/media/audio/" + safeName;
 
-            // Guardar entidad
             Cancion cancion = new Cancion();
             cancion.setTitulo(dto.titulo());
             cancion.setDescripcion(dto.descripcion());
@@ -111,15 +107,17 @@ public class CancionService {
             cancion.setAlbum(album);
 
             Cancion guardada = cancionRepository.save(cancion);
-
             return cancionMapper.toDto(guardada);
 
-        } catch (Exception e) {
+        } catch (java.io.IOException e) {
+            org.slf4j.LoggerFactory.getLogger(CancionService.class)
+                    .error("Fallo I/O guardando audio en {}: {}", audioDir, e.toString(), e);
             throw new RuntimeException("Error procesando el audio", e);
         }
     }
 
-     // Editar
+    
+    // Editar
     @Transactional
     public CancionResponseDTO editarCancion(Long id, CancionRequestDTO dto) {
 
@@ -161,29 +159,49 @@ public class CancionService {
 
     //  LISTADOS
 
-    // Publico USER
-    public List<CancionResponseDTO> listarCanciones() {
-        List<Cancion> canciones = cancionRepository.findAll();
-        return cancionMapper.toDtoList(canciones);
+    //  Listar paginado
+    public Page<CancionResponseDTO> listarCanciones(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return cancionRepository.findAll(pageable)
+                .map(cancionMapper::toDto);
     }
 
-    // Publico USER: canciones por artista (tengan o no álbum)
-    public List<CancionResponseDTO> listarPorArtista(Long artistaId) {
-        List<Cancion> canciones = cancionRepository.findByArtistaId(artistaId);
-        return cancionMapper.toDtoList(canciones);
+
+    public Page<CancionResponseDTO> listarCancionesPorAlbum(Long albumId, int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return cancionRepository.findByAlbumId(albumId, pageable)
+                .map(cancionMapper::toDto);
     }
 
-    // Publico USER: canciones por álbum
-    public List<CancionResponseDTO> listarPorAlbum(Long albumId) {
-        List<Cancion> canciones = cancionRepository.findByAlbumId(albumId);
-        return cancionMapper.toDtoList(canciones);
+    public Page<CancionResponseDTO> listarSinglesPorArtista(Long artistaId, int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return cancionRepository.findByArtistaIdAndAlbumIsNull(artistaId, pageable)
+                .map(cancionMapper::toDto);
     }
 
-    // Privado ADMIN: canciones del artista sin álbum asignado (para construir álbumes)
-    public List<CancionResponseDTO> listarCancionesSinAlbum(Long artistaId) {
-        List<Cancion> canciones = cancionRepository.findByArtistaIdAndAlbumIsNull(artistaId);
-        return cancionMapper.toDtoList(canciones);
+
+    // Ver detalle
+    public CancionResponseDTO verDetalleCancion(Long id) {
+        Cancion cancion = cancionRepository.findById(id)
+                .orElseThrow(() -> new CancionNotFoundException(id));
+        return cancionMapper.toDto(cancion);
     }
+
+    // Listar por artista
+    public Page<CancionResponseDTO> listarCancionesPorArtista(Long artistaId, int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return cancionRepository.findByArtistaId(artistaId, pageable)
+                .map(cancionMapper::toDto);
+    }
+
+    // Buscar (paginado)
+    public Page<CancionResponseDTO> buscarCanciones(String q, int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return cancionRepository.findByTituloContainingIgnoreCase(q, pageable)
+                .map(cancionMapper::toDto);
+    }
+
+
 
     // Mantener la extension de archivo
     private static String buildSafeFileName(String original) {

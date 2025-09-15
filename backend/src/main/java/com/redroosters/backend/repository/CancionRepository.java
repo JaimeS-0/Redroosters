@@ -1,22 +1,28 @@
 package com.redroosters.backend.repository;
 
 import com.redroosters.backend.model.Cancion;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 @Repository
 public interface CancionRepository extends JpaRepository<Cancion, Long> {
 
     // Todas las canciones que pertenecen a un artista concreto,
-    List<Cancion> findByArtistaId(Long artistaId);
+    Page<Cancion> findByArtistaId(Long artistaId, Pageable pageable);
 
     // Todas las canciones que están asociadas a un álbum concreto.
-    List<Cancion> findByAlbumId(Long albumId);
+    Page<Cancion> findByAlbumId(Long albumId, Pageable pageable);
+
 
     // Devuelve todas las canciones de un artista que aun no esten asociadas a ningun album.
     // Al crear un ALbum muestra solo las canciones "libres" o sin album asociado.
-    List<Cancion> findByArtistaIdAndAlbumIsNull(Long artistaId);
+    Page<Cancion> findByArtistaIdAndAlbumIsNull(Long artistaId, Pageable pageable);
+
+    // Para el buscador (la q la abrebiatura de query que contega la misma palabra que buscas)
+    Page<Cancion> findByTituloContainingIgnoreCase(String q, Pageable pageable);
+
 
 }
