@@ -49,7 +49,7 @@ public class SecurityConfig {
 
                         // Rutas públicas
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+                        .requestMatchers("/api/public/**").permitAll()
 
                         // Prueba OpenApi
                         // 👉 Swagger / OpenAPI (correcto)
