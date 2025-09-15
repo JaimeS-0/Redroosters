@@ -24,7 +24,7 @@ public class AlbumPublicController {
     @GetMapping("/album")
     public ResponseEntity<Page<AlbumResponseDTO>> listarAlbumes(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "9") int size,
             @RequestParam(defaultValue = "titulo") String sort
     ) {
         Page<AlbumResponseDTO> albumes = albumService.listarAlbumes(page,size, sort);
@@ -38,10 +38,15 @@ public class AlbumPublicController {
         return ResponseEntity.ok(album);
     }
 
-    // Listar álbumes por artista
+    // Listar álbumes por artista (paginado)
     @GetMapping("/album/artista/{idArtista}")
-    public ResponseEntity<List<AlbumResponseDTO>> listarPorArtista(@PathVariable Long idArtista) {
-        List<AlbumResponseDTO> albumes = albumService.listarAlbumesPorArtista(idArtista);
+    public ResponseEntity<Page<AlbumResponseDTO>> listarPorArtista(
+            @PathVariable Long idArtista,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "9") int size,
+            @RequestParam(defaultValue = "titulo") String sort
+    ) {
+        Page<AlbumResponseDTO> albumes = albumService.listarAlbumesPorArtista(idArtista, page, size, sort);
         return ResponseEntity.ok(albumes);
     }
 
