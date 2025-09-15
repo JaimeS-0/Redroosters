@@ -9,6 +9,6 @@ public record EscuchaResponseDTO(
         Long id,
         String nombreUsuario,
         String tituloCancion,
-        Integer vecesEscuchada,
+        Long vecesEscuchada,
         LocalDateTime ultimaEscucha
 ) {}

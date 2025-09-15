@@ -17,13 +17,13 @@ public class Escucha {
     @ManyToOne(optional = false)
     private Cancion cancion;
 
-    private int vecesEscuchada = 1;
+    private Long vecesEscuchada = 1L;
 
     private LocalDateTime ultimaEscucha;
 
     public Escucha(){}
 
-    public Escucha(Long id, Usuario usuario, Cancion cancion, int vecesEscuchada, LocalDateTime ultimaEscucha) {
+    public Escucha(Long id, Usuario usuario, Cancion cancion, Long vecesEscuchada, LocalDateTime ultimaEscucha) {
         this.id = id;
         this.usuario = usuario;
         this.cancion = cancion;
@@ -55,11 +55,11 @@ public class Escucha {
         this.cancion = cancion;
     }
 
-    public int getVecesEscuchada() {
+    public long getVecesEscuchada() {
         return vecesEscuchada;
     }
 
-    public void setVecesEscuchada(int vecesEscuchada) {
+    public void setVecesEscuchada(Long vecesEscuchada) {
         this.vecesEscuchada = vecesEscuchada;
     }
 

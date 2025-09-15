@@ -6,6 +6,5 @@ import jakarta.validation.constraints.NotNull;
 
 public record EscuchaRequestDTO(
 
-        @NotNull Long usuarioId,
         @NotNull Long cancionId
 ) {}

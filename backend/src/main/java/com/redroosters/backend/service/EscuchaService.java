@@ -1,6 +1,7 @@
 package com.redroosters.backend.service;
 
 import com.redroosters.backend.dto.EscuchaResponseDTO;
+import com.redroosters.backend.dto.TopCancionDTO;
 import com.redroosters.backend.exception.CancionNotFoundException;
 import com.redroosters.backend.exception.UsuarioNotFoundException;
 import com.redroosters.backend.mapper.EscuchaMapper;
@@ -10,11 +11,12 @@ import com.redroosters.backend.model.Usuario;
 import com.redroosters.backend.repository.CancionRepository;
 import com.redroosters.backend.repository.EscuchaRepository;
 import com.redroosters.backend.repository.UsuarioRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EscuchaService {
@@ -28,60 +30,65 @@ public class EscuchaService {
                           UsuarioRepository usuarioRepository,
                           CancionRepository cancionRepository,
                           EscuchaMapper escuchaMapper) {
-
         this.escuchaRepository = escuchaRepository;
         this.usuarioRepository = usuarioRepository;
         this.cancionRepository = cancionRepository;
         this.escuchaMapper = escuchaMapper;
     }
 
+    @Transactional
+    public EscuchaResponseDTO registrarEscucha(Long usuarioId, Long cancionId) {
+        Escucha escucha = escuchaRepository.findByUsuarioIdAndCancionId(usuarioId, cancionId)
 
-    public void registrarEscucha(Long usuarioId, Long cancionId, String nombre, String titulo) {
+                .orElseGet(() -> {
+                    Usuario usuario = usuarioRepository.findById(usuarioId)
+                            .orElseThrow(() -> new UsuarioNotFoundException(String.valueOf(usuarioId)));
 
-        // Comprobamos si existe la escucha
-        Optional<Escucha> existente = escuchaRepository.findByUsuarioIdAndCancionId(usuarioId, cancionId);
+                    Cancion cancion = cancionRepository.findById(cancionId)
+                            .orElseThrow(() -> new CancionNotFoundException(cancionId));
 
-        if (existente.isPresent()) {
+                    Escucha e = new Escucha();
+                    e.setUsuario(usuario);
+                    e.setCancion(cancion);
+                    e.setVecesEscuchada(0L); // se incrementa abajo
+                    return e;
+                });
 
-            // Si ya exixte, actualizamos el contador y fecha
-            Escucha escucha = existente.get();
-            escucha.setVecesEscuchada(escucha.getVecesEscuchada() + 1);
-            escucha.setUltimaEscucha(LocalDateTime.now());
-            escuchaRepository.save(escucha);
-        } else {
+        escucha.setVecesEscuchada(escucha.getVecesEscuchada() + 1);
+        escucha.setUltimaEscucha(LocalDateTime.now());
 
-            // Si no exite crear nueva escucha, Buscamos usuario y cancion y añadimos
-            Usuario usuario = usuarioRepository.findById(usuarioId)
-                    .orElseThrow(() -> new UsuarioNotFoundException(nombre));
-
-            Cancion cancion = cancionRepository.findById(cancionId)
-                    .orElseThrow(() -> new CancionNotFoundException(titulo));
-
-            Escucha nueva = new Escucha();
-            nueva.setUsuario(usuario);
-            nueva.setCancion(cancion);
-            nueva.setVecesEscuchada(1);
-            nueva.setUltimaEscucha(LocalDateTime.now());
-
-            escuchaRepository.save(nueva);
-        }
+        Escucha guardada = escuchaRepository.save(escucha);
+        return escuchaMapper.toDto(guardada);
     }
 
-    public List<EscuchaResponseDTO> listarEscuchaPorUsuario(Long usuarioId, String nombre) {
 
-        // Validar que el usuariio existe
-        if (!usuarioRepository.existsById(usuarioId)) {
-            throw new UsuarioNotFoundException(nombre);
-        }
-
-        // Obtenemos todas las escuchas de ese usuasrio
-        List<Escucha> escuchas = escuchaRepository.findByUsuarioId(usuarioId);
-
-        return escuchaMapper.toDtoList(escuchas);
+    // Contador global (publico)
+    @Transactional(readOnly = true)
+    public Long contadorGlobalCancion(Long cancionId) {
+        cancionRepository.findById(cancionId)
+                .orElseThrow(() -> new CancionNotFoundException(cancionId));
+        return escuchaRepository.sumaGlobalPorCancion(cancionId);
     }
 
-    public List<EscuchaResponseDTO> topCancionesMasEscuchadas() {
-        List<Escucha> top = escuchaRepository.findTop10ByOrderByVecesEscuchadaDesc();
-        return escuchaMapper.toDtoList(top);
+    // Top global (publico)
+    @Transactional(readOnly = true)
+    public List<TopCancionDTO> topCancionesMasEscuchadas(int limit) {
+
+        var ranking = escuchaRepository.topGlobal(PageRequest.of(0, limit));
+        var ids = ranking.stream().map(r -> r.getCancionId()).toList();
+        var canciones = cancionRepository.findAllById(ids);
+
+        // Mapa idCancion → Cancion para componer rápido
+        Map<Long, Cancion> porId = new HashMap<>();
+        for (Cancion c : canciones) porId.put(c.getId(), c);
+
+        List<TopCancionDTO> resultado = new ArrayList<>();
+        for (var r : ranking) {
+            Cancion c = porId.get(r.getCancionId());
+            if (c != null) {
+                resultado.add(escuchaMapper.toTopDto(c, r.getTotal()));
+            }
+        }
+        return resultado;
     }
 }

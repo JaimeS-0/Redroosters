@@ -2,6 +2,8 @@ package com.redroosters.backend.mapper;
 
 import com.redroosters.backend.dto.EscuchaRequestDTO;
 import com.redroosters.backend.dto.EscuchaResponseDTO;
+import com.redroosters.backend.dto.TopCancionDTO;
+import com.redroosters.backend.model.Cancion;
 import com.redroosters.backend.model.Escucha;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,17 +13,19 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface EscuchaMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "usuario", ignore = true)
-    @Mapping(target = "cancion", ignore = true)
-    @Mapping(target = "vecesEscuchada", constant = "1")
-    @Mapping(target = "ultimaEscucha", expression = "java(java.time.LocalDateTime.now())")
-    Escucha toEntity(EscuchaRequestDTO dto);
-
-    @Mapping(target = "nombreUsuario", source = "usuario.username")
+    @Mapping(target = "nombreUsuario", source = "usuario.name")
     @Mapping(target = "tituloCancion", source = "cancion.titulo")
     EscuchaResponseDTO toDto(Escucha escucha);
 
-    List<EscuchaResponseDTO> toDtoList(List<Escucha> lista);
+    List<EscuchaResponseDTO> toDtoList(List<Escucha> escuchas);
+
+    // Para el TOP global
+    @Mapping(target = "cancionId", source = "cancion.id")
+    @Mapping(target = "titulo", source = "cancion.titulo")
+    @Mapping(target = "artista", source = "cancion.artista.nombre")
+    @Mapping(target = "portadaUrl", source = "cancion.portadaUrl")
+    @Mapping(target = "escuchasTotales", source = "total")
+    TopCancionDTO toTopDto(Cancion cancion, Long total);
 }
+
 
