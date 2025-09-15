@@ -26,8 +26,6 @@ Este proyecto está desarrollado para un productor musical y se ha construido co
 - NGINX como proxy inverso
 - Archivos `.env` para configuración segura
 
-## La documentacion de todo el proyecto la tengo por separada en Notion.
-
 ---
 
 ## ⚙️ Cómo ejecutar (modo desarrollo)
@@ -43,6 +41,9 @@ git clone [URL del repositorio]
 ```
 docker compose up -d --build 
 ```
+
+#### La documentacion de todo el proyecto la tengo por separada en Notion.
+
 
 
 
