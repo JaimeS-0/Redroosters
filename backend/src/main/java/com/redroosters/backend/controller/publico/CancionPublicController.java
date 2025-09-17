@@ -60,20 +60,6 @@ public class CancionPublicController {
         return ResponseEntity.ok(dto);
     }
 
-
-    //  Listar canciones por artista (paginado)
-    @GetMapping("/artista/{artistaId}/cancion")
-    public ResponseEntity<Page<CancionResponseDTO>> listarCancionesPorArtista(
-            @PathVariable Long artistaId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "9") int size,
-            @RequestParam(defaultValue = "titulo") String sort
-    ) {
-        Page<CancionResponseDTO> canciones = cancionService.listarCancionesPorArtista(artistaId, page, size, sort);
-        return ResponseEntity.ok(canciones);
-    }
-
-
     // Buscar canciones por texto (paginado)
     @GetMapping("/cancion/buscar")
     public ResponseEntity<Page<CancionResponseDTO>> buscar(

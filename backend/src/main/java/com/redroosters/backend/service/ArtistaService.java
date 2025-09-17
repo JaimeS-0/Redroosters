@@ -7,6 +7,10 @@ import com.redroosters.backend.exception.ArtistaNotFoundException;
 import com.redroosters.backend.mapper.ArtistaMapper;
 import com.redroosters.backend.model.Artista;
 import com.redroosters.backend.repository.ArtistaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,23 +40,36 @@ public class ArtistaService {
     }
 
     // Publico USER
-    public List<ArtistaResponseDTO> listarTodos() {
+    // Listar todos los artistas con paginacion
+    public Page<ArtistaResponseDTO> listarTodos(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
 
-        // Obtenemos todos los artistas
-        List<Artista> artistas =artistaRepository.findAll();
-
-        // Convertimos la lista de entidades a DTOs
-        return artistaMapper.toDToList(artistas);
+        return artistaRepository.findAll(pageable)
+                .map(artista -> new ArtistaResponseDTO(
+                        artista.getId(),
+                        artista.getNombre(),
+                        artista.getUrlNombre(),
+                        artista.getDescripcion(),
+                        artista.getPortadaUrl(),
+                        artista.isDestacado()
+                ));
     }
 
-    // Publico USER -> Mostra informacion de cada artista
-    public ArtistaResponseDTO getPorId(Long id, String titulo) {
+    // Publico USER
+    // Listar solo 6 artistas pagina de artistas
+    public List<ArtistaResponseDTO> randomArtistas(int size, List<Long> excludeIds) {
+        if (excludeIds == null) excludeIds = List.of();
+        return artistaRepository.findRandom(size, excludeIds)
+                .stream()
+                .map(artistaMapper::toDTO)
+                .toList();
+    }
 
-        // Buscar artista por Id
+    // Publico USER
+    // Muestra informacion de un artista
+    public ArtistaResponseDTO getId(Long id) {
         Artista artista = artistaRepository.findById(id)
-                .orElseThrow(() -> new ArtistaNotFoundException(titulo));
-
-        // Convertirlo a DTO y devolverlo
+                .orElseThrow(() -> new ArtistaNotFoundException(id));
         return artistaMapper.toDTO(artista);
     }
 

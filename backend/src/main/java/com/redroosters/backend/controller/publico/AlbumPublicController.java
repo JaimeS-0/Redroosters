@@ -6,8 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 // Ver Albumes en la pagina
 
 @RestController
@@ -37,18 +35,5 @@ public class AlbumPublicController {
         AlbumResponseDTO album = albumService.obtenerAlbumPorId(id);
         return ResponseEntity.ok(album);
     }
-
-    // Listar álbumes por artista (paginado)
-    @GetMapping("/album/artista/{idArtista}")
-    public ResponseEntity<Page<AlbumResponseDTO>> listarPorArtista(
-            @PathVariable Long idArtista,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "9") int size,
-            @RequestParam(defaultValue = "titulo") String sort
-    ) {
-        Page<AlbumResponseDTO> albumes = albumService.listarAlbumesPorArtista(idArtista, page, size, sort);
-        return ResponseEntity.ok(albumes);
-    }
-
 
 }

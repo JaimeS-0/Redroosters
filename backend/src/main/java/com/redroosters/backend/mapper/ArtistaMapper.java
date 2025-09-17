@@ -12,11 +12,13 @@ import java.util.List;
 public interface ArtistaMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "canciones", ignore = true) // 👈 no intentes mapear esto
+    @Mapping(target = "canciones", ignore = true)
     @Mapping(target = "albumes", ignore = true)
     Artista toEntity(ArtistaRequestDTO dto);
 
     ArtistaResponseDTO toDTO(Artista artista);
 
     List<ArtistaResponseDTO> toDToList(List<Artista> artistas);
+
+
 }
