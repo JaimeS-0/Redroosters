@@ -1,5 +1,6 @@
 package com.redroosters.backend.controller.publico;
 
+import com.redroosters.backend.docs.publico.EscuchaPublicApi;
 import com.redroosters.backend.dto.TopCancionDTO;
 import com.redroosters.backend.service.EscuchaService;
 import org.springframework.http.ResponseEntity;
@@ -7,9 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Ver escuchas totales de la cancion y el top de canciones mas escuchadas
+
 @RestController
 @RequestMapping("/api/public")
-public class EscuchaPublicController {
+public class EscuchaPublicController implements EscuchaPublicApi {
 
     private final EscuchaService escuchaService;
 

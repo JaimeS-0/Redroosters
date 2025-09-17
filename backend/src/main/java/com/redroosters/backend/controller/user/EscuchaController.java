@@ -1,5 +1,6 @@
 package com.redroosters.backend.controller.user;
 
+import com.redroosters.backend.docs.user.EscuchaUserApi;
 import com.redroosters.backend.dto.EscuchaResponseDTO;
 import com.redroosters.backend.model.Usuario;
 import com.redroosters.backend.service.EscuchaService;
@@ -7,11 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
-public class EscuchaController {
+public class EscuchaController implements EscuchaUserApi {
 
     private final EscuchaService escuchaService;
 

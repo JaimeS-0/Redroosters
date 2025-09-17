@@ -1,5 +1,6 @@
 package com.redroosters.backend.controller.publico;
 
+import com.redroosters.backend.docs.publico.CancionPublicApi;
 import com.redroosters.backend.dto.CancionResponseDTO;
 import com.redroosters.backend.service.CancionService;
 import org.springframework.data.domain.Page;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/public")
-public class CancionPublicController {
+public class CancionPublicController implements CancionPublicApi {
 
     // Mostrar las Canciones en la Web
 

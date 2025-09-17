@@ -1,8 +1,8 @@
 package com.redroosters.backend.controller.user;
 
 
+import com.redroosters.backend.docs.user.LikeUserApi;
 import com.redroosters.backend.dto.CancionResponseDTO;
-import com.redroosters.backend.dto.LikeResponseDTO;
 import com.redroosters.backend.dto.LikedResponse;
 import com.redroosters.backend.model.Usuario;
 import com.redroosters.backend.service.LikeService;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
-public class LikeController {
+public class LikeController implements LikeUserApi {
 
     private final LikeService likeService;
 
@@ -23,10 +23,8 @@ public class LikeController {
         this.likeService = likeService;
     }
 
-    /**
-     * Crear like para una cancion.
-     * Tip: si no necesitas guardar "nombre" y "titulo" en el like, puedes eliminar esos params.
-     */
+
+    //Crear like para una cancion.
     @PostMapping("/like/{cancionId}")
     public ResponseEntity<Void> darLike(@PathVariable Long cancionId,
                                         @RequestParam(required = false) String nombre,
@@ -36,9 +34,7 @@ public class LikeController {
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Eliminar like de una cancion.
-     */
+    // Eliminar like de una cancion.
     @DeleteMapping("/like/{cancionId}")
     public ResponseEntity<Void> quitarLike(@PathVariable Long cancionId,
                                            @RequestParam(required = false) String titulo,
@@ -48,11 +44,8 @@ public class LikeController {
     }
 
 
-    /**
-     * Comprobar si el usuario actual ha dado like a una cancion.
-     * Devuelve: { "liked": true/false }
-     */
-
+     // Comprobar si el usuario actual ha dado like a una cancion.
+     // Devuelve: true/false
     @GetMapping("/like/{cancionId}/exists")
     public ResponseEntity<LikedResponse> existeLike(@PathVariable Long cancionId,
                                                     @AuthenticationPrincipal Usuario usuario) {

@@ -1,5 +1,6 @@
 package com.redroosters.backend.controller.publico;
 
+import com.redroosters.backend.docs.publico.LikePublicApi;
 import com.redroosters.backend.service.LikeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/public/")
-public class LikePublicController {
+public class LikePublicController implements LikePublicApi {
 
     private final LikeService likeService;
 

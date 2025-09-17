@@ -1,5 +1,7 @@
 package com.redroosters.backend.controller.publico;
 
+import com.redroosters.backend.docs.admin.AlbumAdminApi;
+import com.redroosters.backend.docs.publico.AlbumPublicApi;
 import com.redroosters.backend.dto.AlbumResponseDTO;
 import com.redroosters.backend.service.AlbumService;
 import org.springframework.data.domain.Page;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/public")
-public class AlbumPublicController {
+public class AlbumPublicController implements AlbumPublicApi {
 
     private final AlbumService albumService;
 

@@ -1,5 +1,6 @@
 package com.redroosters.backend.controller.publico;
 
+import com.redroosters.backend.docs.publico.ArtistaPublicApi;
 import com.redroosters.backend.dto.AlbumResponseDTO;
 import com.redroosters.backend.dto.ArtistaResponseDTO;
 import com.redroosters.backend.dto.CancionResponseDTO;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Ver Artistas en la web, sus albumes y canciones
+
 @RestController
 @RequestMapping("/api/public")
-public class ArtistaPublicController {
+public class ArtistaPublicController implements ArtistaPublicApi {
 
     private final ArtistaService artistaService;
     private final AlbumService albumService;
