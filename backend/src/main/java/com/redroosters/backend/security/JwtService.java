@@ -29,8 +29,9 @@ public class JwtService {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // Tiempo que durara el token: 24 horas
-    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
+    // Tiempo que durara el token: 7 Dias
+    private final long EXPIRATION_TIME = 1000L * 60 * 60 * 24 * 7;
+
 
 
     // Crear tocken con el email

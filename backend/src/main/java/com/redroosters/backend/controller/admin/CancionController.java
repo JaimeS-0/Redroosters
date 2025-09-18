@@ -5,7 +5,6 @@ import com.redroosters.backend.docs.admin.CancionAdminApi;
 import com.redroosters.backend.dto.CancionRequestDTO;
 import com.redroosters.backend.dto.CancionResponseDTO;
 import com.redroosters.backend.service.CancionService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +26,28 @@ public class CancionController implements CancionAdminApi {
         this.objectMapper = objectMapper;
     }
 
-    // Crear CON archivo (multipart) .mp3
-    @PostMapping(value = "/cancion/archivo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    // Crear cancion con archivo (multipart) .mp3
+
+    @PostMapping(value = "/cancion/archivo",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<CancionResponseDTO> crearConArchivo(
             @RequestPart("datos") String datosJson,
             @RequestPart("audio") MultipartFile audio
     ) {
+
+        // Validacion que sea una cancion MP3
+        String fileName = audio.getOriginalFilename();
+        if (fileName == null || !fileName.toLowerCase().endsWith(".mp3")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El archivo debe tener extension .mp3");
+        }
+
+        String contentType = audio.getContentType();
+        if (contentType != null && !contentType.startsWith("audio/")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El archivo debe ser de tipo audio (mp3).");
+        }
+
         final CancionRequestDTO dto;
         try {
             dto = objectMapper.readValue(datosJson, CancionRequestDTO.class);

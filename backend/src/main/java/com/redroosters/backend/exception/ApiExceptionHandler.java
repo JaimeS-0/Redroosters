@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MultipartException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -133,6 +134,16 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(ex.getStatusCode()).body(pd);
     }
 
+    // Errores de multipart archivos raros, corrupciones
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<Map<String, Object>> handleMultipart(MultipartException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of(
+                        "status", 400,
+                        "error", "Archivo inválido",
+                        "message", "El archivo no es un MP3 válido"
+                ));
+    }
 
 
     // 500 - fallo del servidor

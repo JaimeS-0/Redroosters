@@ -19,13 +19,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 
 @Service
@@ -67,15 +74,26 @@ public class CancionService {
 
         // Validaciones de request (400 si falta algo)
         if (audio == null || audio.isEmpty()) {
-            throw new org.springframework.web.server.ResponseStatusException(
-                    org.springframework.http.HttpStatus.BAD_REQUEST,
+            throw new ResponseStatusException(
+                    BAD_REQUEST,
                     "Debes adjuntar el archivo de audio en la parte 'audio'");
         }
         if (audioDir == null || audioDir.isBlank()) {
-            throw new org.springframework.web.server.ResponseStatusException(
-                    org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR,
+            throw new ResponseStatusException(
+                    INTERNAL_SERVER_ERROR,
                     "app.uploads.audio-dir no está configurado");
         }
+
+        // Validacion acepta solo archivos .mp3
+        String RutaOriginal = audio.getOriginalFilename();
+
+        if (RutaOriginal == null || !RutaOriginal.toLowerCase().endsWith(".mp3")) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "El archivo debe tener extensión .mp3"
+            );
+        }
+
 
         // manejo específico del archivo
         try {
@@ -109,10 +127,13 @@ public class CancionService {
             Cancion guardada = cancionRepository.save(cancion);
             return cancionMapper.toDto(guardada);
 
-        } catch (java.io.IOException e) {
-            org.slf4j.LoggerFactory.getLogger(CancionService.class)
+        } catch (IOException e) {
+            getLogger(CancionService.class)
                     .error("Fallo I/O guardando audio en {}: {}", audioDir, e.toString(), e);
-            throw new RuntimeException("Error procesando el audio", e);
+
+            throw new ResponseStatusException(
+                    INTERNAL_SERVER_ERROR, "Error procesando el audio"
+            );
         }
     }
 
