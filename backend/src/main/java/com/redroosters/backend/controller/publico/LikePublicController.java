@@ -18,6 +18,7 @@ public class LikePublicController implements LikePublicApi {
     }
 
     @GetMapping("/like/{cancionId}/count")
+    @Override
     public ResponseEntity<Long> count(@PathVariable Long cancionId) {
         return ResponseEntity.ok(likeService.contarLikes(cancionId));
     }

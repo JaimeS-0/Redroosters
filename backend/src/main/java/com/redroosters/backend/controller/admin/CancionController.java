@@ -32,6 +32,7 @@ public class CancionController implements CancionAdminApi {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @Override
     public ResponseEntity<CancionResponseDTO> crearConArchivo(
             @RequestPart("datos") String datosJson,
             @RequestPart("audio") MultipartFile audio
@@ -68,6 +69,7 @@ public class CancionController implements CancionAdminApi {
 
     // Editar SIN archivo
     @PutMapping("/cancion/{id}")
+    @Override
     public ResponseEntity<CancionResponseDTO> editarCancion(
             @PathVariable Long id,
             @RequestBody CancionRequestDTO dto) {
@@ -76,6 +78,7 @@ public class CancionController implements CancionAdminApi {
 
     // Eliminar
     @DeleteMapping("/cancion/{id}")
+    @Override
     public ResponseEntity<Void> eliminarCancion(@PathVariable Long id) {
         cancionService.eliminarCancion(id);
         return ResponseEntity.noContent().build();

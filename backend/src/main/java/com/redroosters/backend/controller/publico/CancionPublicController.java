@@ -21,6 +21,7 @@ public class CancionPublicController implements CancionPublicApi {
 
     // Ver todas las canciones
     @GetMapping("/cancion")
+    @Override
     public ResponseEntity<Page<CancionResponseDTO>> listarCanciones(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "9") int size,
@@ -32,6 +33,7 @@ public class CancionPublicController implements CancionPublicApi {
 
     //  Listar canciones por álbum (paginado)
     @GetMapping("/album/{albumId}/cancion")
+    @Override
     public ResponseEntity<Page<CancionResponseDTO>> listarCancionesPorAlbum(
             @PathVariable Long albumId,
             @RequestParam(defaultValue = "0") int page,
@@ -44,6 +46,7 @@ public class CancionPublicController implements CancionPublicApi {
 
     // Listar singles de un artista (canciones sin álbum)
     @GetMapping("/artista/{artistaId}/singles")
+    @Override
     public ResponseEntity<Page<CancionResponseDTO>> listarSinglesPorArtista(
             @PathVariable Long artistaId,
             @RequestParam(defaultValue = "0") int page,
@@ -56,21 +59,10 @@ public class CancionPublicController implements CancionPublicApi {
 
     // Ver detalle de una canción
     @GetMapping("/cancion/{id}")
+    @Override
     public ResponseEntity<CancionResponseDTO> verDetalle(@PathVariable Long id) {
         CancionResponseDTO dto = cancionService.verDetalleCancion(id);
         return ResponseEntity.ok(dto);
-    }
-
-    // Buscar canciones por texto (paginado)
-    @GetMapping("/cancion/buscar")
-    public ResponseEntity<Page<CancionResponseDTO>> buscar(
-            @RequestParam String q,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "titulo") String sort
-    ) {
-        Page<CancionResponseDTO> canciones = cancionService.buscarCanciones(q, page, size, sort);
-        return ResponseEntity.ok(canciones);
     }
 }
 

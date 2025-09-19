@@ -31,6 +31,7 @@ public class ArtistaPublicController implements ArtistaPublicApi {
 
     // Listar Todos los artista paginados (En principio no se usa, se usa el de abajo)
     @GetMapping("/artistas")
+    @Override
     public ResponseEntity<Page<ArtistaResponseDTO>> listarTodos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "9") int size,
@@ -42,6 +43,7 @@ public class ArtistaPublicController implements ArtistaPublicApi {
 
     // Listar pagina de artistas, muestra solo 6 artistas
     @GetMapping("/artistas/random")
+    @Override
     public ResponseEntity<List<ArtistaResponseDTO>> artistasRandom(
             @RequestParam(defaultValue = "6") int size,
             @RequestParam(required = false) List<Long> excludeIds
@@ -52,12 +54,14 @@ public class ArtistaPublicController implements ArtistaPublicApi {
 
     // Ver los destalles de un artista id
     @GetMapping("/artista/{id}")
+    @Override
     public ResponseEntity<ArtistaResponseDTO> verDetalle(@PathVariable Long id) {
         return ResponseEntity.ok(artistaService.getId(id));
     }
 
     //  Álbumes del artista
     @GetMapping("/artista/{id}/album")
+    @Override
     public ResponseEntity<Page<AlbumResponseDTO>> albumesDeArtista(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,
@@ -69,6 +73,7 @@ public class ArtistaPublicController implements ArtistaPublicApi {
 
     // Canciones del artista
     @GetMapping("/artista/{id}/cancion")
+    @Override
     public ResponseEntity<Page<CancionResponseDTO>> cancionesDeArtista(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,

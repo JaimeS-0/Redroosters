@@ -22,6 +22,7 @@ public class EscuchaController implements EscuchaUserApi {
 
     // Registrar escucha de una cancion (usuario autenticado)
     @PostMapping("/escuchar/{idCancion}")
+    @Override
     public ResponseEntity<EscuchaResponseDTO> registrarEscucha(
             @AuthenticationPrincipal Usuario usuario,
             @PathVariable Long idCancion) {

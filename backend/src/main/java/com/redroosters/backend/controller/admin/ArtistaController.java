@@ -23,7 +23,7 @@ public class ArtistaController implements ArtistaAdminApi {
 
     // Crear artista
     @PostMapping("/artistas")
-    // @Override
+    @Override
     public ResponseEntity<ArtistaResponseDTO> crearArtista(@RequestBody @Valid ArtistaRequestDTO dto) {
         ArtistaResponseDTO creado = artistaService.crearArtista(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(creado);
@@ -31,7 +31,7 @@ public class ArtistaController implements ArtistaAdminApi {
 
     // Editar artista
     @PutMapping("/artistas/{id}")
-    // @Override
+    @Override
     public ResponseEntity<ArtistaResponseDTO> editarArtista(
             @PathVariable Long id,
             @RequestBody @Valid ArtistaRequestDTO dto
@@ -41,7 +41,7 @@ public class ArtistaController implements ArtistaAdminApi {
 
     // Eliminar artista
     @DeleteMapping("/artistas/{id}")
-    // @Override
+    @Override
     public ResponseEntity<Void> eliminarArtista(@PathVariable Long id) {
         artistaService.eliminar(id);
         return ResponseEntity.noContent().build();

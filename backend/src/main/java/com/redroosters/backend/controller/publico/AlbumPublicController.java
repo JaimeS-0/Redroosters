@@ -1,6 +1,5 @@
 package com.redroosters.backend.controller.publico;
 
-import com.redroosters.backend.docs.admin.AlbumAdminApi;
 import com.redroosters.backend.docs.publico.AlbumPublicApi;
 import com.redroosters.backend.dto.AlbumResponseDTO;
 import com.redroosters.backend.service.AlbumService;
@@ -22,6 +21,7 @@ public class AlbumPublicController implements AlbumPublicApi {
 
     // Listar todos los Albumes con paginacion
     @GetMapping("/album")
+    @Override
     public ResponseEntity<Page<AlbumResponseDTO>> listarAlbumes(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "9") int size,
@@ -33,6 +33,7 @@ public class AlbumPublicController implements AlbumPublicApi {
 
     // Ver detalle de un album
     @GetMapping("/album/{id}")
+    @Override
     public ResponseEntity<AlbumResponseDTO> verDetalle(@PathVariable Long id) {
         AlbumResponseDTO album = albumService.obtenerAlbumPorId(id);
         return ResponseEntity.ok(album);

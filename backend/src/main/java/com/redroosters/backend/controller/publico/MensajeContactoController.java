@@ -22,6 +22,7 @@ public class MensajeContactoController implements MensajeContactoPublicApi {
 
     // Crear Mensaje
     @PostMapping("/contacto")
+    @Override
     public ResponseEntity<MensajeContactoResponseDTO> crearMensaje(
             @Valid @RequestBody MensajeContactoRequestDTO dto
     ) {

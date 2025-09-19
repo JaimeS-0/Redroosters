@@ -22,12 +22,14 @@ public class EscuchaPublicController implements EscuchaPublicApi {
 
     // Contador global de una canción
     @GetMapping("/cancion/{id}/escuchas")
+    @Override
     public ResponseEntity<Long> contadorGlobal(@PathVariable Long id) {
         return ResponseEntity.ok(escuchaService.contadorGlobalCancion(id));
     }
 
     // TOP global
     @GetMapping("/cancion/top-escuchadas")
+    @Override
     public ResponseEntity<List<TopCancionDTO>> top(
             @RequestParam(defaultValue = "10") int limit) {
         return ResponseEntity.ok(escuchaService.topCancionesMasEscuchadas(limit));

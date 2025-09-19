@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,13 +54,4 @@ public interface CancionPublicApi {
             @Parameter(description = "ID de la canción") Long id
     );
 
-    @Operation(summary = "Buscar canciones (paginado)",
-            description = "Busca canciones por texto en título/otros campos (según tu implementación).")
-    @ApiResponse(responseCode = "200", description = "OK",
-            content = @Content(mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = CancionResponseDTO.class))))
-    ResponseEntity<Page<CancionResponseDTO>> buscar(
-            @Parameter(description = "Texto a buscar", examples = @ExampleObject(value = "taylor")) String q,
-            int page, int size, String sort
-    );
 }

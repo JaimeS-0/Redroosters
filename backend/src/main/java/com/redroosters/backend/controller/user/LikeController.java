@@ -26,6 +26,7 @@ public class LikeController implements LikeUserApi {
 
     //Crear like para una cancion.
     @PostMapping("/like/{cancionId}")
+    @Override
     public ResponseEntity<Void> darLike(@PathVariable Long cancionId,
                                         @RequestParam(required = false) String nombre,
                                         @RequestParam(required = false) String titulo,
@@ -36,6 +37,7 @@ public class LikeController implements LikeUserApi {
 
     // Eliminar like de una cancion.
     @DeleteMapping("/like/{cancionId}")
+    @Override
     public ResponseEntity<Void> quitarLike(@PathVariable Long cancionId,
                                            @RequestParam(required = false) String titulo,
                                            @AuthenticationPrincipal Usuario usuario) {
@@ -47,6 +49,7 @@ public class LikeController implements LikeUserApi {
      // Comprobar si el usuario actual ha dado like a una cancion.
      // Devuelve: true/false
     @GetMapping("/like/{cancionId}/exists")
+    @Override
     public ResponseEntity<LikedResponse> existeLike(@PathVariable Long cancionId,
                                                     @AuthenticationPrincipal Usuario usuario) {
         boolean liked = likeService.existeLike(usuario.getId(), cancionId);
@@ -55,6 +58,7 @@ public class LikeController implements LikeUserApi {
 
     // Mostra en la web todas las canciones favoritas de un Usuario (Paginado)
     @GetMapping("/likes")
+    @Override
     public ResponseEntity<Page<CancionResponseDTO>> listarFavoritos(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size,
