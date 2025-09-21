@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+// Logica de CRUD y visualizar los likes de las canciones
+
 @Service
 public class LikeService {
 

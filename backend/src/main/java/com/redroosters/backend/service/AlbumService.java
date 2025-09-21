@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+// Logica de CRUD y visualizar Albumes
+
 @Service
 public class AlbumService {
 

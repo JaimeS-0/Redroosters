@@ -6,6 +6,8 @@ import com.redroosters.backend.model.Usuario;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+// Para convertir entre DTOs y la entidad Usuario
+
 @Mapper(componentModel = "spring")
 public interface UsuarioMapper {
 
@@ -13,7 +15,7 @@ public interface UsuarioMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "password", ignore = true) // la seteamos manualmente
+    @Mapping(target = "password", ignore = true) // Ignoramos la contraseña, nostros las encriptamos manualmente
     Usuario toEntity(RegistroRequestDTO dto);
 
     // Mapea de Usuario a UsuarioResponseDTO (para mostrar datos de usuario)

@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+// Entidad JPA que representa a un Usuario
+
 @Entity
 @Table(name = "usuarios")
 public class Usuario implements UserDetails {

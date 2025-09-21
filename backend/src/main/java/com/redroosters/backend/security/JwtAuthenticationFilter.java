@@ -13,6 +13,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+// Filtro JWT que autentica peticiones leyendo el token del header "Authorization: Bearer <token>".
+
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

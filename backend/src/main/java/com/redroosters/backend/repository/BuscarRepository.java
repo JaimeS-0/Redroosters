@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+// Repositio JPA para la busqueda  y consultas personalizadas
+
 @Repository
 public class BuscarRepository {
 
@@ -19,6 +21,7 @@ public class BuscarRepository {
         this.jdbc = jdbc;
     }
 
+    // Define cómo convertir cada fila del SQL en un BusquedaDTO
     private static final RowMapper<BusquedaDTO> ROW_MAPPER = new RowMapper<>() {
         @Override
         public BusquedaDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -31,6 +34,16 @@ public class BuscarRepository {
         }
     };
 
+
+    // Busqueda de Artistas, Albumes y Canciones a la vez
+
+    // q -> lo que el usuario escribe en el buscador
+    // limit -> resultados maximos
+    // offset -> desde donde empezar
+    // Guarda el parametro :term en una tabla temporal ppara utilizrlo en todas las busquedas
+
+    // Justamos todos los resultados (UNION ALL),
+    // Los ordenamos primero por score(Canciones, Albumes, Artistas) y alfanbeticamente
     public List<BusquedaDTO> buscarTodo(String q, int limit, int offset) {
 
         String sql = """
@@ -38,7 +51,7 @@ public class BuscarRepository {
             SELECT a.id AS id,
                    'ARTISTA' AS tipo,
                    a.nombre AS titulo,
-                   NULL      AS subtitulo,
+                   NULL AS subtitulo,
                    0.7::float8 AS score
             FROM artistas a, q
             WHERE a.nombre ILIKE '%%' || q.term || '%%'

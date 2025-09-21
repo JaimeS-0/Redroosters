@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+
+// Permite dar like, quitarlo, comprobar si existe y listar canciones favoritas del usuario autenticado.
+
 @RestController
 @RequestMapping("/api/user")
 public class LikeController implements LikeUserApi {

@@ -8,6 +8,8 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
+// Para convertir entre DTOs y la entidad Artista
+
 @Mapper(componentModel = "spring")
 public interface ArtistaMapper {
 

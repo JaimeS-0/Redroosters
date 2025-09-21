@@ -9,6 +9,8 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
+// Para convertir entre DTOs y la entidad Album
+
 @Mapper(componentModel = "spring")
 public interface AlbumMapper {
 

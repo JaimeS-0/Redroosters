@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+// Entidad JPA que representa a un Like
+
 @Entity
 @Table(name = "likes")
 public class Like {

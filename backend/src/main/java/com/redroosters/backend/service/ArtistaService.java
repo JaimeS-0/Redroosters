@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// Logica de CRUD y visualizar Artistas
+
 @Service
 public class ArtistaService {
 

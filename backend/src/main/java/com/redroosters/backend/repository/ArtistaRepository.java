@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+// Repositio JPA para la entidad Artista y consultas personalizadas
+
 @Repository
 public interface ArtistaRepository extends JpaRepository<Artista, Long> {
 

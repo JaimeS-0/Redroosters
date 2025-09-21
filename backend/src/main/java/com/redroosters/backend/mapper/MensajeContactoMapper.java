@@ -5,6 +5,8 @@ import com.redroosters.backend.model.MensajeContacto;
 import org.mapstruct.*;
 import java.time.LocalDateTime;
 
+// Para convertir entre DTOs y la entidad MensajeContacto
+
 @Mapper(componentModel = "spring", imports = { LocalDateTime.class })
 public interface MensajeContactoMapper {
 

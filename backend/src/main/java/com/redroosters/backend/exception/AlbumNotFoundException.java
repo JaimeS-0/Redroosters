@@ -1,5 +1,7 @@
 package com.redroosters.backend.exception;
 
+// Se lanza cuando no se encontro un album
+
 public class AlbumNotFoundException extends RuntimeException {
 
     public AlbumNotFoundException(Long id) {

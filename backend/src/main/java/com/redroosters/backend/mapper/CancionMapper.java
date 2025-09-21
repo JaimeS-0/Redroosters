@@ -9,6 +9,8 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
+// Para convertir entre DTOs y la entidad Cancion
+
 @Mapper(
         componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,

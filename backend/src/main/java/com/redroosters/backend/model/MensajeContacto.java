@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+// Entidad JPA que representa a un Mensaje de COntacto
+
 @Entity
 @Table(name = "mensajesContacto")
 public class MensajeContacto {

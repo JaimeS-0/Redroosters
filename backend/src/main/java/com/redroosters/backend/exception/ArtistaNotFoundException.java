@@ -1,5 +1,7 @@
 package com.redroosters.backend.exception;
 
+// Se lanza cuando no se encontro un Artista
+
 public class ArtistaNotFoundException extends RuntimeException {
 
     public ArtistaNotFoundException(Long id) {

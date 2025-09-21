@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 
+// Obtiene la duración de una cancion con ffprobe y formatea en minutos y segundos
+
 public final class AudioUtils {
 
     private AudioUtils() {}

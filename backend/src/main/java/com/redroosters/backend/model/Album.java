@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// Entidad JPA que representa a un Album
+
 @Entity
 @Table(name = "albumes")
 public class Album {

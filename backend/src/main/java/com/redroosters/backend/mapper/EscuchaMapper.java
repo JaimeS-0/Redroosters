@@ -1,6 +1,5 @@
 package com.redroosters.backend.mapper;
 
-import com.redroosters.backend.dto.EscuchaRequestDTO;
 import com.redroosters.backend.dto.EscuchaResponseDTO;
 import com.redroosters.backend.dto.TopCancionDTO;
 import com.redroosters.backend.model.Cancion;
@@ -9,6 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
+
+// Para convertir entre DTOs y la entidad Escucha
 
 @Mapper(componentModel = "spring")
 public interface EscuchaMapper {

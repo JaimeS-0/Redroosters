@@ -1,5 +1,7 @@
 package com.redroosters.backend.exception;
 
+// Se lanza cuando no se encontro una Cancion
+
 public class CancionNotFoundException extends RuntimeException {
 
     public CancionNotFoundException(Long id) {

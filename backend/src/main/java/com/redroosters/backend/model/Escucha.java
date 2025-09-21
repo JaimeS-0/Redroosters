@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+// Entidad JPA que representa a una Escucha
+
 @Entity
 @Table(name = "escuchas")
 public class Escucha {

@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 
+// Logica para contar y visualizar la Escucha de una cancion
+
 @Service
 public class EscuchaService {
 

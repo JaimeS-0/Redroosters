@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+// Repositio JPA para la entidad Escucha y consultas personalizadas
+
 @Repository
 public interface EscuchaRepository extends JpaRepository<Escucha, Long> {
 

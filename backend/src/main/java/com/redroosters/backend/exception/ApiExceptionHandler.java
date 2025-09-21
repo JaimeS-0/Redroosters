@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartException;
 import java.util.HashMap;
 import java.util.Map;
 
+// Manejar todas las excepciones de la APP para controlar los erroes
+
 @ControllerAdvice
 public class ApiExceptionHandler {
 

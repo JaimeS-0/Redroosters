@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+// Entidad JPA que representa a un Artista
+
 @Entity
 @Table(name = "artistas")
 public class Artista {

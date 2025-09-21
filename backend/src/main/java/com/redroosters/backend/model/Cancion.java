@@ -2,6 +2,8 @@ package com.redroosters.backend.model;
 
 import jakarta.persistence.*;
 
+// Entidad JPA que representa a un Cancion
+
 @Entity
 @Table(name = "canciones")
 public class Cancion {

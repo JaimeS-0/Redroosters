@@ -14,7 +14,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
 
-// Genera y valida el token
+// Genera y valida el token JWT
 
 @Service
 public class JwtService {

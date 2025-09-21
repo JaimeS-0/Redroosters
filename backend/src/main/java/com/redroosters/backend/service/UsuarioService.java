@@ -10,6 +10,8 @@ import com.redroosters.backend.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+// Logica para registrar un nuevo Usuario
+
 @Service
 public class UsuarioService {
 

@@ -17,6 +17,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+
+// Para loguearse en la app y registrarse
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController implements AuthApi {

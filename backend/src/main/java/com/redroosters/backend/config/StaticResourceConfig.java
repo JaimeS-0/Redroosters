@@ -8,6 +8,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+// Para servir canciones desede una carpeta local del servidor, Se puedan abrir directamente desde
+// el navegador a traves de la ruta /media/audio....
+
 @Configuration
 public class StaticResourceConfig implements WebMvcConfigurer {
 
