@@ -5,6 +5,8 @@ package com.redroosters.backend.dto;
 
 public record EstadisticaEscuchaLikeDTO(
 
-        Long cancionId
-) {
-}
+        Long cancionId,
+        String tituloCancion,
+        String nombreArtista,
+        long total
+) {}

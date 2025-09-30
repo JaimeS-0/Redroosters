@@ -39,6 +39,11 @@ public interface EscuchaRepository extends JpaRepository<Escucha, Long> {
            """)
     List<TopCancionProjection> topGlobal(Pageable pageable);
 
+    // Suma las veces escuchas totales
+    @Query("select coalesce(sum(e.vecesEscuchada), 0) from Escucha e")
+    long sumAllEscuchas();
+
+
     interface TopCancionProjection {
         Long getCancionId();
         Long getTotal();
