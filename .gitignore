@@ -30,3 +30,15 @@ astro.config.*.mjs
 
 /.mvn/
 !.mvn/wrapper/maven-wrapper.jar
+
+
+# Backend
+backend/target/
+backend/uploads/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Base de datos local
+postgres_data/
