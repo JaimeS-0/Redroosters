@@ -1,36 +1,44 @@
 
-# Etapa 1: Construcción del frontend con Astro
 
+# --- DEV: modo desarrollo con Astro y hot reload ---
 
-# Imagen base ligera de Node.js 20
-FROM node:20-alpine3.19 AS build
-
-# Carpeta de trabajo dentro del contenedor
+FROM node:20-alpine AS dev
 WORKDIR /app
 
-# Copio los archivos de dependencias primero
-# Esto permite aprovechar la caché de Docker si no cambian
-COPY package.json package-lock.json* ./
+# Copio los archivos de dependencias
+COPY package*.json ./
 
-# Instalo las dependencias con "npm ci"
-# (instala exactamente lo que está en package-lock.json)
+# Instalo las dependencias con npm ci
 RUN npm ci
 
-# Copio todo el código del frontend al contenedor
+# Copio todo el proyecto al contenedor
 COPY . .
 
-# Compilo el proyecto Astro -> genera la carpeta "dist" con HTML/CSS/JS estáticos
+# Expongo el puerto 3000 (donde corre el servidor de Astro en dev)
+EXPOSE 3000
+
+# Arranco Astro en modo desarrollo, escuchando en todas las IPs
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
+
+
+# --- BUILD: Compilo Astro para producción ---
+
+FROM node:20-alpine AS build
+WORKDIR /app
+
+# Instalo dependencias y compilo el proyecto
+COPY package*.json ./
+RUN npm ci --silent --no-audit --prefer-offline
+COPY . .
 RUN npm run build
 
 
-# Etapa 2: Servir los estáticos con Nginx
+# --- PROD: versión final que sirve los archivos estáticos con Nginx ---
 
-
-# Imagen base de Nginx muy ligera
 FROM nginx:1.27-alpine
 
-# copiamos el build de Astro a la carpeta que sirve nginx
+# Copio el resultado del build a la carpeta que Nginx usa por defecto
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expongo el puerto 80, que es donde Nginx escucha por defecto
+# Expongo el puerto 80, donde escuchará Nginx
 EXPOSE 80

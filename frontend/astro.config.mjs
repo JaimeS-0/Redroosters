@@ -10,10 +10,13 @@ export default defineConfig({
     server: {
       proxy: {
         '/api': {
-          target: 'http://backend:9000', // nombre del servicio docker
+          target: 'http://backend:9000',
           changeOrigin: true,
         },
       },
     },
   },
 });
+
+
+

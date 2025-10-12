@@ -1,10 +1,12 @@
 ---
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
+import HomeHero from "../components/home/HomeHero.astro";
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="home" headerVerLogo={false} mainClass="pt-0">
+	<HomeHero />
 
-	<h1>Esta es la Home</h1>
+	<section class="max-w-6xl mx-auto py-12 h-screen">
+		<!-- Artistas Destacados -->
+	</section>
 </Layout>

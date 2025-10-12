@@ -1,0 +1,67 @@
+<div
+    id="menuFondoNegro"
+    class="fixed inset-0 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300 z-40"
+>
+</div>
+
+<div
+    id="sideMenu"
+    class="fixed top-0 right-0 h-full w-64 bg-black text-white
+         p-6 translate-x-full transition-transform duration-300 z-50
+         flex flex-col gap-5"
+>
+    <div class="flex justify-start">
+        <button
+            id="closeMenu"
+            class="text-white text-2xl hover:text-red-400"
+            aria-label="Cerrar">✕</button
+        >
+    </div>
+
+    <ul class="flex flex-col gap-6 text-lg">
+        <li>
+            <a
+                href="/iniciar-sesion"
+                class="block w-full text-center hover:text-red-400 hover:bg-white/10"
+                >Iniciar sesión</a
+            >
+        </li>
+        <li>
+            <a
+                href=""
+                class="block w-full text-center hover:text-red-400 hover:bg-white/10"
+                >Cerrar Sesión</a
+            >
+        </li>
+
+        <li>
+            <a
+                href="/likes"
+                class="block w-full text-center hover:text-red-400 hover:bg-white/10"
+                >Likes</a
+            >
+        </li>
+        <li>
+            <a
+                href="/panel-admin"
+                class="block w-full text-center hover:text-red-400 hover:bg-white/10"
+                >Panel admin</a
+            >
+        </li>
+        <li>
+            <a
+                href="/mensajes-admin"
+                class="block w-full text-center hover:text-red-400 hover:bg-white/10"
+                >Mensajes admin</a
+            >
+        </li>
+        <li>
+            <a
+                href="/api/swagger-ui/index.html#/"
+                target="_blank"
+                class="block w-full text-center hover:text-red-400 hover:bg-white/10"
+                >Documentacion API</a
+            >
+        </li>
+    </ul>
+</div>

@@ -1,1 +1,23 @@
 @import "tailwindcss";
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: "Avestrava";
+    src: url("/fonts/Avestrava.ttf") format("truetype");
+
+    
+}
+
+/* Crea una clase utilitaria de Tailwind sin tocar el config */
+@layer utilities {
+    .font-avestrava {
+        font-family: "Avestrava", sans-serif;
+    }
+}

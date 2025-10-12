@@ -1,14 +1,30 @@
+---
+import "../styles/global.css";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+
+// Props / propiedades que vienen desde cada página
+const { title = "RedRoosters", headerVerLogo = true } = Astro.props;
+
+// Layout -> envuelve cada página con la estructura común (head, meta, favicon, header/footer).
+
+// Cada página inserta su contenido en <slot />, evitando duplicar codigo.
+---
+
 <!doctype html>
 <html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/public/Favicon_Gallo.webp" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Home</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/jpg" href="img/Logo.jpg" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Red Roosters TV</title>
+        <meta name="description" content="Descubre Artistas y Canciones" />
+    </head>
 
+    <body>
+        <Header verLogo={headerVerLogo} />
+        <slot />
+        <Footer />
+    </body>
+</html>
