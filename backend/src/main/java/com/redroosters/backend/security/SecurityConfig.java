@@ -25,7 +25,8 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtFilter;
     private final CustomUserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+            CustomUserDetailsService userDetailsService) {
         this.jwtFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
     }
@@ -43,8 +44,8 @@ public class SecurityConfig {
                 // Si no hay token o es invalido devolvemos 401
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(
-                                (request, response, authException) ->
-                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")))
+                                (request, response, authException) -> response
+                                        .sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")))
 
                 .authorizeHttpRequests(auth -> auth
 
@@ -52,13 +53,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
 
-                        // Prueba OpenApi
-                        // 👉 Swagger / OpenAPI (correcto)
+                        // OpenApi documentacion
                         .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html"
-                        ).permitAll()
+                                "/api/v3/api-docs/**",
+                                "/api/swagger-ui.html",
+                                "/api/swagger-ui/**")
+                        .permitAll()
+                        // hasRole("ADMIN")
 
                         // Rutas de usuarios registrados
                         .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
@@ -67,10 +68,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
                         // Cualquier otra petición requiere autenticación
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
 
-                // Añadimos nuestro filtro antes del filtro por defecto
+                // Añadimos nuestro filtro antes del filtro por defecto de spring
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .build();
@@ -79,7 +79,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // frontend -> Aqui ira la url real en produccion, el dominio
+        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // frontend -> Aqui ira la url real de
+                                                                           // produccion
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -87,7 +88,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 
     @Bean
     PasswordEncoder passwordEncoder() {
