@@ -11,7 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
         sideMenu.classList.remove("translate-x-full");
         fondoNegro.classList.remove("pointer-events-none", "opacity-0");
         fondoNegro.classList.add("opacity-100");
-        document.body.classList.add("overflow-hidden");
+        //document.body.classList.add("overflow-hidden");
+        
         btnOpen.setAttribute("aria-expanded", "true");
     };
 

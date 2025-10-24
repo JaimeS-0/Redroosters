@@ -8,14 +8,16 @@
     box-sizing: border-box;
 }
 
+/* format le dice al navegador el tipo de fuente que es */
 @font-face {
     font-family: "Avestrava";
     src: url("/fonts/Avestrava.ttf") format("truetype");
 
-    
+
 }
 
-/* Crea una clase utilitaria de Tailwind sin tocar el config */
+/* Clase personalizada de Tailwind
+   para usar la clase "font-avestrava" y para aplicar la fuente  */
 @layer utilities {
     .font-avestrava {
         font-family: "Avestrava", sans-serif;
