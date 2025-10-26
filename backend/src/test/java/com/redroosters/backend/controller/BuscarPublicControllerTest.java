@@ -22,15 +22,12 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * 🧪 TEST BuscarPublicController
- *
- * Este test comprueba el funcionamiento del endpoint público de búsqueda
- * (/api/public/buscar) sin necesidad de levantar el servidor ni usar JWT.
- * Se usa @WebMvcTest para probar solo el controlador de búsqueda,
- * simulando peticiones HTTP con MockMvc.
- */
-@WebMvcTest(
+
+// Este test comprueba el funcionamiento del endpoint público de búsqueda
+// (/api/public/buscar) sin necesidad de levantar el servidor ni usar JWT.
+// Se usa @WebMvcTest para probar solo el controlador de búsqueda,
+// simulando peticiones HTTP con MockMvc.
+ @WebMvcTest(
         controllers = BuscarPublicController.class,
         excludeFilters = {
                 // Excluimos la configuración real de seguridad (JWT) para evitar errores
@@ -49,11 +46,10 @@ class BuscarPublicControllerTest {
     @MockitoBean
     BuscarService buscarService;
 
-    /**
-     * 🔐 Configuración de seguridad mínima usada solo durante este test.
-     * Permite acceso libre a /api/public/** y evita errores 401/403
-     * al no cargar la seguridad JWT real.
-     */
+
+    // Configuración de seguridad mínima usada solo durante este test.
+    // Permite acceso libre a /api/public/** y evita errores 401/403
+    // al no cargar la seguridad JWT real.
     @TestConfiguration
     static class TestSecurityConfig {
         @Bean
@@ -64,17 +60,16 @@ class BuscarPublicControllerTest {
                             .requestMatchers("/api/public/**").permitAll() // rutas públicas permitidas
                             .anyRequest().authenticated() // el resto requiere login
                     )
-                    .httpBasic(Customizer.withDefaults()); // añade auth básica simple si se necesita
+                    .httpBasic(Customizer.withDefaults()); // añade auth básica
             return http.build();
         }
     }
 
-    /**
-     * ✅ Caso de prueba principal:
-     * Comprueba que el endpoint /api/public/buscar devuelve correctamente
-     * la estructura esperada de resultados (artista, álbum, canción)
-     * en formato JSON.
-     */
+
+    // Caso de prueba principal:
+    // Comprueba que el endpoint /api/public/buscar devuelve correctamente
+    // la estructura esperada de resultados (artista, álbum, canción)
+    // en JSON.
     @Test
     void buscar_okEstructuraBasica() throws Exception {
 
@@ -85,7 +80,7 @@ class BuscarPublicControllerTest {
                 new BusquedaDTO(3L, "cancion", "Super Estrella", "Aitana")
         );
 
-        // Simulamos que el servicio devuelve estos resultados cuando se busca "Cuato azul"
+        // Simulamos que el servicio devuelve estos resultados cuando se busca "Cuarto azul"
         when(buscarService.buscar(anyString(), anyInt(), anyInt())).thenReturn(resultados);
 
         // Simulamos una petición GET al endpoint con parámetros q, page y size
