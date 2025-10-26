@@ -13,7 +13,7 @@ const inlineHide = verLogo
 <header
     id="mainHeader"
     class="fixed top-0 left-0 w-full z-50
-         h-14 sm:h-14 md:h-14
+         h-25 sm:h-25 md:h-25
          transition-[background-color,box-shadow] duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
 >
     <nav
@@ -31,7 +31,7 @@ const inlineHide = verLogo
             <li>
                 <a
                     href="/artistas"
-                    class="font-avestrava text-[clamp(25px,5.2vw,40px)] tracking-wide
+                    class="font-avestrava text-[clamp(25px,5.2vw,70px)] tracking-wide
                  text-white hover:text-red-400 transition-colors"
                 >
                     Artistas
@@ -40,7 +40,7 @@ const inlineHide = verLogo
             <li>
                 <a
                     href="/hot"
-                    class="text-white font-avestrava text-[clamp(25px,5.2vw,40px)] tracking-wide
+                    class="text-white font-avestrava text-[clamp(25px,5.2vw,70px)] tracking-wide
                  hover:text-red-400 transition-colors"
                 >
                     Hot
@@ -89,7 +89,7 @@ const inlineHide = verLogo
                 <a
                     href="/nosotros"
                     class="text-white font-avestrava font-medium tracking-wide hover:text-red-400 transition-colors
-                 text-[clamp(25px,5.2vw,40px)]"
+                 text-[clamp(25px,5.2vw,70px)]"
                 >
                     Nosotros
                 </a>
@@ -97,7 +97,7 @@ const inlineHide = verLogo
             <li>
                 <button
                     id="menuBtn"
-                    class="ml-auto text-white hover:text-red-400 transition-colors text-2xl"
+                    class="ml-auto text-white hover:text-red-400 transition-colors text-5xl"
                     aria-label="Abrir menú"
                     aria-expanded="false"
                 >
@@ -120,12 +120,12 @@ const inlineHide = verLogo
 
         if (window.scrollY > 50) {
             header.classList.add(
-                "bg-black/90",
+                "bg-black",
                 "shadow-[0_4px_20px_rgba(0,0,0,0.4)]",
             );
         } else {
             header.classList.remove(
-                "bg-black/90",
+                "bg-black",
                 "shadow-[0_4px_20px_rgba(0,0,0,0.4)]",
             );
         }
