@@ -1,28 +1,91 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import HomeHero from "../components/home/HomeHero.astro";
+
+interface Artista {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  portadaUrl: string;
+  destacado: boolean;
+}
+
+let artistas: Artista[] = [];
+
+try {
+  const res = await fetch("http://backend:9000/api/public/artistas");
+  const data = await res.json();
+
+  // Solo los que vienen marcados como destacados 
+  artistas = (data.content as Artista[])?.filter((a) => a.destacado === true) ?? [];
+} catch (err) {
+  artistas = [];
+}
+
+// rellenar hasta tener siempre 3
+while (artistas.length < 3) {
+  artistas.push({
+    id: -1,
+    nombre: "Proximamente...",
+    descripcion: "Nuevo artista destacado en camino...",
+    portadaUrl: "",
+    	destacado: false,
+  });
+}
+
+// dejar solo 3 artistas
+artistas = artistas.slice(0, 3);
 ---
 
 <Layout title="home" headerVerLogo={false} mainClass="pt-0">
-	<HomeHero />
+  <HomeHero />
 
-	<section
-		class="w-full min-h-dvh bg-cover bg-center bg-no-repeat flex flex-col items-center bg-black"
-		style="background-image: url('/img/Home/FondoMain.webp');"
-	>
-		<h1
-			class="font-avestrava text-[clamp(25px,5.2vw,7rem)] tracking-wide text-white
-         [text-shadow:0_0_7px_black]"
-		>
-			Artistas Destacados
-		</h1>
+  <section
+    class="w-full min-h-dvh bg-cover bg-center bg-no-repeat flex flex-col items-center bg-black gap-10"
+    style="background-image: url('/img/Home/FondoMain.webp');"
+  >
+    <h1
+      class="font-avestrava text-[clamp(25px,5.2vw,7rem)] tracking-wide text-white
+      [text-shadow:0_0_7px_black]"
+    >
+      Artistas Destacados
+    </h1>
 
+    <div class="flex justify-center gap-12 w-full max-w-8xl px-4">
+      {artistas.map((artista, index) => (
 
-		<div>
+        <article
+          class={`bg-slate-100 rounded-xl shadow-xl overflow-hidden transition-transform duration-300 ${
+            index === 1
 			
+			 ? "w-[550px] hover:scale-110"  // central
+			 : "w-[450px] hover:scale-105"	// laterales
+          }  hover:shadow-2xl`}
+        >
+          {/* imagen */}
+          <div class="h-[500px] overflow-hidden">
+			{artista.portadaUrl && artista.id !== -1 ? (
+            <img
+              src={artista.portadaUrl}
+              alt={artista.nombre}
+              class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+            />
+		  ) : null}
+          </div>
 
-		</div>
+          
+          <div class="p-6 text-center space-y-3">
+            <p class="font-semibold text-gray-900 text-xl tracking-wide">
+              {artista.nombre}
+            </p>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              {artista.descripcion}
+            </p>
 
-
-	</section>
+           
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
 </Layout>
