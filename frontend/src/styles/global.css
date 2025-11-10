@@ -23,3 +23,50 @@
         font-family: "Avestrava", sans-serif;
     }
 }
+
+/* Toggle login / registro */
+
+/* Cuando el checkbox está activado... */
+#authToggle:checked+.selector-row .toggle-track {
+    background-color: #ef4444;
+}
+
+#authToggle:checked+.selector-row .toggle-thumb {
+
+    /* movemos el circulito a la derecha */
+    transform: translateX(1.5rem);
+}
+
+#authToggle:checked+.selector-row .login-label {
+
+    /* "Iniciar sesión" apagado */
+    color: #6b7280;
+}
+
+#authToggle:checked+.selector-row .register-label {
+
+    /* "Registrarme" destacado */
+    color: #000000;
+
+}
+
+
+/* Línea roja con animacion suave */
+
+/* Estado inicial: debajo de "Iniciar sesión" */
+.underline-slide {
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 110px;
+    height: 3px;
+    background-color: #ef4444;
+    border-radius: 9999px;
+    transition: left 0.5s ease, width 0.35s ease;
+}
+
+/* Cuando se marca el toggle: mover debajo de "Registrarme" */
+#authToggle:checked+.selector-row .underline-slide {
+    left: 180px;
+    width: 120px;
+}

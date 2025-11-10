@@ -9,21 +9,12 @@ import jakarta.validation.constraints.Size;
 
 public record RegistroRequestDTO(
 
-        @NotBlank(message = "El nombre de usuario es obligatorio.")
-        @Size(min = 3, max = 15, message = "Debe tene entre 3 y 15 caracteres.")
-        @Pattern(
-                regexp = "^[A-Za-z][A-Za-z0-9_-]{2,14}$",
-                message = "El usuario debe empezar con una letra y solo puede contener letras, números y guiones"
-        )
-        String name,
+                @NotBlank(message = "El nombre de usuario es obligatorio.") @Size(min = 3, max = 15, message = "Debe tene entre 3 y 15 caracteres.") @Pattern(regexp = "^[A-Za-z][A-Za-z0-9_-]{2,14}$", message = "El usuario debe empezar con una letra y solo puede contener letras, números y guiones") String name,
 
-        @NotBlank(message = "El email es obligatorio.")
-        @Email(message = "Debe ser un email válido.")
-        String email,
+                @NotBlank(message = "El email es obligatorio.") @Email(message = "Debe ser un email válido.") String email,
 
-        @NotBlank(message = "La contrasela es obligatoria.")
-        @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres.")
-        String password
+                @NotBlank(message = "La contrasela es obligatoria.") @Size(min = 10, message = "La contraseña debe tener al menos 10 caracteres.") String password
 
-        // El campo confirmar password se hace solo en el frontend
-) {}
+// El campo confirmar password se hace solo en el frontend
+) {
+}

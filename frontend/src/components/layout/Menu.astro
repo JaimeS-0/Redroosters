@@ -21,17 +21,21 @@
     <ul class="flex flex-col gap-6 text-lg">
         <li>
             <a
-                href="/iniciar-sesion"
+                href="/login"
                 class="block w-full text-center hover:text-red-400 hover:bg-white/10"
-                >Iniciar sesión</a
             >
+                Iniciar sesión
+            </a>
         </li>
+
         <li>
             <a
-                href=""
+                href="#"
+                id="logoutLink"
                 class="block w-full text-center hover:text-red-400 hover:bg-white/10"
-                >Cerrar Sesión</a
             >
+                Cerrar sesión
+            </a>
         </li>
 
         <li>
@@ -65,3 +69,84 @@
         </li>
     </ul>
 </aside>
+
+<!-- Modal de confirmacion Cerrar sesion -->
+<div
+    id="logoutModal"
+    tabindex="-1"
+    class="hidden fixed inset-0 z-50 justify-center items-center w-full h-full bg-black/60 backdrop-blur-sm"
+>
+    <div class="w-full max-w-md mx-auto px-6 sm:px-8 my-16 sm:my-24">
+        <div
+            class="relative bg-gradient-to-b from-gray-950 to-gray-900 rounded-3xl
+             shadow-[0_0_35px_rgba(255,0,0,0.15)] border border-red-500/30 text-white"
+        >
+            <button
+                id="closeLogoutModal"
+                type="button"
+                class="absolute top-4 right-4 text-gray-400 hover:text-red-400 transition-colors"
+            >
+                ✕
+            </button>
+
+            <!-- Contenido -->
+            <div
+                class="px-10 pt-16 pb-16 md:px-12 md:pt-20 md:pb-20
+         text-center flex flex-col items-center gap-8"
+            >
+                <!-- Icono -->
+                <div
+                    class="w-16 h-16 flex items-center justify-center rounded-full
+           bg-red-600/20 text-red-400 border border-red-500/30"
+                >
+                    <svg
+                        class="w-8 h-8"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-3A2.25 2.25 0 008.25 5.25V9m7.5 0H8.25m7.5 0v10.5a2.25 2.25 0 01-2.25 2.25h-3a2.25 2.25 0 01-2.25-2.25V9m7.5 0H8.25"
+                        ></path>
+                    </svg>
+                </div>
+
+                <h3 id="logoutModalTitle" class="text-2xl font-semibold">
+                    ¿Cerrar sesión?
+                </h3>
+
+                <p
+                    id="logoutModalText"
+                    class="text-gray-400 leading-relaxed text-base max-w-sm mb-8"
+                >
+                    Tu sesión se cerrará y volverás a la página de inicio.
+                </p>
+
+                <!-- Botones -->
+                <div
+                    class="flex flex-col sm:flex-row gap-4 justify-center w-full mt-4 mb-4"
+                >
+                    <button
+                        id="cancelLogout"
+                        type="button"
+                        class="flex-1 px-5 py-3 rounded-lg border border-gray-600
+             bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium transition-all"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        id="confirmLogout"
+                        type="button"
+                        class="flex-1 px-5 py-3 rounded-lg bg-red-600 hover:bg-red-700
+             focus:ring-4 focus:ring-red-500/40 text-white font-semibold transition-all"
+                    >
+                        Sí, cerrar sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

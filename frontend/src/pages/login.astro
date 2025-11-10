@@ -1,0 +1,119 @@
+---
+import Layout from "../layouts/Layout.astro";
+import InicioSesion from "../components/login/InicioSesion.astro";
+import Registro from "../components/login/Registro.astro";
+---
+
+<Layout title="login" headerVerLogo={true} headerFondoNegro={true}>
+    <main
+        class="min-h-screen flex flex-col justify-center bg-transparent pt-12 pb-30 md:pt-16 md:pb-35 xl:pb-40"
+    >
+        <!-- Contenedor -->
+        <div class="w-full flex flex-col items-center gap-8">
+            <h1
+                id="tituloLogin"
+                class="text-1xl md:text-2xl max-w-xl text-center text-black"
+            >
+                👋🏻 Registrate para guardar tus canciones favoritas
+            </h1>
+
+            <input id="authToggle" type="checkbox" class="sr-only peer" />
+
+            <div
+                class="selector-row relative flex items-center gap-4 text-lg font-semibold text-black"
+            >
+                <span class="login-label transition-all duration-300">
+                    Iniciar sesión
+                </span>
+
+                <!-- Switch -->
+                <label
+                    for="authToggle"
+                    class="relative inline-flex items-center cursor-pointer"
+                >
+                    <div
+                        class="toggle-track w-12 h-6 bg-gray-500 rounded-full
+             transition-colors duration-300"
+                    >
+                    </div>
+
+                    <div
+                        class="toggle-thumb absolute left-[2px] top-[2px] bg-white w-5 h-5 rounded-full
+             transition-transform duration-300"
+                    >
+                    </div>
+                </label>
+
+                <span
+                    class="register-label text-gray-400 transition-colors duration-300"
+                >
+                    Registrarme
+                </span>
+
+                <span
+                    class="underline-slide absolute bottom-[-8px] left-0 h-[3px] w-[110px] bg-red-500 rounded-full transition-all duration-500"
+                ></span>
+            </div>
+
+            <!-- Tarjeta que gira -->
+            <div
+                class="flip-card relative w-full max-w-xl min-h-[520px]
+               mt-6 mb-40
+               transition-transform duration-1000
+               [transform-style:preserve-3d]
+               peer-checked:[transform:rotateY(180deg)]"
+            >
+                <div class="absolute inset-0 [backface-visibility:hidden]">
+                    <InicioSesion />
+                </div>
+
+                <div
+                    class="absolute inset-0 [transform:rotateY(180deg)]
+                 [backface-visibility:hidden]"
+                >
+                    <Registro />
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const titulo = document.getElementById("tituloLogin");
+
+        if (!titulo) return;
+
+        // Leemos el user del localStorage
+        const userData = localStorage.getItem("rr_user");
+
+        if (!userData) {
+            // No hay sesion no hacemos nada
+            return;
+        }
+
+        let user;
+        try {
+            user = JSON.parse(userData);
+        } catch (e) {
+            // console.error("Error parseando rr_user:", e);
+            return;
+        }
+
+        // leemos el token de la cookie
+        const tokenMatch = document.cookie.match(/rr_token=([^;]+)/);
+        const token = tokenMatch ? tokenMatch[1] : null;
+
+        // console.log("-> user:", user, "token:", token)
+
+        // Si existe usuario, cambiamos el texto
+        titulo.textContent = user.username
+            ? `👋🏻 ¡Bienvenido, ${user.username}! ya has iniciado sesión`
+            : "👋🏻 ¡Bienvenido de nuevo!";
+    });
+</script>
+
+<script src="/src/scripts/login/verContraseñaLogin.js"></script>
+<script src="/src/scripts/login/enlacesAncla.js"></script>
+<script src="/src/scripts/login/authRegister.js"></script>
+<script src="/src/scripts/login/authLogin.js"></script>
