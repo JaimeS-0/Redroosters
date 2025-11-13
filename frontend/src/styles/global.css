@@ -16,6 +16,7 @@
 
 }
 
+
 /* Clase personalizada de Tailwind
    para usar la clase "font-avestrava" y para aplicar la fuente  */
 @layer utilities {
@@ -23,6 +24,22 @@
         font-family: "Avestrava", sans-serif;
     }
 }
+
+/* Fuente para el panel de Administracion */
+@font-face {
+    font-family: 'MaximumVoltage';
+    src: url('/fonts/MaximumVoltageItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Clase personalizada para MaximumVoltage Tailwind */
+@layer utilities {
+    .font-maximum {
+        font-family: "MaximumVoltage", sans-serif;
+    }
+}
+
 
 /* Toggle login / registro */
 

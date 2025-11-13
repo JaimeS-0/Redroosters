@@ -1,0 +1,125 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+import ArtistasPanel from "../components/panelAdmin/ArtistasPanel.astro";
+//import CancionesPanel from "../components/admin/CancionesPanel.astro";
+//import AlbumsPanel from "../components/admin/AlbumsPanel.astro";
+---
+
+<Layout title="Panel de Administracion">
+    <main class="bg-black min-h-screen flex items-center justify-start gap-30">
+        <div
+            class="translate-x-30 inline-block w-[320px] rounded-3xl border border-gray-700
+             bg-gradient-to-b from-gray-800 to-gray-700 px-0 py-0
+             shadow-[0_0_35px_rgba(255,0,0,0.15)] overflow-hidden
+             flex-col gap-12 mt-12 pt-12"
+        >
+            <div class="h-5"></div>
+
+            <div class="relative flex justify-center pt-6">
+                <span
+                    class="font-maximum text-4xl text-red-600 absolute translate-x-[4px] translate-y-[3px] select-none"
+                    aria-hidden="true">MENÚ</span
+                >
+                <span class="font-maximum text-4xl text-white relative"
+                    >MENÚ</span
+                >
+            </div>
+            <div class="h-10"></div>
+
+            <!-- btn para cambiar vista -->
+            <ul class="flex flex-col w-full divide-y border-b text-white">
+                <li>
+                    <button
+                        type="button"
+                        data-target="vista-artistas"
+                        class="w-full py-6 text-2xl font-maximum text-white hover:bg-gray-600/30 cursor-pointer sidebar-btn active"
+                    >
+                        ARTISTA
+                    </button>
+                </li>
+                <li>
+                    <button
+                        type="button"
+                        data-target="vista-canciones"
+                        class="w-full py-6 text-2xl font-maximum text-white hover:bg-gray-600/30 cursor-pointer sidebar-btn"
+                    >
+                        CANCIÓN
+                    </button>
+                </li>
+                <li>
+                    <button
+                        type="button"
+                        data-target="vista-albums"
+                        class="w-full py-6 text-2xl font-maximum text-white hover:bg-gray-600/30 cursor-pointer sidebar-btn"
+                    >
+                        ÁLBUM
+                    </button>
+                </li>
+                <li>
+                    <button
+                        type="button"
+                        data-target="vista-estadisticas"
+                        class="w-full py-6 text-2xl font-maximum text-white hover:bg-gray-600/30 cursor-pointer sidebar-btn"
+                    >
+                        ESTADÍSTICAS
+                    </button>
+                </li>
+            </ul>
+            <div class="h-6"></div>
+        </div>
+
+        <section
+            id="contenido"
+            class="flex-1 min-h-[100vh] flex items-center justify-center"
+        >
+            <!-- Tarjeta central -->
+            <div
+                class="w-full max-w-5xl min-h-[60vh] rounded-2xl border border-gray-700
+           bg-gradient-to-b from-gray-900/60 to-gray-800/60
+           backdrop-blur-sm shadow-[0_0_40px_rgba(255,0,0,0.18)]
+           p-10 scale-[1.05]"
+            >
+                <div id="vista-artistas" class="block w-full">
+                    <ArtistasPanel base="/api/admin/artistas" />
+                </div>
+
+                <div id="vista-canciones" class="hidden w-full"></div>
+                <div id="vista-albums" class="hidden w-full"></div>
+                <div id="vista-estadisticas" class="hidden w-full">
+                    <h2 class="text-white text-3xl text-center">
+                        salen Estadisticas
+                    </h2>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Menu btn de las vistas -->
+    <script>
+        const btns = Array.from(document.querySelectorAll(".sidebar-btn"));
+        const views = Array.from(
+            document.querySelectorAll('#contenido div[id^="vista-"]'),
+        );
+
+        function setActive(id) {
+            btns.forEach((b) => b.classList.remove("active"));
+            const current = btns.find(
+                (b) => b.getAttribute("data-target") === id,
+            );
+            if (current) current.classList.add("active");
+
+            views.forEach((v) => v.classList.toggle("hidden", v.id !== id));
+        }
+
+        btns.forEach((b) =>
+            b.addEventListener("click", () =>
+                setActive(b.getAttribute("data-target")),
+            ),
+        );
+
+        const style = document.createElement("style");
+        style.textContent = `.sidebar-btn.active{background:rgba(255,255,255,.08)}`;
+        document.head.appendChild(style);
+    </script>
+</Layout>

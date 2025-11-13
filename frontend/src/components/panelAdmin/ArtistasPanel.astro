@@ -1,0 +1,232 @@
+---
+export interface Props {
+    base?: string;
+}
+const { base = "/api/admin/artistas" } = Astro.props;
+
+// id único para aislar el script y no pisar otros componentes
+const uid = "artistas-" + Math.random().toString(36).slice(2);
+---
+
+<section
+    id={uid}
+    data-uid={uid}
+    data-base={base}
+    class="w-full min-h-[60vh] flex items-center justify-center px-6"
+>
+    <!-- Tarjeta -->
+    <div
+        class="w-full min-h-[50vh] max-w-4xl rounded-2xl border border-gray-700
+              bg-gradient-to-b from-gray-900/60 to-gray-800/60
+              shadow-[0_0_40px_rgba(255,0,0,0.18)] backdrop-blur-sm
+              p-6 md:p-10 space-y-10"
+    >
+        <!-- Título -->
+        <div class="relative flex justify-center mb-10">
+            <h1 class="text-white text-2xl md:text-5xl tracking-wide">
+                ARTISTAS
+            </h1>
+        </div>
+
+        <!-- Tabs -->
+        <div class="h-14 md:h-14"></div>
+
+        <!-- BOTONES -->
+        <div
+            class="flex flex-wrap justify-center gap-8 mb-7 pb-4 border-b border-gray-700/50"
+        >
+            <button
+                data-tab="crear"
+                type="button"
+                class="tab min-w-[140px] px-6 py-3 rounded-full border text-lg bg-gray-800/60 text-white/80 border-gray-700 shadow-md hover:bg-gray-700 hover:text-white hover:scale-105"
+                >Crear</button
+            >
+            <button
+                data-tab="editar"
+                type="button"
+                class="tab min-w-[140px] px-6 py-3 rounded-full border text-lg bg-gray-800/60 text-white/80 border-gray-700 shadow-md hover:bg-gray-700 hover:text-white hover:scale-105"
+                >Editar</button
+            >
+            <button
+                data-tab="eliminar"
+                type="button"
+                class="tab min-w-[140px] px-6 py-3 rounded-full border text-lg bg-gray-800/60 text-white/80 border-gray-700 shadow-md hover:bg-gray-700 hover:text-white hover:scale-105"
+                >Eliminar</button
+            >
+        </div>
+
+        <div class="h-14 md:h-20"></div>
+
+        <!-- CREAR -->
+        <div data-panel="crear" class="block mt-8">
+            <form
+                data-form="crear"
+                class="space-y-4 bg-gray-800/60 p-6 rounded-xl border border-white/10"
+            >
+                <div>
+                    <label class="block text-sm text-gray-300 mb-1"
+                        >Nombre</label
+                    >
+                    <input
+                        name="nombre"
+                        class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                   border border-white/10 focus:outline-none
+                   focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                        required
+                    />
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 mb-1"
+                        >Descripcion</label
+                    >
+                    <textarea
+                        name="descripcion"
+                        class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                   border border-white/10 focus:outline-none
+                   focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                    ></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 mb-1"
+                        >Portada URL</label
+                    >
+                    <input
+                        name="portadaUrl"
+                        class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                   border border-white/10 focus:outline-none
+                   focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                    />
+                </div>
+                <div class="flex items-center gap-2">
+                    <input
+                        id={`destacado-${uid}`}
+                        type="checkbox"
+                        name="destacado"
+                        class="size-4"
+                    />
+                    <label for={`destacado-${uid}`} class="text-gray-300"
+                        >Destacado</label
+                    >
+                </div>
+
+                <button
+                    class="px-5 py-3 rounded-xl bg-red-600 text-white hover:bg-red-500 active:scale-[.98] transition"
+                >
+                    Crear artista
+                </button>
+                <p data-msg="crear" class="text-sm text-gray-300 mt-2"></p>
+            </form>
+        </div>
+
+        <!-- EDITAR -->
+        <div data-panel="editar" class="hidden">
+            <form
+                data-form="editar"
+                class="space-y-4 bg-gray-800/60 p-6 rounded-xl border border-white/10"
+            >
+                <div>
+                    <label class="block text-sm text-gray-300 mb-1"
+                        >ID Artista</label
+                    >
+                    <input
+                        name="id"
+                        class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white border border-white/10
+                   focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                        required
+                    />
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 mb-1"
+                        >Nuevo nombre</label
+                    >
+                    <input
+                        name="nombre"
+                        class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white border border-white/10
+                 focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                    />
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 mb-1"
+                        >Nueva descripcion</label
+                    >
+                    <textarea
+                        name="descripcion"
+                        class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white border border-white/10
+                 focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                    ></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 mb-1"
+                        >Nueva portada URL</label
+                    >
+                    <input
+                        name="portadaUrl"
+                        class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white border border-white/10
+                 focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                    />
+                </div>
+                <div class="flex items-center gap-2">
+                    <input
+                        id={`destacadoEdit-${uid}`}
+                        type="checkbox"
+                        name="destacado"
+                        class="size-4"
+                    />
+                    <label for={`destacadoEdit-${uid}`} class="text-gray-300"
+                        >Destacado</label
+                    >
+                </div>
+
+                <button
+                    class="px-5 py-3 rounded-xl bg-yellow-600 text-white hover:bg-yellow-500 active:scale-[.98] transition"
+                >
+                    Guardar cambios
+                </button>
+                <p data-msg="editar" class="text-sm text-gray-300 mt-2"></p>
+            </form>
+        </div>
+
+        <!-- ELIMINAR -->
+        <div data-panel="eliminar" class="hidden">
+            <form
+                data-form="eliminar"
+                class="space-y-4 bg-gray-800/60 p-6 rounded-xl border border-white/10"
+            >
+                <div>
+                    <label class="block text-sm text-gray-300 mb-1"
+                        >ID Artista</label
+                    >
+                    <input
+                        name="id"
+                        class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white border border-white/10
+                   focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                        required
+                    />
+                </div>
+
+                <button
+                    class="px-5 py-3 rounded-xl bg-gray-600 text-white hover:bg-gray-500 active:scale-[.98] transition"
+                >
+                    Eliminar
+                </button>
+                <p data-msg="eliminar" class="text-sm text-gray-300 mt-2"></p>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="/src/scripts/admin/adminArtistas.js"></script>
+
+<!-- Prueba -->
+<style is:global>
+    .tab {
+        transition: all 0.3s ease;
+    }
+    .tab.active {
+        background: rgba(220, 38, 38, 0.8) !important;
+        color: #fff !important;
+        border-color: rgb(239 68 68);
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+    }
+</style>
