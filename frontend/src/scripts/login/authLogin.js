@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const data = await res.json()
-            //console.log("✅ Login correcto:", data)
+            console.log("✅ Login correcto:", data)
 
             if (mensajeLogin) {
                 mensajeLogin.textContent = "Te has Logueado correctamente."
@@ -105,19 +105,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
             document.cookie = `rr_token=${data.token}; path=/; max-age=86400`
 
+            localStorage.setItem("token", data.token);
+
             localStorage.setItem(
                 "rr_user",
                 JSON.stringify({
                     username: data.username,
                     email: data.email,
-                    role: data.role,
+                    role: data.role
                 })
             );
 
             // esperar 200 ms antes de redirigir
+            /*
             setTimeout(() => {
                 window.location.href = "/"
             }, 200)
+            */
 
         } catch (err) {
             console.error(err);

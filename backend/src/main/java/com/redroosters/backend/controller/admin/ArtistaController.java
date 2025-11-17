@@ -1,47 +1,119 @@
 package com.redroosters.backend.controller.admin;
 
-import com.redroosters.backend.docs.admin.ArtistaAdminApi;
 import com.redroosters.backend.dto.ArtistaRequestDTO;
 import com.redroosters.backend.dto.ArtistaResponseDTO;
+import com.redroosters.backend.service.AlmacenamientoService;
 import com.redroosters.backend.service.ArtistaService;
-import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+
 
 // Crear, Editar, Eliminar Artista
-
 @RestController
 @RequestMapping("/api/admin")
-public class ArtistaController implements ArtistaAdminApi {
+public class ArtistaController  {
 
     private final ArtistaService artistaService;
+    private final AlmacenamientoService almacenamientoService;
 
-    public ArtistaController(ArtistaService artistaService) {
+    public ArtistaController(ArtistaService artistaService,
+                             AlmacenamientoService almacenamientoService) {
         this.artistaService = artistaService;
+        this.almacenamientoService = almacenamientoService;
     }
 
-    // Crear artista
-    @PostMapping("/artistas")
-    @Override
-    public ResponseEntity<ArtistaResponseDTO> crearArtista(@RequestBody @Valid ArtistaRequestDTO dto) {
+    @PostMapping(
+            value = "/artistas",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<ArtistaResponseDTO> crearArtista(
+            @RequestPart("nombre") String nombre,
+            @RequestPart(value = "descripcion", required = false) String descripcion,
+            @RequestPart(value = "destacado", required = false) String destacadoStr,
+            @RequestPart(value = "portada", required = false) MultipartFile portada
+    ) {
+
+        boolean destacado = false;
+        if (destacadoStr != null) {
+            destacado = Boolean.parseBoolean(destacadoStr);
+        }
+
+        String portadaUrl = null;
+        if (portada != null && !portada.isEmpty()) {
+            portadaUrl = almacenamientoService.guardarPortada(portada);
+        }
+
+        // Por si urlNombre es NOT NULL en la BBDD:
+        String urlNombre = nombre
+                .toLowerCase()
+                .replace(" ", "-")
+                .replaceAll("[^a-z0-9\\-]", "");
+
+        ArtistaRequestDTO dto = new ArtistaRequestDTO(
+                nombre,
+                urlNombre,
+                descripcion,
+                portadaUrl,
+                destacado
+        );
+
         ArtistaResponseDTO creado = artistaService.crearArtista(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(creado);
     }
 
-    // Editar artista
-    @PutMapping("/artistas/{id}")
-    @Override
+    // Editar artista (con posible nueva portada)
+    @PutMapping(
+            value = "/artistas/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ResponseEntity<ArtistaResponseDTO> editarArtista(
             @PathVariable Long id,
-            @RequestBody @Valid ArtistaRequestDTO dto
+            @RequestPart("nombre") String nombre,
+            @RequestPart(value = "descripcion", required = false) String descripcion,
+            @RequestPart(value = "destacado", required = false) String destacadoStr,
+            @RequestPart(value = "portada", required = false) MultipartFile portada
     ) {
-        return ResponseEntity.ok(artistaService.editar(id, dto));
+
+        boolean destacado = false;
+        if (destacadoStr != null) {
+            destacado = Boolean.parseBoolean(destacadoStr);
+        }
+
+        // Si viene una nueva portada, la guardamos y usamos esa URL.
+        // Si NO viene archivo, dejamos portadaUrl = null para NO tocar la portada actual.
+        String portadaUrl = null;
+        if (portada != null && !portada.isEmpty()) {
+            portadaUrl = almacenamientoService.guardarPortada(portada);
+        }
+
+        // Generamos urlNombre igual que en crear
+        String urlNombre = nombre
+                .toLowerCase()
+                .replace(" ", "-")
+                .replaceAll("[^a-z0-9\\-]", "");
+
+        ArtistaRequestDTO dto = new ArtistaRequestDTO(
+                nombre,
+                urlNombre,
+                descripcion,
+                portadaUrl,   // puede ser null -> significa "no cambies la portada"
+                destacado
+        );
+
+        ArtistaResponseDTO actualizado = artistaService.editar(id, dto);
+        return ResponseEntity.ok(actualizado);
     }
+
 
     // Eliminar artista
     @DeleteMapping("/artistas/{id}")
-    @Override
+    //@Override
     public ResponseEntity<Void> eliminarArtista(@PathVariable Long id) {
         artistaService.eliminar(id);
         return ResponseEntity.noContent().build();

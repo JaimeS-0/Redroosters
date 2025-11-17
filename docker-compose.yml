@@ -37,6 +37,8 @@ services:
       - "${BACK_PORT}:${BACK_PORT}"
     volumes:
       - redroosters_audio:/app/uploads/audio
+      - redroosters_portadas:/app/uploads/portadas
+
     depends_on:
       - db
 
@@ -66,6 +68,8 @@ services:
       - "${NGINX_PORT}:${NGINX_PORT}"  
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - redroosters_portadas:/app/uploads/portadas:ro  # 👈 para que Nginx vea las imágenes
+
     depends_on:
       - frontend
       - backend
@@ -73,4 +77,5 @@ services:
 volumes:
   postgres_data:
   redroosters_audio:
+  redroosters_portadas:
 

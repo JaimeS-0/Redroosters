@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     mensajeRegistro.textContent = "Te has registrado correctamente. Ahora puedes iniciar sesión."
                     mensajeRegistro.className = "text-green-500 text-center mt-4"
                 }
-                
+
 
                 const toggle = document.getElementById("authToggle")
                 if (toggle) toggle.checked = false

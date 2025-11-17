@@ -13,6 +13,9 @@
     "tailwindcss": "^4.1.14"
   },
   "devDependencies": {
-    "astro": "^5.14.1"
+    "@types/debug": "^4.1.12",
+    "@types/estree": "^1.0.8",
+    "@types/fontkit": "^2.0.8",
+    "astro": "^5.15.8"
   }
 }

@@ -8,14 +8,14 @@ export default defineConfig({
     plugins: [tailwindcss()],
     server: {
       proxy: {
-        '/api': {
+        '/api/': {
           target: 'http://backend:9000',
           changeOrigin: true,
         },
       },
     },
   },
-  
+
 });
 
 
