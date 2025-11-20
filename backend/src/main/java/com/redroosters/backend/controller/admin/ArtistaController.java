@@ -74,7 +74,7 @@ public class ArtistaController  {
     )
     public ResponseEntity<ArtistaResponseDTO> editarArtista(
             @PathVariable Long id,
-            @RequestPart("nombre") String nombre,
+            @RequestPart(value = "nombre", required = false) String nombre,
             @RequestPart(value = "descripcion", required = false) String descripcion,
             @RequestPart(value = "destacado", required = false) String destacadoStr,
             @RequestPart(value = "portada", required = false) MultipartFile portada
@@ -85,30 +85,31 @@ public class ArtistaController  {
             destacado = Boolean.parseBoolean(destacadoStr);
         }
 
-        // Si viene una nueva portada, la guardamos y usamos esa URL.
-        // Si NO viene archivo, dejamos portadaUrl = null para NO tocar la portada actual.
         String portadaUrl = null;
         if (portada != null && !portada.isEmpty()) {
             portadaUrl = almacenamientoService.guardarPortada(portada);
         }
 
-        // Generamos urlNombre igual que en crear
-        String urlNombre = nombre
-                .toLowerCase()
-                .replace(" ", "-")
-                .replaceAll("[^a-z0-9\\-]", "");
+        String urlNombre = null;
+        if (nombre != null && !nombre.isBlank()) {
+            urlNombre = nombre
+                    .toLowerCase()
+                    .replace(" ", "-")
+                    .replaceAll("[^a-z0-9\\-]", "");
+        }
 
         ArtistaRequestDTO dto = new ArtistaRequestDTO(
                 nombre,
                 urlNombre,
                 descripcion,
-                portadaUrl,   // puede ser null -> significa "no cambies la portada"
+                portadaUrl,   // null = no tocar portada si así lo decides en el servicio
                 destacado
         );
 
         ArtistaResponseDTO actualizado = artistaService.editar(id, dto);
         return ResponseEntity.ok(actualizado);
     }
+
 
 
     // Eliminar artista

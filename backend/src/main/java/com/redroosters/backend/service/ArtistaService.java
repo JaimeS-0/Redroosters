@@ -78,21 +78,36 @@ public class ArtistaService {
     // Privado ADMIN
     public ArtistaResponseDTO editar(Long id, ArtistaRequestDTO dto) {
 
-        // Buscar artista para editar
         Artista existente = artistaRepository.findById(id)
                 .orElseThrow(() -> new ArtistaNotFoundException(id));
 
-        // Actualizar los campos
-        existente.setNombre(dto.nombre());
-        existente.setDescripcion(dto.descripcion());
-        existente.setPortadaUrl(dto.portadaUrl());
+        // Solo cambiar nombre si viene
+        if (dto.nombre() != null && !dto.nombre().isBlank()) {
+            existente.setNombre(dto.nombre());
+
+            // Si tambien viene urlNombre, lo actualizamos
+            if (dto.urlNombre() != null && !dto.urlNombre().isBlank()) {
+                existente.setUrlNombre(dto.urlNombre());
+            }
+        }
+
+        // Solo cambiar descripcion si viene
+        if (dto.descripcion() != null) {
+            existente.setDescripcion(dto.descripcion());
+        }
+
+        // Solo cambiar portada si viene una nueva URL
+        if (dto.portadaUrl() != null) {
+            existente.setPortadaUrl(dto.portadaUrl());
+        }
+
+        // Destacado lo actualizamos siempre (el front siempre lo manda)
         existente.setDestacado(dto.destacado());
 
-        // Guardar cambios
         Artista actualizado = artistaRepository.save(existente);
-
         return artistaMapper.toDTO(actualizado);
     }
+
 
     // Privado ADMIN
     public void eliminar(Long id) {
