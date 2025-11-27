@@ -262,6 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         hayError = true;
                     }
 
+
                     if (!(audioFile instanceof File) || audioFile.size === 0) {
                         setFieldError(formCrear, "audio", "Debes seleccionar un archivo de audio (.mp3)");
                         hayError = true;
@@ -427,7 +428,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (formEliminar && selCancionEliminar) {
             formEliminar.addEventListener("submit", async (e) => {
                 e.preventDefault();
+
                 if (!baseEliminar) return;
+
+                if (msgEliminar) {
+                    msgEliminar.textContent = "";
+                    msgEliminar.style.color = "";
+                    msgEliminar.classList.remove("text-red-400");
+                }
+
 
                 clearFieldErrors(formEliminar);
 
@@ -438,16 +447,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     setFieldError(formEliminar, "eliminar", "Selecciona una cancion");
                     hayError = true;
                 }
-
-                if (hayError) {
-                    setMsg(msgEditar, false, "Revisa los campos marcados en rojo");
-                    return;
-                }
-
-                const ok = window.confirm(
-                    "¿Seguro que quieres eliminar esta cancion?"
-                );
-                if (!ok) return;
 
                 try {
                     await fetchAdmin(`${baseEliminar}/${id}`, {

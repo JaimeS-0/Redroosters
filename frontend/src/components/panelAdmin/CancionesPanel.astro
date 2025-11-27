@@ -113,12 +113,12 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
 
                         <div class="flex flex-col gap-2">
                             <label class="block text-sm text-gray-300"
-                                >Descripcion</label
+                                >Descripcion (max 255)</label
                             >
                             <textarea
                                 name="descripcion"
-                                rows={3}
-                                maxlength="500"
+                                rows={4}
+                                maxlength="255"
                                 class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
                                        border border-white/10 focus:outline-none
                                        focus:ring-2 focus:ring-red-500/40 focus:border-red-400 resize-y"
@@ -228,7 +228,7 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                                hover:bg-red-600 active:scale-[.98] hover:scale-105
                                transition cursor-pointer"
                     >
-                        Crear cancion
+                        Crear canción
                     </button>
                 </div>
 
@@ -249,7 +249,7 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                 <!-- Seleccionar cancion -->
                 <div class="flex flex-col gap-3">
                     <label class="block text-sm text-gray-300">
-                        Selecciona una cancion *
+                        Selecciona una canción *
                     </label>
                     <select
                         id="select-cancion-editar"
@@ -259,7 +259,7 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                                border border-white/10 focus:outline-none
                                focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
                     >
-                        <option value="">Selecciona una cancion</option>
+                        <option value="">Selecciona una canción</option>
                     </select>
                     <p data-error="cancionId" class="text-xs text-red-400 mt-1">
                     </p>
@@ -282,12 +282,11 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
 
                         <div class="flex flex-col gap-2">
                             <label class="text-sm text-gray-300">
-                                Nueva descripcion
+                                Nueva descripcion (max 255)
                             </label>
                             <textarea
                                 name="descripcion"
-                                rows={3}
-                                maxlength="500"
+                                rows={4}
                                 class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
                                        border border-white/10 focus:outline-none
                                        focus:ring-2 focus:ring-red-500/40 focus:border-red-400 resize-y"
@@ -401,7 +400,11 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
         </div>
 
         <!-- PANEL ELIMINAR -->
-        <div data-panel="eliminar" class="hidden mt-2">
+        <div
+            data-panel="eliminar"
+            data-delete-type="cancion"
+            class="hidden mt-2"
+        >
             <form
                 data-form="eliminar"
                 class="space-y-6 bg-gray-800/60 p-6 md:p-8 rounded-xl border border-white/10"
@@ -414,11 +417,12 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                         id="select-cancion-eliminar"
                         name="eliminar"
                         data-select-cancion="eliminar"
+                        data-delete-select
                         class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
                                border border-white/10 focus:outline-none
                                focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
                     >
-                        <option value="">Selecciona una cancion</option>
+                        <option value="">Selecciona una canción</option>
                     </select>
                     <p data-error="eliminar" class="text-xs text-red-400 mt-1">
                     </p>
@@ -427,10 +431,12 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
 
                 <div class="flex justify-center items-center pt-6">
                     <button
+                        type="button"
+                        data-delete-trigger
                         class="px-6 py-3 rounded-xl bg-red-600 text-white font-medium
                                hover:bg-red-500 active:scale-[.98] transition cursor-pointer hover:scale-105"
                     >
-                        Eliminar cancion
+                        Eliminar canción
                     </button>
                 </div>
 

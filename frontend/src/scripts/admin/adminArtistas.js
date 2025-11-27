@@ -284,6 +284,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (formEliminar && selArtistaEliminar) {
             formEliminar.addEventListener("submit", async (e) => {
                 e.preventDefault();
+
+                console.log("[adminArtistas] submit eliminar artista");
+
+
                 if (!baseAdmin) {
                     return;
                 }
@@ -294,19 +298,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 let hayError = false;
 
                 if (!id) {
-                    setFieldError(formEliminar, "eliminar", "Selecciona una cancion");
+                    setFieldError(formEliminar, "eliminar", "Selecciona un Artista");
                     hayError = true;
                 }
 
                 if (hayError) {
-                    setMsg(msgEditar, false, "Revisa los campos marcados en rojo");
+                    setMsg(msgEliminar, false, "Revisa los campos marcados en rojo");
                     return;
                 }
-
-                const ok = window.confirm(
-                    "¿Seguro que quieres eliminar este artista?"
-                );
-                if (!ok) return;
 
                 try {
                     await fetchAdmin(`${baseAdmin}/${id}`, {

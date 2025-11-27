@@ -97,7 +97,73 @@ import CancionesPanel from "../components/panelAdmin/CancionesPanel.astro";
                 </div>
             </div>
         </section>
+
+        <!-- MODAL GENERICA ELIMINAR -->
+        <div
+            id="deleteModal"
+            tabindex="-1"
+            class="hidden fixed inset-0 z-50 justify-center items-center w-full h-full bg-black/60 backdrop-blur-sm"
+        >
+            <div class="w-full max-w-md mx-auto px-6 sm:px-8 my-16 sm:my-24">
+                <div
+                    class="relative bg-gradient-to-b from-gray-950 to-gray-900 rounded-3xl
+                   shadow-[0_0_35px_rgba(255,0,0,0.15)] border border-red-500/30 text-white"
+                >
+                    <button
+                        id="deleteClose"
+                        type="button"
+                        class="absolute top-4 right-4 text-gray-400 hover:text-red-400 transition-colors"
+                    >
+                        ✕
+                    </button>
+
+                    <div
+                        class="px-10 pt-16 pb-16 md:px-12 md:pt-20 md:pb-20
+                       text-center flex flex-col items-center gap-8"
+                    >
+                        <h3
+                            id="deleteModalTitle"
+                            class="text-2xl font-semibold"
+                        >
+                            Eliminar
+                        </h3>
+
+                        <p
+                            id="deleteModalText"
+                            class="text-gray-400 leading-relaxed text-base max-w-sm mb-8"
+                        >
+                            ¿Seguro que quieres eliminar el elemento
+                            seleccionado?
+                        </p>
+
+                        <div
+                            class="flex flex-col sm:flex-row gap-4 justify-center w-full mt-4 mb-4"
+                        >
+                            <button
+                                id="deleteCancel"
+                                type="button"
+                                class="flex-1 px-5 py-3 rounded-lg border border-gray-600
+                               bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium transition-all"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                id="deleteConfirm"
+                                type="button"
+                                class="flex-1 px-5 py-3 rounded-lg bg-red-600 hover:bg-red-700
+                               focus:ring-4 focus:ring-red-500/40 text-white font-semibold transition-all"
+                            >
+                                Sí, eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 </Layout>
 
 <script type="module" src="/src/scripts/admin/MenuLateralPanel"></script>
+<script src="/src/scripts/admin/ModalEliminar.js" defer></script>
+
+
