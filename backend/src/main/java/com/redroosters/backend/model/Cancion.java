@@ -18,7 +18,7 @@ public class Cancion {
 
     private Integer duracionSegundos = 0;
 
-    private String portadaUrl;
+    private String portada;
 
     private String urlAudio;
 
@@ -32,12 +32,12 @@ public class Cancion {
     public Cancion() {
     }
 
-    public Cancion(Long id, String titulo, String descripcion, Integer duracionSegundos, String portadaUrl, String urlAudio, Artista artista, Album album) {
+    public Cancion(Long id, String titulo, String descripcion, Integer duracionSegundos, String portada, String urlAudio, Artista artista, Album album) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.duracionSegundos = duracionSegundos;
-        this.portadaUrl = portadaUrl;
+        this.portada = portada;
         this.urlAudio = urlAudio;
         this.artista = artista;
         this.album = album;
@@ -75,12 +75,12 @@ public class Cancion {
         this.duracionSegundos = duracionSegundos;
     }
 
-    public String getPortadaUrl() {
-        return portadaUrl;
+    public String getPortada() {
+        return portada;
     }
 
-    public void setPortadaUrl(String portadaUrl) {
-        this.portadaUrl = portadaUrl;
+    public void setPortada(String portada) {
+        this.portada = portada;
     }
 
     public String getUrlAudio() {

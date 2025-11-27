@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 
 import ArtistasPanel from "../components/panelAdmin/ArtistasPanel.astro";
-//import CancionesPanel from "../components/admin/CancionesPanel.astro";
+import CancionesPanel from "../components/panelAdmin/CancionesPanel.astro";
 //import AlbumsPanel from "../components/admin/AlbumsPanel.astro";
 ---
 
@@ -84,7 +84,9 @@ import ArtistasPanel from "../components/panelAdmin/ArtistasPanel.astro";
                     <ArtistasPanel base="/api/admin/artistas" />
                 </div>
 
-                <div id="vista-canciones" class="hidden w-full"></div>
+                <div id="vista-canciones" class="hidden w-full justify-center">
+                    <CancionesPanel base="/api/admin/canion/archivo" />
+                </div>
 
                 <div id="vista-albums" class="hidden w-full"></div>
 

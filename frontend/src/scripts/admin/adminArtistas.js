@@ -1,35 +1,51 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const secciones = document.querySelectorAll("section[data-uid]");
-    console.log("secciones encontradas:", secciones.length);
+    const secciones = document.querySelectorAll(
+        'section[data-uid][data-base][data-base-public]'
+    );
     if (!secciones.length) return;
 
     secciones.forEach((root) => {
-        const base = root.dataset.base; // "/api/admin/artistas"
+        const baseAdmin = root.dataset.base;
+        const basePublic = root.dataset.basePublic;
 
-        // 🔹 selects para EDITAR / ELIMINAR
-        const selectArtistaEditar = root.querySelector("#select-artista-editar");
-        const selectArtistaEliminar = root.querySelector("#select-artista-eliminar");
+        const formCrear = root.querySelector('form[data-form="crear"]');
+        const formEditar = root.querySelector('form[data-form="editar"]');
+        const formEliminar = root.querySelector('form[data-form="eliminar"]');
 
-        // TABS 
+        if (formCrear) activarLimpiezaErrores(formCrear);
+        if (formEditar) activarLimpiezaErrores(formEditar);
+        if (formEliminar) activarLimpiezaErrores(formEliminar);
+
+        const selArtistaEditar = root.querySelector("#select-artista-editar");
+        const selArtistaEliminar = root.querySelector("#select-artista-eliminar");
+
+        const msgCrear = root.querySelector('[data-msg="crear"]');
+        const msgEditar = root.querySelector('[data-msg="editar"]');
+        const msgEliminar = root.querySelector('[data-msg="eliminar"]');
+
+        // --------- TABS ---------
         const tabs = Array.from(root.querySelectorAll("[data-tab]"));
         const panels = Array.from(root.querySelectorAll("[data-panel]"));
 
-        function pintaBotones(activo) {
-            tabs.forEach((btn) => btn.classList.remove("active"));
-            const actual = root.querySelector(`[data-tab="${activo}"]`);
-            if (actual) actual.classList.add("active");
-        }
-
-        function pintaPaneles(activo) {
-            panels.forEach((p) => {
-                const esActivo = p.getAttribute("data-panel") === activo;
-                p.classList.toggle("hidden", !esActivo);
-            });
-        }
-
         function activar(tab) {
-            pintaBotones(tab);
-            pintaPaneles(tab);
+            tabs.forEach((btn) => {
+                btn.classList.toggle("active", btn.dataset.tab === tab);
+            });
+
+            panels.forEach((panel) => {
+                const activo = panel.getAttribute("data-panel") === tab;
+                panel.classList.toggle("hidden", !activo);
+                panel.classList.toggle("block", activo);
+            });
+
+            if (window.jQuery && $.fn.select2) {
+                if (tab === "editar" && selArtistaEditar) {
+                    $(selArtistaEditar).select2({ width: "100%" });
+                }
+                if (tab === "eliminar" && selArtistaEliminar) {
+                    $(selArtistaEliminar).select2({ width: "100%" });
+                }
+            }
         }
 
         root.addEventListener("click", (e) => {
@@ -40,246 +56,290 @@ document.addEventListener("DOMContentLoaded", () => {
 
         activar("crear");
 
-        // INIT SELECT2 + CARGAR OPCIONES 
-        const selects = root.querySelectorAll(".select2");
-        if (window.jQuery && $.fn.select2) {
-            selects.forEach((s) => $(s).select2());
-        } else {
-            console.error("jQuery o select2 no están cargados todavía");
+        // --------- Mensajes ---------
+        function setMsg(el, ok, texto) {
+            if (!el) return;
+            el.textContent = texto;
+            el.style.color = ok ? "#4ade80" : "#f97373";
         }
 
-        if (typeof cargarArtistas === "function") {
-            cargarArtistas(root).catch(console.error);
-        } else {
-            console.error("cargarArtistas no está definida");
-        }
+        async function fetchAdmin(url, options = {}) {
+            const token = localStorage.getItem("token");
 
-        // CREAR 
-        const formCrear = root.querySelector('form[data-form="crear"]');
-        const msgCrear = root.querySelector('[data-msg="crear"]');
+            const headers = {
+                ...(options.headers || {}),
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            };
 
-        const fileInputCrear = formCrear?.querySelector('input[name="portada"]');
-        const previewCrear = formCrear?.querySelector('[data-preview-portada]');
-
-        if (fileInputCrear && previewCrear) {
-            fileInputCrear.addEventListener("change", () => {
-                if (fileInputCrear.files.length > 0) {
-                    const file = fileInputCrear.files[0];
-                    previewCrear.textContent = "✔ Archivo seleccionado: " + file.name;
-                } else {
-                    previewCrear.textContent = "Ningún archivo seleccionado";
-                }
+            const res = await fetch(url, {
+                ...options,
+                headers,
             });
+
+            //console.log("Respuesta backend:", res.status, url);
+
+            if (!res.ok) {
+                const text = await res.text().catch(() => "");
+                //console.log("Body error backend:", text);
+                throw new Error(`HTTP ${res.status}`);
+            }
+            return res;
         }
 
-        if (formCrear && msgCrear && base) {
-            formCrear.addEventListener("submit", async (e) => {
-                e.preventDefault();
-                msgCrear.textContent = "Creando artista...";
+        // --------------Errores-------------
 
-                const fd = new FormData();
-                fd.append("nombre", formCrear.nombre.value.trim());
-                fd.append("descripcion", formCrear.descripcion.value.trim());
-                fd.append("destacado", formCrear.destacado.checked ? "true" : "false");
+        // Limpia todos los errores de campos dentro de un formulario
+        function clearFieldErrors(form) {
+            if (!form) return;
 
-                if (fileInputCrear && fileInputCrear.files.length > 0) {
-                    fd.append("portada", fileInputCrear.files[0]);
-                }
-
-                const token = localStorage.getItem("token");
-                if (!token) {
-                    msgCrear.textContent = "No hay sesion iniciada.";
-                    msgCrear.className = "text-red-500 text-center mt-2";
-                    return;
-                }
-
-                const url = window.location.origin + base;
-                console.log("URL FINAL QUE SE LLAMA (CREAR):", url);
-
-                try {
-                    const res = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                            Authorization: "Bearer " + token,
-                        },
-                        body: fd,
-                    });
-
-                    let body = {};
-                    try { body = await res.json(); } catch (_) { }
-
-                    if (res.ok) {
-                        msgCrear.textContent = "Artista creado correctamente.";
-                        msgCrear.className = "text-green-500 text-center mt-4";
-                        formCrear.reset();
-                        if (previewCrear) previewCrear.textContent = "Ningún archivo seleccionado";
-
-                        // 🔁 refrescamos selects sin recargar
-                        if (typeof cargarArtistas === "function") {
-                            await cargarArtistas(root);
-                        }
-                    } else {
-                        msgCrear.textContent = body.message || "Error al crear artista.";
-                        msgCrear.className = "text-red-500 text-center mt-2";
-                    }
-                } catch (err) {
-                    console.error(err);
-                    msgCrear.textContent = "Error de red al crear el artista.";
-                    msgCrear.className = "text-red-500 text-center mt-2";
-                }
+            // Vaciar los <p data-error="...">
+            form.querySelectorAll("[data-error]").forEach((el) => {
+                el.textContent = "";
             });
+
+            // Quitar estilos rojos de los inputs
+            form.querySelectorAll(".input-error").forEach((el) => {
+                el.classList.remove("input-error");
+                el.classList.remove("border-red-500");
+                el.classList.remove("ring-2");
+                el.classList.remove("ring-red-500/70");
+            });
+
         }
 
-        // EDITAR 
-        const formEditar = root.querySelector('form[data-form="editar"]');
-        const msgEditar = root.querySelector('[data-msg="editar"]');
+        // Poner error a un campo concreto
+        function setFieldError(form, fieldName, message) {
+            if (!form) return;
 
-        if (formEditar && msgEditar && base && selectArtistaEditar) {
-            const fileInputEditar = formEditar.querySelector('input[name="portada"]');
-            const previewEditar = formEditar.querySelector('[data-preview-portada-editar]');
+            const input = form.querySelector(`[name="${fieldName}"]`);
+            const error = form.querySelector(`[data-error="${fieldName}"]`);
 
-            if (fileInputEditar && previewEditar) {
-                previewEditar.textContent = "Ningún archivo seleccionado";
-                fileInputEditar.addEventListener("change", () => {
-                    if (fileInputEditar.files.length > 0) {
-                        previewEditar.textContent =
-                            "✔ Archivo seleccionado: " + fileInputEditar.files[0].name;
-                    } else {
-                        previewEditar.textContent = "Ningún archivo seleccionado";
-                    }
-                });
+            if (input) {
+                input.classList.add("input-error");
+                input.classList.add("border-red-500");
+                input.classList.add("ring-2");
+                input.classList.add("ring-red-500/70");
             }
 
-            formEditar.addEventListener("submit", async (e) => {
+            if (error) {
+                error.textContent = message;
+            }
+        }
+
+        function activarLimpiezaErrores(form) {
+            if (!form) return;
+
+            // Para inputs de texto
+            form.querySelectorAll("input[name]").forEach((input) => {
+                input.addEventListener("input", () => {
+                    const field = input.name;
+                    const error = form.querySelector(`[data-error="${field}"]`);
+
+                    input.classList.remove("input-error", "border-red-500", "ring-2", "ring-red-500/70");
+                    if (error) error.textContent = "";
+                });
+
+
+            });
+        }
+
+        // --------- CREAR ---------
+        if (formCrear) {
+            formCrear.addEventListener("submit", async (e) => {
                 e.preventDefault();
-                msgEditar.textContent = "Guardando cambios...";
-
-                const id = selectArtistaEditar.value?.trim();
-                if (!id) {
-                    msgEditar.textContent = "Selecciona un artista primero.";
-                    return;
-                }
-
-                const fd = new FormData();
-
-                if (formEditar.nombre.value.trim() !== "") {
-                    fd.append("nombre", formEditar.nombre.value.trim());
-                }
-                if (formEditar.descripcion.value.trim() !== "") {
-                    fd.append("descripcion", formEditar.descripcion.value.trim());
-                }
-
-                fd.append("destacado", formEditar.destacado.checked ? "true" : "false");
-
-                if (fileInputEditar && fileInputEditar.files.length > 0) {
-                    fd.append("portada", fileInputEditar.files[0]);
-                }
-
-                const token = localStorage.getItem("token");
-                if (!token) {
-                    msgEditar.textContent = "No hay sesion iniciada.";
-                    msgEditar.className = "text-red-500 text-center mt-2";
-                    return;
-                }
-
-                const url = window.location.origin + base + "/" + encodeURIComponent(id);
-                console.log("URL FINAL QUE SE LLAMA (EDITAR):", url);
+                if (!baseAdmin) return;
 
                 try {
-                    const res = await fetch(url, {
-                        method: "PUT",
-                        headers: {
-                            Authorization: "Bearer " + token,
-                        },
+                    const raw = new FormData(formCrear);
+
+                    const nombre = raw.get("nombre");
+                    const descripcion = raw.get("descripcion") || null;
+                    const destacadoChecked = raw.get("destacado") === "on";
+                    const portadaFile = raw.get("portada");
+
+                    clearFieldErrors(formCrear);
+                    let hayError = false
+
+                    if (!nombre || !nombre.trim()) {
+                        setFieldError(formCrear, "nombre", "El artista no puede estar vacio");
+                        hayError = true;
+                    }
+
+                    // Si hay errores, no llamamos al backend
+                    if (hayError) {
+                        setMsg(msgCrear, false, "Revisa los campos marcados en rojo");
+                        return;
+                    }
+
+
+                    const fd = new FormData();
+                    fd.append("nombre", nombre.trim());
+                    if (descripcion && descripcion.trim() !== "") {
+                        fd.append("descripcion", descripcion.trim());
+                    }
+                    fd.append("destacado", String(destacadoChecked));
+                    if (portadaFile instanceof File && portadaFile.size > 0) {
+                        fd.append("portada", portadaFile);
+                    }
+
+                    await fetchAdmin(baseAdmin, {
+                        method: "POST",
                         body: fd,
                     });
 
-                    let body = {};
-                    try { body = await res.json(); } catch (_) { }
+                    setMsg(msgCrear, true, "Artista creado correctamente ✅");
+                    formCrear.reset();
 
-                    if (res.ok) {
-                        msgEditar.textContent = "Artista actualizado correctamente.";
-                        msgEditar.className = "text-green-500 text-center mt-4";
+                    // Avisamos globalmente
+                    document.dispatchEvent(new CustomEvent("artistas-actualizados"));
 
-                        // refrescar selects
-                        if (typeof cargarArtistas === "function") {
-                            await cargarArtistas(root);
-                        }
-                    } else {
-                        msgEditar.textContent =
-                            body.message || "Error al actualizar artista.";
-                        msgEditar.className = "text-red-500 text-center mt-2";
-                    }
                 } catch (err) {
-                    console.error(err);
-                    msgEditar.textContent = "Error de red al actualizar el artista.";
-                    msgEditar.className = "text-red-500 text-center mt-2";
+                    //console.error("Error creando artista", err);
+                    if (String(err.message).includes("401")) {
+                        setMsg(msgCrear, false, "No autorizado. Vuelve a iniciar sesion.");
+                    } else {
+                        setMsg(
+                            msgCrear,
+                            false,
+                            "Error al crear el artista ❌"
+                        );
+                    }
                 }
             });
         }
 
-        //  ELIMINAR 
-        const formEliminar = root.querySelector('form[data-form="eliminar"]');
-        const msgEliminar = root.querySelector('[data-msg="eliminar"]');
-
-        if (formEliminar && msgEliminar && base && selectArtistaEliminar) {
-            formEliminar.addEventListener("submit", async (e) => {
+        // --------- EDITAR ---------
+        if (formEditar && selArtistaEditar) {
+            formEditar.addEventListener("submit", async (e) => {
                 e.preventDefault();
-
-                msgEliminar.textContent = "Eliminando artista...";
-
-                const id = selectArtistaEliminar.value?.trim();
-                if (!id) {
-                    msgEliminar.textContent = "Selecciona un artista primero.";
-                    return;
-                }
-
-                const token = localStorage.getItem("token");
-                if (!token) {
-                    msgEliminar.textContent = "No hay sesion iniciada.";
-                    msgEliminar.className = "text-red-500 text-center mt-2";
-                    return;
-                }
-
-                const url = `${window.location.origin + base}/${encodeURIComponent(id)}`;
-                console.log("URL DELETE:", url);
+                if (!baseAdmin) return;
 
                 try {
-                    const res = await fetch(url, {
-                        method: "DELETE",
-                        headers: {
-                            Authorization: "Bearer " + token,
-                        },
+                    const raw = new FormData(formEditar);
+
+                    const id = selArtistaEditar.value; // <- ID de la cancion
+
+                    const nombre = raw.get("nombre") || null;
+                    const descripcion = raw.get("descripcion") || null;
+                    const destacadoChecked = raw.get("destacado") === "on";
+                    const portadaFile = raw.get("portada");
+
+
+                    clearFieldErrors(formEditar);
+                    let hayError = false
+
+                    if (!id) {
+                        setFieldError(formEditar, "artistaId", "Debes seleccionar un artista");
+                        hayError = true;
+                    }
+
+                    // Si hay errores, no llamamos al backend
+                    if (hayError) {
+                        setMsg(msgEditar, false, "Revisa los campos marcados en rojo");
+                        return;
+                    }
+
+                    const fd = new FormData();
+                    if (nombre && nombre.trim() !== "") {
+                        fd.append("nombre", nombre.trim());
+                    }
+                    if (descripcion && descripcion.trim() !== "") {
+                        fd.append("descripcion", descripcion.trim());
+                    }
+                    fd.append("destacado", String(destacadoChecked));
+                    if (portadaFile instanceof File && portadaFile.size > 0) {
+                        fd.append("portada", portadaFile);
+                    }
+
+                    await fetchAdmin(`${baseAdmin}/${id}`, {
+                        method: "PUT",
+                        body: fd,
                     });
 
-                    if (res.ok || res.status === 204) {
-                        msgEliminar.textContent = "Artista eliminado correctamente.";
-                        msgEliminar.className = "text-green-500 text-center mt-2";
+                    setMsg(msgEditar, true, "Artista editado correctamente ✅");
 
-                        if (typeof cargarArtistas === "function") {
-                            await cargarArtistas(root);
-                        }
+                    // Avisamos globalmente
+                    document.dispatchEvent(new CustomEvent("artistas-actualizados"));
 
-                        if (window.jQuery && $.fn.select2) {
-                            $(selectArtistaEliminar).val("").trigger("change");
-                        } else {
-                            selectArtistaEliminar.value = "";
-                        }
-                    } else {
-                        let body = {};
-                        try { body = await res.json(); } catch (_) { }
-
-                        msgEliminar.textContent =
-                            body.message || "Error al eliminar el artista.";
-                        msgEliminar.className = "text-red-500 text-center mt-2";
-                    }
                 } catch (err) {
-                    console.error(err);
-                    msgEliminar.textContent =
-                        "Error de red al eliminar el artista.";
-                    msgEliminar.className = "text-red-500 text-center mt-2";
+                    //console.error("Error editando artista", err);
+                    if (String(err.message).includes("401")) {
+                        setMsg(
+                            msgEditar,
+                            false,
+                            "No autorizado. Vuelve a iniciar sesion."
+                        );
+                    } else {
+                        setMsg(
+                            msgEditar,
+                            false,
+                            "Error al editar el artista ❌"
+                        );
+                    }
+                }
+            });
+        }
+
+        // --------- ELIMINAR ---------
+        if (formEliminar && selArtistaEliminar) {
+            formEliminar.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                if (!baseAdmin) {
+                    return;
+                }
+
+                clearFieldErrors(formEliminar);
+
+                const id = selArtistaEliminar.value;
+                let hayError = false;
+
+                if (!id) {
+                    setFieldError(formEliminar, "eliminar", "Selecciona una cancion");
+                    hayError = true;
+                }
+
+                if (hayError) {
+                    setMsg(msgEditar, false, "Revisa los campos marcados en rojo");
+                    return;
+                }
+
+                const ok = window.confirm(
+                    "¿Seguro que quieres eliminar este artista?"
+                );
+                if (!ok) return;
+
+                try {
+                    await fetchAdmin(`${baseAdmin}/${id}`, {
+                        method: "DELETE",
+                    });
+
+                    setMsg(
+                        msgEliminar,
+                        true,
+                        "Artista eliminado correctamente ✅"
+                    );
+
+                    // Avisamos globalmente
+                    document.dispatchEvent(new CustomEvent("artistas-actualizados"));
+
+                } catch (err) {
+                    //console.error("Error eliminando artista", err);
+                    if (String(err.message).includes("401")) {
+                        setMsg(
+                            msgEliminar,
+                            false,
+                            "No autorizado. Vuelve a iniciar sesion."
+                        );
+                    } else {
+                        setMsg(
+                            msgEliminar,
+                            false,
+                            "Error al eliminar el artista ❌"
+                        );
+                    }
                 }
             });
         }
     });
+
 });

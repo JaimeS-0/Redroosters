@@ -9,7 +9,7 @@ public record CancionResponseDTO(
         String descripcion,
         Integer duracionSegundos,
         String duracionTexto,
-        String portadaUrl,
+        String portada,
         String urlAudio,
         String nombreArtista,
         String tituloAlbum // puede ser null

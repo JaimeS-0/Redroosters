@@ -24,7 +24,7 @@ public interface EscuchaMapper {
     @Mapping(target = "cancionId", source = "cancion.id")
     @Mapping(target = "titulo", source = "cancion.titulo")
     @Mapping(target = "artista", source = "cancion.artista.nombre")
-    @Mapping(target = "portadaUrl", source = "cancion.portadaUrl")
+    @Mapping(target = "portada", source = "cancion.portada")
     @Mapping(target = "escuchasTotales", source = "total")
     TopCancionDTO toTopDto(Cancion cancion, Long total);
 }

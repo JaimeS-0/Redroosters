@@ -8,5 +8,5 @@ public record TopCancionDTO(
         String titulo,
         String artista,
         Long escuchasTotales,
-        String portadaUrl
+        String portada
 ) {}

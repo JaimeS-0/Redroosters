@@ -92,7 +92,7 @@ class CancionControllerTest {
                 "{\"titulo\":\"Tema\",\"artistaId\":1,\"albumId\":1}".getBytes());
 
         // Se simula la respuesta del servicio cuando se guarda una canción
-        when(cancionService.crearConArchivo(any(CancionRequestDTO.class), any()))
+        when(cancionService.crearConArchivo(any(CancionRequestDTO.class), any(), any()))
                 .thenReturn(new CancionResponseDTO(
                         10L, "Lia", "Artista Famosa y Guapa", 215, "2:30",
                         "/audios/tema.mp3", "/audios/tema.mp3", "Aitana", "Cuarto Azul"

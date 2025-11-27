@@ -1,0 +1,460 @@
+---
+export interface Props {
+    base?: string;
+    baseCrear?: string;
+    baseEditar?: string;
+    baseEliminar?: string;
+}
+
+const { base = "/api/admin/canion/archivo" } = Astro.props;
+
+const {
+    baseCrear = "/api/admin/cancion/archivo",
+    baseEditar = "/api/admin/cancion",
+    baseEliminar = "/api/admin/cancion",
+} = Astro.props;
+
+// Generamos id unico para aislar el script y no pisar otros componentes
+const uid = "canciones-" + Math.random().toString(36).slice(2);
+---
+
+<section
+    id={uid}
+    data-uid={uid}
+    data-base-crear={baseCrear}
+    data-base-editar={baseEditar}
+    data-base-eliminar={baseEliminar}
+    data-canciones="/api/public/cancion"
+    data-artistas="/api/public/artistas"
+    data-albums="/api/public/album"
+    class="w-full min-h-[60vh] flex items-center justify-center px-4 sm:px-6 md:px-10 py-10"
+>
+    <script src="/src/scripts/admin/SelectsGlobal.js" defer></script>
+    <script src="/src/scripts/admin/adminCanciones.js" defer></script>
+
+    <!-- Tarjeta -->
+    <div
+        class="w-full min-h-[50vh] max-w-5xl rounded-2xl border border-gray-700
+               bg-gradient-to-b from-gray-900/70 to-gray-800/80
+               shadow-[0_0_40px_rgba(255,0,0,0.18)] backdrop-blur-sm
+               p-8 md:p-12 space-y-10"
+    >
+        <!-- Titulo -->
+        <div class="relative flex justify-center mb-4">
+            <h1
+                class="text-white text-3xl md:text-5xl tracking-wide font-maximum text-center"
+            >
+                CANCIONES
+            </h1>
+        </div>
+
+        <div class="h-14 md:h-14"></div>
+
+        <!-- Tabs -->
+        <div
+            class="flex flex-wrap justify-center gap-6 md:gap-8 mb-6 pb-4 border-b border-gray-700/60"
+        >
+            <button
+                data-tab="crear"
+                type="button"
+                class="tab min-w-[140px] px-6 py-3 rounded-full border text-base md:text-lg
+                       bg-gray-800/70 text-white/80 border-gray-700 shadow-md
+                       hover:bg-gray-700 hover:text-white hover:scale-105 cursor-pointer"
+            >
+                Crear
+            </button>
+            <button
+                data-tab="editar"
+                type="button"
+                class="tab min-w-[140px] px-6 py-3 rounded-full border text-base md:text-lg
+                       bg-gray-800/70 text-white/80 border-gray-700 shadow-md
+                       hover:bg-gray-700 hover:text-white hover:scale-105 cursor-pointer"
+            >
+                Editar
+            </button>
+            <button
+                data-tab="eliminar"
+                type="button"
+                class="tab min-w-[140px] px-6 py-3 rounded-full border text-base md:text-lg
+                       bg-gray-800/70 text-white/80 border-gray-700 shadow-md
+                       hover:bg-gray-700 hover:text-white hover:scale-105 cursor-pointer"
+            >
+                Eliminar
+            </button>
+        </div>
+
+        <div class="h-14 md:h-14"></div>
+
+        <!-- PANEL CREAR -->
+        <div data-panel="crear" class="block mt-2">
+            <form
+                data-form="crear"
+                class="space-y-6 bg-gray-800/60 p-6 md:p-8 rounded-xl border border-white/10"
+            >
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Columna izquierda -->
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-2">
+                            <label class="block text-sm text-gray-300"
+                                >Titulo *</label
+                            >
+                            <input
+                                name="titulo"
+                                class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                            />
+                            <p
+                                data-error="titulo"
+                                class="text-xs text-red-400 mt-1"
+                            >
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="block text-sm text-gray-300"
+                                >Descripcion</label
+                            >
+                            <textarea
+                                name="descripcion"
+                                rows={3}
+                                maxlength="500"
+                                class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400 resize-y"
+                            ></textarea>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label
+                                class="block text-sm text-gray-300"
+                                for={`portada-crear-${uid}`}
+                            >
+                                Portada (Imagen)
+                            </label>
+                            <input
+                                id={`portada-crear-${uid}`}
+                                type="file"
+                                accept="image/*"
+                                name="portada"
+                                placeholder="/imagenes/portadas/mi-cancion.jpg"
+                                class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                                data-portada
+                            />
+                            <p
+                                data-preview-portada-crear
+                                class="text-xs text-gray-400 mt-1"
+                            >
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Columna derecha -->
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-2">
+                            <label
+                                class="block text-sm text-gray-300"
+                                for={`audio-crear-${uid}`}
+                            >
+                                Audio (Cancion) *
+                            </label>
+                            <input
+                                id={`audio-crear-${uid}`}
+                                type="file"
+                                name="audio"
+                                accept="audio/*"
+                                placeholder="/audio/mis-canciones/mi-cancion.mp3"
+                                class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                                data-audio
+                            />
+                            <p
+                                data-preview-audio-crear
+                                class="text-xs text-gray-400 mt-1"
+                            >
+                            </p>
+                            <p
+                                data-error="audio"
+                                class="text-xs text-red-400 mt-1"
+                            >
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="block text-sm text-gray-300">
+                                Artista *
+                            </label>
+                            <select
+                                id="select-artista-crear"
+                                data-select-artista="crear"
+                                name="artistaId"
+                                class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                            >
+                                <option value="">Selecciona un artista</option>
+                            </select>
+                            <p
+                                data-error="artistaId"
+                                class="text-xs text-red-400 mt-1"
+                            >
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="block text-sm text-gray-300">
+                                Album (opcional)
+                            </label>
+                            <select
+                                id="select-album-crear"
+                                data-select-album="crear"
+                                name="albumId"
+                                class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                            >
+                                <option value="">Sin album</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-10 md:h-10"></div>
+
+                <div class="flex justify-center items-center pt-4">
+                    <button
+                        class="px-6 py-3 rounded-xl bg-red-500 text-white font-medium
+                               hover:bg-red-600 active:scale-[.98] hover:scale-105
+                               transition cursor-pointer"
+                    >
+                        Crear cancion
+                    </button>
+                </div>
+
+                <p
+                    data-msg="crear"
+                    class="text-sm text-gray-300 mt-2 text-center"
+                >
+                </p>
+            </form>
+        </div>
+
+        <!-- PANEL EDITAR -->
+        <div data-panel="editar" class="hidden mt-2">
+            <form
+                data-form="editar"
+                class="space-y-6 bg-gray-800/60 p-6 md:p-8 rounded-xl border border-white/10"
+            >
+                <!-- Seleccionar cancion -->
+                <div class="flex flex-col gap-3">
+                    <label class="block text-sm text-gray-300">
+                        Selecciona una cancion *
+                    </label>
+                    <select
+                        id="select-cancion-editar"
+                        name="cancionId"
+                        data-select-cancion
+                        class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                               border border-white/10 focus:outline-none
+                               focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                    >
+                        <option value="">Selecciona una cancion</option>
+                    </select>
+                    <p data-error="cancionId" class="text-xs text-red-400 mt-1">
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 pt-2">
+                    <!-- Columna izquierda -->
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm text-gray-300"
+                                >Nuevo titulo</label
+                            >
+                            <input
+                                name="titulo"
+                                class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                            />
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm text-gray-300">
+                                Nueva descripcion
+                            </label>
+                            <textarea
+                                name="descripcion"
+                                rows={3}
+                                maxlength="500"
+                                class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400 resize-y"
+                            ></textarea>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label
+                                class="text-sm text-gray-300"
+                                for={`portada-editar-${uid}`}
+                            >
+                                Nueva portada
+                            </label>
+                            <input
+                                id={`portada-editar-${uid}`}
+                                type="file"
+                                name="portada"
+                                accept="image/*"
+                                class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                                data-portada
+                            />
+                            <p
+                                data-preview-portada-editar
+                                class="text-xs text-gray-400 mt-1"
+                            >
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Columna derecha -->
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm text-gray-300">
+                                Nuevo audio
+                            </label>
+                            <input
+                                id={`audio-editar-${uid}`}
+                                type="file"
+                                name="audio"
+                                accept="audio/*"
+                                class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                                data-audio
+                            />
+                            <p
+                                data-preview-audio-editar
+                                class="text-xs text-gray-400 mt-1"
+                            >
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm text-gray-300">
+                                Cambiar artista *
+                            </label>
+                            <select
+                                id="select-artista-editar"
+                                data-select-artista="editar"
+                                name="artistaId"
+                                class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                            >
+                                <option value=""></option>
+                            </select>
+                            <p
+                                data-error="artistaId"
+                                class="text-xs text-red-400 mt-1"
+                            >
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm text-gray-300">
+                                Cambiar album (opcional)
+                            </label>
+                            <select
+                                id="select-album-editar"
+                                data-select-album="editar"
+                                name="albumId"
+                                class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                            >
+                                <option value=""
+                                    >Mantener album / sin album</option
+                                >
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-10 md:h-10"></div>
+
+                <div class="flex justify-center items-center pt-4">
+                    <button
+                        class="px-6 py-3 rounded-xl bg-green-600 text-white font-medium
+                               hover:bg-green-500 active:scale-[.98] transition cursor-pointer hover:scale-105"
+                    >
+                        Guardar cambios
+                    </button>
+                </div>
+
+                <p
+                    data-msg="editar"
+                    class="text-sm text-gray-300 mt-2 text-center"
+                >
+                </p>
+            </form>
+        </div>
+
+        <!-- PANEL ELIMINAR -->
+        <div data-panel="eliminar" class="hidden mt-2">
+            <form
+                data-form="eliminar"
+                class="space-y-6 bg-gray-800/60 p-6 md:p-8 rounded-xl border border-white/10"
+            >
+                <div class="flex flex-col gap-3">
+                    <label class="block text-sm text-gray-300">
+                        Selecciona una cancion
+                    </label>
+                    <select
+                        id="select-cancion-eliminar"
+                        name="eliminar"
+                        data-select-cancion="eliminar"
+                        class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                               border border-white/10 focus:outline-none
+                               focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                    >
+                        <option value="">Selecciona una cancion</option>
+                    </select>
+                    <p data-error="eliminar" class="text-xs text-red-400 mt-1">
+                    </p>
+                </div>
+                <div class="h-10 md:h-10"></div>
+
+                <div class="flex justify-center items-center pt-6">
+                    <button
+                        class="px-6 py-3 rounded-xl bg-red-600 text-white font-medium
+                               hover:bg-red-500 active:scale-[.98] transition cursor-pointer hover:scale-105"
+                    >
+                        Eliminar cancion
+                    </button>
+                </div>
+
+                <p
+                    data-msg="eliminar"
+                    class="text-sm text-gray-300 mt-2 text-center"
+                >
+                </p>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="/src/scripts/admin/IndicadorInput.js" defer></script>
+
+<style is:global>
+    .tab {
+        transition: all 0.3s ease;
+    }
+    .tab.active {
+        background: rgba(220, 38, 38, 0.8) !important;
+        color: #fff !important;
+        border-color: rgb(239 68 68);
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+    }
+</style>

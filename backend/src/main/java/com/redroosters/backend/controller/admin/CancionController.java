@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/admin")
-public class CancionController implements CancionAdminApi {
+public class CancionController  {
 
     private final CancionService cancionService;
     private final ObjectMapper objectMapper;
@@ -32,10 +32,12 @@ public class CancionController implements CancionAdminApi {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @Override
+    //@Override
     public ResponseEntity<CancionResponseDTO> crearConArchivo(
             @RequestPart("datos") String datosJson,
-            @RequestPart("audio") MultipartFile audio
+            @RequestPart("audio") MultipartFile audio,
+            @RequestPart(value = "portada", required = false) MultipartFile portada
+
     ) {
 
         // Validacion que sea una cancion MP3
@@ -63,22 +65,42 @@ public class CancionController implements CancionAdminApi {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Debes adjuntar el archivo de audio en la parte 'audio'");
         }
 
-        var resp = cancionService.crearConArchivo(dto, audio);
+        var resp = cancionService.crearConArchivo(dto, audio, portada);
         return ResponseEntity.status(HttpStatus.CREATED).body(resp);
     }
 
-    // Editar SIN archivo
-    @PutMapping("/cancion/{id}")
-    @Override
+    // Editar CON posible cambio de audio/portada (multipart)
+    @PutMapping(
+            value = "/cancion/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<CancionResponseDTO> editarCancion(
             @PathVariable Long id,
-            @RequestBody CancionRequestDTO dto) {
-        return ResponseEntity.ok(cancionService.editarCancion(id, dto));
+            @RequestPart("datos") String datosJson,
+            @RequestPart(name = "audio", required = false) MultipartFile audio,
+            @RequestPart(name = "portada", required = false) MultipartFile portada
+    ) {
+        final CancionRequestDTO dto;
+        try {
+            dto = objectMapper.readValue(datosJson, CancionRequestDTO.class);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "La parte 'datos' debe ser JSON valido"
+            );
+        }
+
+        var resp = cancionService.editarCancion(id, dto, audio, portada);
+        return ResponseEntity.ok(resp);
     }
+
+
+
 
     // Eliminar
     @DeleteMapping("/cancion/{id}")
-    @Override
+    //@Override
     public ResponseEntity<Void> eliminarCancion(@PathVariable Long id) {
         cancionService.eliminarCancion(id);
         return ResponseEntity.noContent().build();

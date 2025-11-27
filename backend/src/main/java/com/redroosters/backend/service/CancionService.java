@@ -43,6 +43,8 @@ public class CancionService {
     private final ArtistaRepository artistaRepository;
     private final AlbumRepository albumRepository;
     private final CancionMapper cancionMapper;
+    private final AlmacenamientoService almacenamientoService;
+
 
     @Value("${app.uploads.audio-dir}")
     private String audioDir;
@@ -50,20 +52,25 @@ public class CancionService {
     public CancionService(CancionRepository cancionRepository,
                           ArtistaRepository artistaRepository,
                           AlbumRepository albumRepository,
-                          CancionMapper cancionMapper) {
+                          CancionMapper cancionMapper,
+                          AlmacenamientoService almacenamientoService) {
         this.cancionRepository = cancionRepository;
         this.artistaRepository = artistaRepository;
         this.albumRepository = albumRepository;
         this.cancionMapper = cancionMapper;
+        this.almacenamientoService = almacenamientoService;
+
     }
 
 
      // Crear cancion SUBIENDO archivo. Guarda el fichero en disco, calcula duración con ffprobe,
 
     @Transactional
-    public CancionResponseDTO crearConArchivo(CancionRequestDTO dto, MultipartFile audio) {
+    public CancionResponseDTO crearConArchivo(CancionRequestDTO dto,
+                                              MultipartFile audio,
+                                              MultipartFile portadaFile) {
 
-        // Validaciones de dominio (404 si no existen)
+        // Validaciones de dominio
         Artista artista = artistaRepository.findById(dto.artistaId())
                 .orElseThrow(() -> new ArtistaNotFoundException(dto.artistaId()));
 
@@ -73,45 +80,50 @@ public class CancionService {
                     .orElseThrow(() -> new AlbumNotFoundException(dto.albumId()));
         }
 
-        // Validaciones de request (400 si falta algo)
+        // ---- Guardar portada si viene ----
+        String portadaUrl = null;
+        if (portadaFile != null && !portadaFile.isEmpty()) {
+            portadaUrl = almacenamientoService.guardarPortada(portadaFile);
+        }
+
+        // Validaciones de request
         if (audio == null || audio.isEmpty()) {
             throw new ResponseStatusException(
                     BAD_REQUEST,
-                    "Debes adjuntar el archivo de audio en la parte 'audio'");
+                    "Debes adjuntar el archivo de audio en la parte 'audio'"
+            );
         }
         if (audioDir == null || audioDir.isBlank()) {
             throw new ResponseStatusException(
                     INTERNAL_SERVER_ERROR,
-                    "app.uploads.audio-dir no está configurado");
+                    "app.uploads.audio-dir no está configurado"
+            );
         }
 
-        // Validacion acepta solo archivos .mp3
-        String RutaOriginal = audio.getOriginalFilename();
-
-        if (RutaOriginal == null || !RutaOriginal.toLowerCase().endsWith(".mp3")) {
-
+        String rutaOriginal = audio.getOriginalFilename();
+        if (rutaOriginal == null || !rutaOriginal.toLowerCase().endsWith(".mp3")) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "El archivo debe tener extensión .mp3"
             );
         }
 
-
-        // manejo específico del archivo
         try {
             Path folder = Paths.get(audioDir).toAbsolutePath().normalize();
             Files.createDirectories(folder);
 
-            String original = (audio.getOriginalFilename() != null) ? audio.getOriginalFilename() : "audio.mp3";
+            String original = (audio.getOriginalFilename() != null)
+                    ? audio.getOriginalFilename()
+                    : "audio.mp3";
+
             String safeName = buildSafeFileName(original);
             Path dest = folder.resolve(safeName);
-
             audio.transferTo(dest.toFile());
 
             int duracionSeg;
             try {
                 duracionSeg = AudioUtils.getAudioDuracionSegundos(dest);
             } catch (Exception e) {
-                duracionSeg = 0; // no reventar si ffprobe falla
+                duracionSeg = 0;
             }
 
             String urlAudio = "/media/audio/" + safeName;
@@ -119,7 +131,15 @@ public class CancionService {
             Cancion cancion = new Cancion();
             cancion.setTitulo(dto.titulo());
             cancion.setDescripcion(dto.descripcion());
-            cancion.setPortadaUrl(dto.portadaUrl());
+
+            // 🔴 IMPORTANTE: usar la URL calculada, y si fuera null,
+            // caer a lo que venga en el DTO (por si algun caso especial):
+            cancion.setPortada(
+                    (portadaUrl != null && !portadaUrl.isBlank())
+                            ? portadaUrl
+                            : dto.portada()
+            );
+
             cancion.setUrlAudio(urlAudio);
             cancion.setDuracionSegundos(duracionSeg);
             cancion.setArtista(artista);
@@ -139,37 +159,106 @@ public class CancionService {
     }
 
 
-    // Editar
     @Transactional
-    public CancionResponseDTO editarCancion(Long id, CancionRequestDTO dto) {
+    public CancionResponseDTO editarCancion(Long id,
+                                            CancionRequestDTO dto,
+                                            MultipartFile audio,
+                                            MultipartFile portadaFile) {
 
         Cancion cancion = cancionRepository.findById(id)
                 .orElseThrow(() -> new CancionNotFoundException(id));
 
-        Artista artista = artistaRepository.findById(dto.artistaId())
-                .orElseThrow(() -> new ArtistaNotFoundException(dto.artistaId()));
-
-        Album album = null;
-        if (dto.albumId() != null) {
-            album = albumRepository.findById(dto.albumId())
-                    .orElseThrow(() -> new AlbumNotFoundException(dto.albumId()));
+        // 🔹 TÍTULO: solo si viene
+        if (dto.titulo() != null) {
+            cancion.setTitulo(dto.titulo());
         }
 
-        // Actualizar campos básicos
-        cancion.setTitulo(dto.titulo());
-        cancion.setDescripcion(dto.descripcion());
-        cancion.setPortadaUrl(dto.portadaUrl());
-        cancion.setArtista(artista);
-        cancion.setAlbum(album);
+        // 🔹 DESCRIPCION: solo si viene
+        if (dto.descripcion() != null) {
+            cancion.setDescripcion(dto.descripcion());
+        }
 
+        // 🔹 ARTISTA: solo si viene artistaId
+        if (dto.artistaId() != null) {
+            Artista artista = artistaRepository.findById(dto.artistaId())
+                    .orElseThrow(() -> new ArtistaNotFoundException(dto.artistaId()));
+            cancion.setArtista(artista);
+        }
 
-        if (dto.urlAudio() != null && !dto.urlAudio().isBlank()) {
-            cancion.setUrlAudio(dto.urlAudio());
+        // 🔹 ALBUM: solo si viene albumId
+        if (dto.albumId() != null) {
+            Album album = albumRepository.findById(dto.albumId())
+                    .orElseThrow(() -> new AlbumNotFoundException(dto.albumId()));
+            cancion.setAlbum(album);
+        }
+
+        // 🔹 PORTADA nueva si viene archivo
+        if (portadaFile != null && !portadaFile.isEmpty()) {
+            String portadaUrl = almacenamientoService.guardarPortada(portadaFile);
+            cancion.setPortada(portadaUrl);
+        }
+
+        // 🔹 AUDIO nuevo si viene archivo
+        if (audio != null && !audio.isEmpty()) {
+            if (audioDir == null || audioDir.isBlank()) {
+                throw new ResponseStatusException(
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        "app.uploads.audio-dir no esta configurado"
+                );
+            }
+
+            String rutaOriginal = audio.getOriginalFilename();
+            if (rutaOriginal == null || !rutaOriginal.toLowerCase().endsWith(".mp3")) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "El archivo debe tener extension .mp3"
+                );
+            }
+
+            try {
+                Path folder = Paths.get(audioDir).toAbsolutePath().normalize();
+                Files.createDirectories(folder);
+
+                String original = (audio.getOriginalFilename() != null)
+                        ? audio.getOriginalFilename()
+                        : "audio.mp3";
+
+                String safeName = buildSafeFileName(original);
+                Path dest = folder.resolve(safeName);
+                audio.transferTo(dest.toFile());
+
+                int duracionSeg;
+                try {
+                    duracionSeg = AudioUtils.getAudioDuracionSegundos(dest);
+                } catch (Exception e) {
+                    duracionSeg = 0;
+                }
+
+                String urlAudio = "/media/audio/" + safeName;
+                cancion.setUrlAudio(urlAudio);
+                cancion.setDuracionSegundos(duracionSeg);
+
+            } catch (IOException e) {
+                getLogger(CancionService.class)
+                        .error("Fallo I/O guardando audio en {}: {}", audioDir, e.toString(), e);
+
+                throw new ResponseStatusException(
+                        HttpStatus.INTERNAL_SERVER_ERROR, "Error procesando el audio"
+                );
+            }
         }
 
         Cancion actualizada = cancionRepository.save(cancion);
         return cancionMapper.toDto(actualizada);
     }
+
+
+
+
+
+
+
+
 
     @Transactional
     public void eliminarCancion(Long id) {
