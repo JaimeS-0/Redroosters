@@ -58,8 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!option || !option.value) {
                 if (msgEl) {
-                    // LIMPIAR EL VERDE QUE VIENE DE UN DELETE CORRECTO
-                    msgEl.style.color = "";           // ← ESTA LINEA ES LA CLAVE
+                    msgEl.style.color = "";           
                     msgEl.textContent = `Selecciona un ${tipo} primero.`;
                     msgEl.classList.remove("text-gray-300");
                     msgEl.classList.add("text-red-400");
@@ -67,13 +66,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-
-
             const nombre = option.textContent?.trim() || "";
 
             if (msgEl) {
                 msgEl.textContent = "";
-                msgEl.style.color = "";           // ← limpiar rojo o verde previo
+                msgEl.style.color = "";           
                 msgEl.classList.remove("text-red-400");
             }
 

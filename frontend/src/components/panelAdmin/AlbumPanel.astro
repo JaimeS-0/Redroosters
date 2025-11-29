@@ -6,27 +6,26 @@ export interface Props {
     baseEliminar?: string;
 }
 
-const { base = "/api/admin/canion/archivo" } = Astro.props;
+const { base = "/api/admin/album" } = Astro.props;
 
 const {
-    baseCrear = "/api/admin/cancion/archivo",
-    baseEditar = "/api/admin/cancion",
-    baseEliminar = "/api/admin/cancion",
+    baseCrear = "/api/admin/album",
+    baseEditar = "/api/admin/album",
+    baseEliminar = "/api/admin/album",
 } = Astro.props;
 
-// Generamos id unico para aislar el script y no pisar otros componentes
-const uid = "canciones-" + Math.random().toString(36).slice(2);
+const uid = "albumes-" + Math.random().toString(36).slice(2);
 ---
 
 <section
     id={uid}
     data-uid={uid}
+    data-album-panel
     data-base-crear={baseCrear}
     data-base-editar={baseEditar}
     data-base-eliminar={baseEliminar}
-    data-canciones="/api/public/cancion"
-    data-artistas="/api/public/artistas"
     data-albums="/api/public/album"
+    data-artistas="/api/public/artistas"
     class="w-full min-h-[60vh] flex items-center justify-center px-4 sm:px-6 md:px-10 py-10"
 >
     <!-- Tarjeta -->
@@ -41,7 +40,7 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
             <h1
                 class="text-white text-3xl md:text-5xl tracking-wide font-maximum text-center"
             >
-                CANCIONES
+                ALBUMES
             </h1>
         </div>
 
@@ -92,9 +91,9 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                     <!-- Columna izquierda -->
                     <div class="space-y-4">
                         <div class="flex flex-col gap-2">
-                            <label class="block text-sm text-gray-300"
-                                >Titulo *</label
-                            >
+                            <label class="block text-sm text-gray-300">
+                                Titulo *
+                            </label>
                             <input
                                 name="titulo"
                                 class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
@@ -109,9 +108,9 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                         </div>
 
                         <div class="flex flex-col gap-2">
-                            <label class="block text-sm text-gray-300"
-                                >Descripcion (max 255)</label
-                            >
+                            <label class="block text-sm text-gray-300">
+                                Descripcion (max 255)
+                            </label>
                             <textarea
                                 name="descripcion"
                                 rows={4}
@@ -120,28 +119,9 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                                        border border-white/10 focus:outline-none
                                        focus:ring-2 focus:ring-red-500/40 focus:border-red-400 resize-y"
                             ></textarea>
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <label
-                                class="block text-sm text-gray-300"
-                                for={`portada-crear-${uid}`}
-                            >
-                                Portada (Imagen)
-                            </label>
-                            <input
-                                id={`portada-crear-${uid}`}
-                                type="file"
-                                accept="image/*"
-                                name="portada"
-                                placeholder="/imagenes/portadas/mi-cancion.jpg"
-                                class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
-                                       border border-white/10 focus:outline-none
-                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
-                                data-portada
-                            />
                             <p
-                                data-preview-portada-crear
-                                class="text-xs text-gray-400 mt-1"
+                                data-error="descripcion"
+                                class="text-xs text-red-400 mt-1"
                             >
                             </p>
                         </div>
@@ -150,41 +130,11 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                     <!-- Columna derecha -->
                     <div class="space-y-4">
                         <div class="flex flex-col gap-2">
-                            <label
-                                class="block text-sm text-gray-300"
-                                for={`audio-crear-${uid}`}
-                            >
-                                Audio (Cancion) *
-                            </label>
-                            <input
-                                id={`audio-crear-${uid}`}
-                                type="file"
-                                name="audio"
-                                accept="audio/*"
-                                placeholder="/audio/mis-canciones/mi-cancion.mp3"
-                                class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
-                                       border border-white/10 focus:outline-none
-                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
-                                data-audio
-                            />
-                            <p
-                                data-preview-audio-crear
-                                class="text-xs text-gray-400 mt-1"
-                            >
-                            </p>
-                            <p
-                                data-error="audio"
-                                class="text-xs text-red-400 mt-1"
-                            >
-                            </p>
-                        </div>
-
-                        <div class="flex flex-col gap-2">
                             <label class="block text-sm text-gray-300">
                                 Artista *
                             </label>
                             <select
-                                id="select-artista-crear"
+                                id="select-artista-album-crear"
                                 data-select-artista="crear"
                                 name="artistaId"
                                 class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
@@ -199,24 +149,32 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                             >
                             </p>
                         </div>
-
                         <div class="flex flex-col gap-2">
-                            <label class="block text-sm text-gray-300">
-                                Album (opcional)
+                            <label
+                                class="block text-sm text-gray-300"
+                                for={`portada-album-crear-${uid}`}
+                            >
+                                Portada (Imagen)
                             </label>
-                            <select
-                                id="select-album-crear"
-                                data-select-album="crear"
-                                name="albumId"
-                                class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                            <input
+                                id={`portada-album-crear-${uid}`}
+                                type="file"
+                                accept="image/*"
+                                name="portada"
+                                class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
                                        border border-white/10 focus:outline-none
                                        focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                                data-portada
+                            />
+                            <p
+                                data-preview-portada
+                                class="text-xs text-gray-400 mt-1"
                             >
-                                <option value="">Sin album</option>
-                            </select>
+                            </p>
                         </div>
                     </div>
                 </div>
+
                 <div class="h-10 md:h-10"></div>
 
                 <div class="flex justify-center items-center pt-4">
@@ -225,7 +183,7 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                                hover:bg-red-600 active:scale-[.98] hover:scale-105
                                transition cursor-pointer"
                     >
-                        Crear canción
+                        Crear album
                     </button>
                 </div>
 
@@ -243,22 +201,22 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                 data-form="editar"
                 class="space-y-6 bg-gray-800/60 p-6 md:p-8 rounded-xl border border-white/10"
             >
-                <!-- Seleccionar cancion -->
+                <!-- Seleccionar album -->
                 <div class="flex flex-col gap-3">
                     <label class="block text-sm text-gray-300">
-                        Selecciona una canción *
+                        Selecciona un album *
                     </label>
                     <select
-                        id="select-cancion-editar"
-                        name="cancionId"
-                        data-select-cancion
+                        id="select-album-editar"
+                        name="albumId"
+                        data-select-album="editar"
                         class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
                                border border-white/10 focus:outline-none
                                focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
                     >
-                        <option value="">Selecciona una canción</option>
+                        <option value="">Selecciona un album</option>
                     </select>
-                    <p data-error="cancionId" class="text-xs text-red-400 mt-1">
+                    <p data-error="albumId" class="text-xs text-red-400 mt-1">
                     </p>
                 </div>
 
@@ -266,9 +224,9 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                     <!-- Columna izquierda -->
                     <div class="space-y-4">
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm text-gray-300"
-                                >Nuevo titulo</label
-                            >
+                            <label class="text-sm text-gray-300">
+                                Nuevo titulo
+                            </label>
                             <input
                                 name="titulo"
                                 class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
@@ -284,20 +242,50 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                             <textarea
                                 name="descripcion"
                                 rows={4}
+                                maxlength="255"
                                 class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
                                        border border-white/10 focus:outline-none
                                        focus:ring-2 focus:ring-red-500/40 focus:border-red-400 resize-y"
                             ></textarea>
+                            <p
+                                data-error="descripcion"
+                                class="text-xs text-red-400 mt-1"
+                            >
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Columna derecha -->
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm text-gray-300">
+                                Cambiar artista *
+                            </label>
+                            <select
+                                id="select-artista-album-editar"
+                                data-select-artista="editar"
+                                name="artistaId"
+                                class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
+                                       border border-white/10 focus:outline-none
+                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
+                            >
+                                <option value=""></option>
+                            </select>
+                            <p
+                                data-error="artistaId"
+                                class="text-xs text-red-400 mt-1"
+                            >
+                            </p>
                         </div>
                         <div class="flex flex-col gap-2">
                             <label
                                 class="text-sm text-gray-300"
-                                for={`portada-editar-${uid}`}
+                                for={`portada-album-editar-${uid}`}
                             >
-                                Nueva portada
+                                Nueva portada (opcional)
                             </label>
                             <input
-                                id={`portada-editar-${uid}`}
+                                id={`portada-album-editar-${uid}`}
                                 type="file"
                                 name="portada"
                                 accept="image/*"
@@ -313,70 +301,8 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                             </p>
                         </div>
                     </div>
-
-                    <!-- Columna derecha -->
-                    <div class="space-y-4">
-                        <div class="flex flex-col gap-2">
-                            <label class="text-sm text-gray-300">
-                                Nuevo audio
-                            </label>
-                            <input
-                                id={`audio-editar-${uid}`}
-                                type="file"
-                                name="audio"
-                                accept="audio/*"
-                                class="w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
-                                       border border-white/10 focus:outline-none
-                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
-                                data-audio
-                            />
-                            <p
-                                data-preview-audio-editar
-                                class="text-xs text-gray-400 mt-1"
-                            >
-                            </p>
-                        </div>
-
-                        <div class="flex flex-col gap-2">
-                            <label class="text-sm text-gray-300">
-                                Cambiar artista *
-                            </label>
-                            <select
-                                id="select-artista-editar"
-                                data-select-artista="editar"
-                                name="artistaId"
-                                class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
-                                       border border-white/10 focus:outline-none
-                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
-                            >
-                                <option value=""></option>
-                            </select>
-                            <p
-                                data-error="artistaId"
-                                class="text-xs text-red-400 mt-1"
-                            >
-                            </p>
-                        </div>
-
-                        <div class="flex flex-col gap-2">
-                            <label class="text-sm text-gray-300">
-                                Cambiar album (opcional)
-                            </label>
-                            <select
-                                id="select-album-editar"
-                                data-select-album="editar"
-                                name="albumId"
-                                class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
-                                       border border-white/10 focus:outline-none
-                                       focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
-                            >
-                                <option value=""
-                                    >Mantener album / sin album</option
-                                >
-                            </select>
-                        </div>
-                    </div>
                 </div>
+
                 <div class="h-10 md:h-10"></div>
 
                 <div class="flex justify-center items-center pt-4">
@@ -397,33 +323,30 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
         </div>
 
         <!-- PANEL ELIMINAR -->
-        <div
-            data-panel="eliminar"
-            data-delete-type="cancion"
-            class="hidden mt-2"
-        >
+        <div data-panel="eliminar" data-delete-type="album" class="hidden mt-2">
             <form
                 data-form="eliminar"
                 class="space-y-6 bg-gray-800/60 p-6 md:p-8 rounded-xl border border-white/10"
             >
                 <div class="flex flex-col gap-3">
                     <label class="block text-sm text-gray-300">
-                        Selecciona una cancion
+                        Selecciona un album
                     </label>
                     <select
-                        id="select-cancion-eliminar"
+                        id="select-album-eliminar"
                         name="eliminar"
-                        data-select-cancion="eliminar"
+                        data-select-album="eliminar"
                         data-delete-select
                         class="select2 w-full rounded-xl px-4 py-3 bg-gray-900/70 text-white
                                border border-white/10 focus:outline-none
                                focus:ring-2 focus:ring-red-500/40 focus:border-red-400"
                     >
-                        <option value="">Selecciona una canción</option>
+                        <option value="">Selecciona un album</option>
                     </select>
                     <p data-error="eliminar" class="text-xs text-red-400 mt-1">
                     </p>
                 </div>
+
                 <div class="h-10 md:h-10"></div>
 
                 <div class="flex justify-center items-center pt-6">
@@ -433,7 +356,7 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
                         class="px-6 py-3 rounded-xl bg-red-600 text-white font-medium
                                hover:bg-red-500 active:scale-[.98] transition cursor-pointer hover:scale-105"
                     >
-                        Eliminar canción
+                        Eliminar album
                     </button>
                 </div>
 
@@ -445,21 +368,21 @@ const uid = "canciones-" + Math.random().toString(36).slice(2);
             </form>
         </div>
     </div>
+
+    <script src="/src/scripts/admin/IndicadorInput.js" defer></script>
+    <script src="/src/scripts/admin/adminAlbum.js" defer></script>
+    <script src="/src/scripts/admin/SelectsGlobal.js" defer></script>
+
+    <style is:global>
+        .tab {
+            transition: all 0.3s ease;
+        }
+        .tab.active {
+            background: rgba(220, 38, 38, 0.8) !important;
+            color: #fff !important;
+            border-color: rgb(239 68 68);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+    </style>
 </section>
-
-<script src="/src/scripts/admin/IndicadorInput.js" defer></script>
-<script src="/src/scripts/admin/SelectsGlobal.js" defer></script>
-<script src="/src/scripts/admin/adminCanciones.js" defer></script>
-
-<style is:global>
-    .tab {
-        transition: all 0.3s ease;
-    }
-    .tab.active {
-        background: rgba(220, 38, 38, 0.8) !important;
-        color: #fff !important;
-        border-color: rgb(239 68 68);
-        transform: scale(1.05);
-        box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-    }
-</style>

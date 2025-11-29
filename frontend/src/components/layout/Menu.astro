@@ -1,3 +1,7 @@
+---
+import AdminIcon from "./icons.astro";
+---
+
 <div
     id="menuFondoNegro"
     class="fixed inset-0 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300 z-40"
@@ -7,24 +11,27 @@
 <aside
     id="sideMenu"
     class="fixed top-0 right-0 h-full w-64 bg-black text-white
-         p-6 translate-x-full transition-transform duration-300 z-50
-         flex flex-col gap-5"
+           p-6 translate-x-full transition-transform duration-300 z-50
+           flex flex-col gap-5"
 >
     <div class="flex justify-start">
         <button
             id="closeMenu"
             class="text-white text-2xl hover:text-red-400"
-            aria-label="Cerrar">✕</button
+            aria-label="Cerrar"
         >
+            ✕
+        </button>
     </div>
 
-    <ul class="flex flex-col gap-6 text-lg">
+    <ul class="flex flex-col gap-6 text-lg mt-4">
         <li>
             <a
                 href="/login"
-                class="block w-full text-center hover:text-red-400 hover:bg-white/10"
+                class="block w-full text-center py-2 rounded-md
+                       hover:text-red-400 hover:bg-white/10"
             >
-                Iniciar sesión
+                Iniciar sesion
             </a>
         </li>
 
@@ -32,45 +39,66 @@
             <a
                 href="#"
                 id="logoutLink"
-                class="block w-full text-center hover:text-red-400 hover:bg-white/10"
+                class="block w-full text-center py-2 rounded-md
+                       hover:text-red-400 hover:bg-white/10"
             >
-                Cerrar sesión
+                Cerrar sesion
             </a>
         </li>
 
         <li>
             <a
                 href="/likes"
-                class="block w-full text-center hover:text-red-400 hover:bg-white/10"
-                >Likes</a
+                class="block w-full text-center py-2 rounded-md
+                       hover:text-red-400 hover:bg-white/10"
             >
+                Likes
+            </a>
         </li>
+
         <li>
             <a
                 href="/panelAdministracion"
-                class="block w-full text-center hover:text-red-400 hover:bg-white/10"
-                >Panel admin</a
+                class="btn-admin hidden w-full flex items-center justify-center gap-2
+                       text-center py-2 rounded-md
+                       hover:text-red-400 hover:bg-white/10"
+                data-admin-only
             >
+                <AdminIcon class="w-5 h-5" />
+                Panel admin
+            </a>
         </li>
+
         <li>
             <a
                 href="/mensajes-admin"
-                class="block w-full text-center hover:text-red-400 hover:bg-white/10"
-                >Mensajes admin</a
+                class="btn-admin hidden w-full flex items-center justify-center gap-2
+                       text-center py-2 rounded-md
+                       hover:text-red-400 hover:bg-white/10"
+                data-admin-only
             >
+                <AdminIcon class="w-5 h-5" />
+                Mensajes admin
+            </a>
         </li>
+
         <li>
             <a
                 href="/api/swagger-ui/index.html#/"
                 target="_blank"
-                class="block w-full text-center hover:text-red-400 hover:bg-white/10"
-                >Documentacion API</a
+                class="btn-admin hidden w-full flex items-center justify-center gap-2
+                       text-center py-2 rounded-md
+                       hover:text-red-400 hover:bg-white/10"
+                data-admin-only
             >
+                <AdminIcon class="w-5 h-5" />
+                Documentacion API
+            </a>
         </li>
     </ul>
 </aside>
 
-<!-- Modal de confirmacion Cerrar sesion -->
+<!-- Modal logout-->
 <div
     id="logoutModal"
     tabindex="-1"
@@ -89,23 +117,21 @@
                 ✕
             </button>
 
-            <!-- Contenido -->
             <div
                 class="px-10 pt-16 pb-16 md:px-12 md:pt-20 md:pb-20
-         text-center flex flex-col items-center gap-8"
+                     text-center flex flex-col items-center gap-8"
             >
                 <h3 id="logoutModalTitle" class="text-2xl font-semibold">
-                    ¿Cerrar sesión?
+                    ¿Cerrar sesion?
                 </h3>
 
                 <p
                     id="logoutModalText"
                     class="text-gray-400 leading-relaxed text-base max-w-sm mb-8"
                 >
-                    Tu sesión se cerrará y volverás a la página de inicio.
+                    Tu sesion se cerrara y volveras a la pagina de inicio.
                 </p>
 
-                <!-- Botones -->
                 <div
                     class="flex flex-col sm:flex-row gap-4 justify-center w-full mt-4 mb-4"
                 >
@@ -113,7 +139,7 @@
                         id="cancelLogout"
                         type="button"
                         class="flex-1 px-5 py-3 rounded-lg border border-gray-600
-             bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium transition-all"
+                               bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium transition-all"
                     >
                         Cancelar
                     </button>
@@ -121,9 +147,9 @@
                         id="confirmLogout"
                         type="button"
                         class="flex-1 px-5 py-3 rounded-lg bg-red-600 hover:bg-red-700
-             focus:ring-4 focus:ring-red-500/40 text-white font-semibold transition-all"
+                               focus:ring-4 focus:ring-red-500/40 text-white font-semibold transition-all"
                     >
-                        Sí, cerrar sesión
+                        Si, cerrar sesion
                     </button>
                 </div>
             </div>

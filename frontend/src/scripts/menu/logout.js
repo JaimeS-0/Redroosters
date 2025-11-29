@@ -28,7 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // ¿Hay sesión?
         const tokenMatch = document.cookie.match(/rr_token=([^;]+)/);
-        const hasSession = !!tokenMatch;
+        const lsToken = localStorage.getItem("token");
+        const hasSession = !!tokenMatch || !!lsToken;
+
 
         if (hasSession) {
             // Si hay sesión -> modal de cerrar sesión
@@ -44,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 confirmBtn.onclick = () => {
                     document.cookie = "rr_token=; path=/; max-age=0";
                     localStorage.removeItem("rr_user");
+                    localStorage.removeItem("token");
                     window.location.href = "/login";
                 };
             }

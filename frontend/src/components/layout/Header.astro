@@ -36,7 +36,7 @@ const inlineHide = verLogo
             <li>
                 <a
                     href="/artistas"
-                    class="font-avestrava text-[clamp(25px,5.2vw,70px)] tracking-wide
+                    class="font-avestrava text-[clamp(25px,8vw,70px)] tracking-wide
                  text-white hover:text-red-400 transition-colors"
                 >
                     Artistas
@@ -45,7 +45,7 @@ const inlineHide = verLogo
             <li>
                 <a
                     href="/hot"
-                    class="text-white font-avestrava text-[clamp(25px,5.2vw,70px)] tracking-wide
+                    class="text-white font-avestrava text-[clamp(25px,8vw,70px)] tracking-wide
                  hover:text-red-400 transition-colors"
                 >
                     Hot
@@ -94,19 +94,69 @@ const inlineHide = verLogo
                 <a
                     href="/nosotros"
                     class="text-white font-avestrava font-medium tracking-wide hover:text-red-400 transition-colors
-                 text-[clamp(25px,5.2vw,70px)]"
+                 text-[clamp(25px,8vw,70px)]"
                 >
                     Nosotros
                 </a>
             </li>
-            <li>
+            <li class="flex items-center">
                 <button
                     id="menuBtn"
-                    class="ml-auto text-white hover:text-red-400 transition-colors text-5xl"
-                    aria-label="Abrir menú"
+                    type="button"
                     aria-expanded="false"
+                    aria-controls="sideMenu"
+                    class="relative group"
                 >
-                    ≡
+                    <div
+                        class="relative flex items-center justify-center
+               w-12 h-12 select-none overflow-hidden"
+                    >
+                        <div
+                            class="flex flex-col justify-between
+                   w-[20px] h-[20px]
+                   transform transition-all duration-300 origin-center"
+                        >
+                            <!-- LINEAS HAMBURGUESA -->
+                            <div
+                                class="bg-white group-hover:bg-red-500 h-[2px] w-7 transform transition-all duration-300
+                                origin-left group-[.menu-open]:translate-x-10"
+                            >
+                            </div>
+
+                            <div
+                                class="bg-white group-hover:bg-red-500 h-[2px] w-7 rounded transform transition-all duration-300 delay-200
+                                group-[.menu-open]:translate-x-10"
+                            >
+                            </div>
+
+                            <div
+                                class="bg-white group-hover:bg-red-500 h-[2px] w-7 transform transition-all duration-300 origin-left delay-300
+                                group-[.menu-open]:translate-x-10"
+                            >
+                            </div>
+
+                            <!-- X -->
+                            <div
+                                class="absolute items-center justify-between
+                       transform transition-all duration-500
+                       top-1/2 -translate-y-1/2 -translate-x-10
+                       group-[.menu-open]:translate-x-0
+                       flex w-0 group-[.menu-open]:w-12"
+                            >
+                                <div
+                                    class="absolute bg-white group-hover:bg-red-500 h-[2px] w-5 transform transition-all duration-500
+                                    rotate-45 delay-300 group-[.menu-open]:rotate-45"
+                                >
+                                </div>
+
+                                <div
+                                    class="absolute bg-white group-hover:bg-red-500 h-[2px] w-5 transform transition-all duration-500
+                                    -rotate-45 delay-300 group-[.menu-open]:-rotate-45"
+                                >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </button>
 
                 <Menu />

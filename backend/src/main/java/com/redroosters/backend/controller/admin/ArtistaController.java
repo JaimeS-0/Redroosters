@@ -1,5 +1,7 @@
 package com.redroosters.backend.controller.admin;
 
+import com.redroosters.backend.docs.admin.AlbumAdminApi;
+import com.redroosters.backend.docs.admin.ArtistaAdminApi;
 import com.redroosters.backend.dto.ArtistaRequestDTO;
 import com.redroosters.backend.dto.ArtistaResponseDTO;
 import com.redroosters.backend.service.AlmacenamientoService;
@@ -17,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 // Crear, Editar, Eliminar Artista
 @RestController
 @RequestMapping("/api/admin")
-public class ArtistaController  {
+public class ArtistaController  implements ArtistaAdminApi {
 
     private final ArtistaService artistaService;
     private final AlmacenamientoService almacenamientoService;
@@ -32,6 +34,7 @@ public class ArtistaController  {
             value = "/artistas",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
+    @Override
     public ResponseEntity<ArtistaResponseDTO> crearArtista(
             @RequestPart("nombre") String nombre,
             @RequestPart(value = "descripcion", required = false) String descripcion,
@@ -72,6 +75,7 @@ public class ArtistaController  {
             value = "/artistas/{id}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
+    @Override
     public ResponseEntity<ArtistaResponseDTO> editarArtista(
             @PathVariable Long id,
             @RequestPart(value = "nombre", required = false) String nombre,
@@ -114,7 +118,7 @@ public class ArtistaController  {
 
     // Eliminar artista
     @DeleteMapping("/artistas/{id}")
-    //@Override
+    @Override
     public ResponseEntity<Void> eliminarArtista(@PathVariable Long id) {
         artistaService.eliminar(id);
         return ResponseEntity.noContent().build();

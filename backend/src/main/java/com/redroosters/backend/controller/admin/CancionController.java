@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/admin")
-public class CancionController  {
+public class CancionController  implements CancionAdminApi{
 
     private final CancionService cancionService;
     private final ObjectMapper objectMapper;
@@ -32,7 +32,7 @@ public class CancionController  {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    //@Override
+    @Override
     public ResponseEntity<CancionResponseDTO> crearConArchivo(
             @RequestPart("datos") String datosJson,
             @RequestPart("audio") MultipartFile audio,
@@ -75,6 +75,7 @@ public class CancionController  {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @Override
     public ResponseEntity<CancionResponseDTO> editarCancion(
             @PathVariable Long id,
             @RequestPart("datos") String datosJson,
@@ -94,10 +95,10 @@ public class CancionController  {
         var resp = cancionService.editarCancion(id, dto, audio, portada);
         return ResponseEntity.ok(resp);
     }
-    
+
     // Eliminar
     @DeleteMapping("/cancion/{id}")
-    //@Override
+    @Override
     public ResponseEntity<Void> eliminarCancion(@PathVariable Long id) {
         cancionService.eliminarCancion(id);
         return ResponseEntity.noContent().build();

@@ -1,62 +1,88 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const formLogin = document.getElementById("formLogin");
+    const btnLogin = document.getElementById("btnLogin");
 
-    const formLogin = document.getElementById("formLogin")
-    const btnLogin = document.getElementById("btnLogin")
+    if (!formLogin) return;
 
-    if (!formLogin) return
+    // Comprobar si YA hay sesion iniciada NADA MAS CARGAR
+    const token = localStorage.getItem("token");
 
-    let enviando = false
+    if (token) {
+        const loginEmail = document.getElementById("login-email");
+        const loginPassword = document.getElementById("login-password");
+        const mensajeLogin = document.getElementById("login-mensaje");
 
-    formLogin.addEventListener("submit", async (e) => {
-        e.preventDefault()
+        // Deshabilitar inputs
+        if (loginEmail) loginEmail.disabled = true;
+        if (loginPassword) loginPassword.disabled = true;
 
-        if (enviando) return
-        enviando = true
-
+        // Deshabilitar boton
         if (btnLogin) {
-            btnLogin.disabled = true
-            btnLogin.textContent = "Iniciando..."
+            btnLogin.disabled = true;
+            btnLogin.textContent = "Sesion ya iniciada";
+            btnLogin.classList.add("opacity-60", "cursor-not-allowed");
         }
 
-        const loginEmail = document.getElementById("login-email")
-        const loginPassword = document.getElementById("login-password")
+        // Mensaje bonito
+        if (mensajeLogin) {
+            mensajeLogin.textContent = "Ya tienes una sesion iniciada.";
+            mensajeLogin.className = "text-green-500 text-center mt-4";
+        }
 
-        const email = loginEmail.value.trim()
-        const password = loginPassword.value.trim()
+        // No registramos el submit. Salimos ya.
+        return;
+    }
 
-        const errorEmail = document.getElementById("login-error-email")
-        const errorPassword = document.getElementById("login-error-password")
+    // Si NO hay sesion, aqui sigue tu login normal
+    let enviando = false;
 
-        const mensajeLogin = document.getElementById("login-mensaje")
+    formLogin.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
+        if (enviando) return;
+        enviando = true;
 
-        if (errorEmail) errorEmail.textContent = ""
-        if (errorPassword) errorPassword.textContent = ""
+        if (btnLogin) {
+            btnLogin.disabled = true;
+            btnLogin.textContent = "Iniciando...";
+        }
 
-        let valido = true
+        const loginEmail = document.getElementById("login-email");
+        const loginPassword = document.getElementById("login-password");
+
+        const email = loginEmail.value.trim();
+        const password = loginPassword.value.trim();
+
+        const errorEmail = document.getElementById("login-error-email");
+        const errorPassword = document.getElementById("login-error-password");
+        const mensajeLogin = document.getElementById("login-mensaje");
+
+        if (errorEmail) errorEmail.textContent = "";
+        if (errorPassword) errorPassword.textContent = "";
+
+        let valido = true;
 
         if (!email) {
-            if (errorEmail) errorEmail.textContent = "Introduce tu email."
-            valido = false
+            if (errorEmail) errorEmail.textContent = "Introduce tu email.";
+            valido = false;
         }
 
         if (!password) {
-            if (errorPassword) errorPassword.textContent = "Introduce tu contraseña."
-            valido = false
+            if (errorPassword) errorPassword.textContent = "Introduce tu contraseña.";
+            valido = false;
         } else if (password.length < 10) {
             if (errorPassword)
-                errorPassword.textContent = "La contraseña debe tener al menos 10 caracteres."
-            valido = false
+                errorPassword.textContent = "La contraseña debe tener al menos 10 caracteres.";
+            valido = false;
         }
 
         if (!valido) {
-            enviando = false
+            enviando = false;
             if (btnLogin) {
-                btnLogin.disabled = false
-                btnLogin.textContent = "Iniciar sesión"
+                btnLogin.disabled = false;
+                btnLogin.textContent = "Iniciar sesión";
             }
-
-            return
+            return;
         }
 
         try {
@@ -64,46 +90,45 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
-            })
+            });
 
             if (!res.ok) {
-                let mensaje = "No se ha podido iniciar sesion."
+                let mensaje = "No se ha podido iniciar sesion.";
 
                 try {
-                    const errorBody = await res.json()
-                    if (errorBody.detail) mensaje = errorBody.detail
-                    else if (errorBody.title) mensaje = errorBody.title
+                    const errorBody = await res.json();
+                    if (errorBody.detail) mensaje = errorBody.detail;
+                    else if (errorBody.title) mensaje = errorBody.title;
                     if (res.status === 401 || res.status === 403)
-                        mensaje = "Email o contraseña incorrectos."
+                        mensaje = "Email o contraseña incorrectos.";
                 } catch { }
 
-                if (errorEmail) errorEmail.textContent = mensaje
+                if (errorEmail) errorEmail.textContent = mensaje;
 
                 loginEmail.addEventListener("input", () => {
-                    if (errorEmail) errorEmail.textContent = ""
+                    if (errorEmail) errorEmail.textContent = "";
                 });
                 loginPassword.addEventListener("input", () => {
-                    if (errorPassword) errorPassword.textContent = ""
+                    if (errorPassword) errorPassword.textContent = "";
                 });
 
-                // resetear estado del envio para volver a pulsar el boton
-                enviando = false
+                enviando = false;
                 if (btnLogin) {
                     btnLogin.disabled = false;
-                    btnLogin.textContent = "Iniciar sesión"
+                    btnLogin.textContent = "Iniciar sesión";
                 }
                 return;
             }
 
-            const data = await res.json()
-            console.log("✅ Login correcto:", data)
+            const data = await res.json();
+            //console.log("✅ Login correcto:", data);
 
             if (mensajeLogin) {
-                mensajeLogin.textContent = "Te has Logueado correctamente."
-                mensajeLogin.className = "text-green-500 text-center mt-4"
+                mensajeLogin.textContent = "Te has Logueado correctamente.";
+                mensajeLogin.className = "text-green-500 text-center mt-4";
             }
 
-            document.cookie = `rr_token=${data.token}; path=/; max-age=86400`
+            document.cookie = `rr_token=${data.token}; path=/; max-age=86400`;
 
             localStorage.setItem("token", data.token);
 
@@ -112,28 +137,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 JSON.stringify({
                     username: data.username,
                     email: data.email,
-                    role: data.role
+                    role: data.role,
                 })
             );
 
-            // esperar 200 ms antes de redirigir
-            /*
             setTimeout(() => {
-                window.location.href = "/"
-            }, 200)
-            */
-
+                window.location.href = "/";
+            }, 300);
         } catch (err) {
-            console.error(err);
+            //console.error(err);
 
             const errorEmail = document.getElementById("login-error-email");
             if (errorEmail)
-                errorEmail.textContent = "No se pudo conectar con el servidor"
+                errorEmail.textContent = "No se pudo conectar con el servidor";
 
             enviando = false;
             if (btnLogin) {
-                btnLogin.disabled = false
-                btnLogin.textContent = "Iniciar sesión"
+                btnLogin.disabled = false;
+                btnLogin.textContent = "Iniciar sesión";
             }
         }
     });

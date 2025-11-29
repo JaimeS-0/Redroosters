@@ -3,28 +3,46 @@ import Layout from "../layouts/Layout.astro";
 
 import ArtistasPanel from "../components/panelAdmin/ArtistasPanel.astro";
 import CancionesPanel from "../components/panelAdmin/CancionesPanel.astro";
-//import AlbumsPanel from "../components/admin/AlbumsPanel.astro";
+import AlbumPanel from "../components/panelAdmin/AlbumPanel.astro";
 ---
 
 <Layout title="Panel de Administracion">
-    <main class="bg-black min-h-screen flex items-center justify-start gap-30">
+    <main
+        class="bg-black min-h-screen
+               w-full
+               overflow-x-hidden
+               flex flex-col lg:flex-row
+               items-start lg:items-center
+               justify-start
+               gap-8 lg:gap-30"
+    >
+        <div class="block lg:hidden h-28"></div>
+
+        <!-- MENU -->
         <div
-            class="translate-x-30 inline-block w-[320px] rounded-3xl border border-gray-700
-             bg-gradient-to-b from-gray-800 to-gray-700 px-0 py-0
-             shadow-[0_0_35px_rgba(255,0,0,0.15)] overflow-hidden
-             flex-col gap-12 mt-12 pt-12"
+            class="lg:translate-x-30 inline-block
+           w-full lg:w-[320px]
+           rounded-3xl border border-gray-700
+           bg-gradient-to-b from-gray-800 to-gray-700
+           px-0 py-0
+           shadow-[0_0_35px_rgba(255,0,0,0.15)]
+           overflow-hidden
+           gap-12"
         >
             <div class="h-5"></div>
 
             <div class="relative flex justify-center pt-6">
                 <span
                     class="font-maximum text-4xl text-red-600 absolute translate-x-[4px] translate-y-[3px] select-none"
-                    aria-hidden="true">MENÚ</span
+                    aria-hidden="true"
                 >
-                <span class="font-maximum text-4xl text-white relative"
-                    >MENÚ</span
-                >
+                    MENÚ
+                </span>
+                <span class="font-maximum text-4xl text-white relative">
+                    MENÚ
+                </span>
             </div>
+
             <div class="h-10"></div>
 
             <!-- Menu para cambiar vista -->
@@ -69,26 +87,35 @@ import CancionesPanel from "../components/panelAdmin/CancionesPanel.astro";
             <div class="h-6"></div>
         </div>
 
+        <!-- CONTENIDO -->
         <section
             id="contenido"
-            class="flex-1 min-h-[100vh] flex items-center justify-center"
+            class="flex-1 w-full
+                   min-h-[60vh]
+                   flex items-center justify-center
+                   mt-6 lg:mt-0"
         >
             <!-- Tarjeta central -->
             <div
-                class="w-full max-w-5xl min-h-[60vh] rounded-2xl border border-gray-700
-           bg-gradient-to-b from-gray-900/60 to-gray-800/60
-           backdrop-blur-sm shadow-[0_0_40px_rgba(255,0,0,0.18)]
-           p-10 scale-[1.05]"
+                class="w-full max-w-5xl min-h-[60vh]
+                       rounded-2xl border border-gray-700
+                       bg-gradient-to-b from-gray-900/60 to-gray-800/60
+                       backdrop-blur-sm
+                       shadow-[0_0_40px_rgba(255,0,0,0.18)]
+                       p-6 sm:px-8 sm:py-8 lg:p-10
+                       scale-100 lg:scale-[1.05]"
             >
                 <div id="vista-artistas" class="flex w-full justify-center">
                     <ArtistasPanel base="/api/admin/artistas" />
                 </div>
 
                 <div id="vista-canciones" class="hidden w-full justify-center">
-                    <CancionesPanel base="/api/admin/canion/archivo" />
+                    <CancionesPanel base="/api/admin/cancion/archivo" />
                 </div>
 
-                <div id="vista-albums" class="hidden w-full"></div>
+                <div id="vista-albums" class="hidden w-full">
+                    <AlbumPanel base="/api/admin/album" />
+                </div>
 
                 <div id="vista-estadisticas" class="hidden w-full">
                     <h2 class="text-white text-3xl text-center">
@@ -102,12 +129,16 @@ import CancionesPanel from "../components/panelAdmin/CancionesPanel.astro";
         <div
             id="deleteModal"
             tabindex="-1"
-            class="hidden fixed inset-0 z-50 justify-center items-center w-full h-full bg-black/60 backdrop-blur-sm"
+            class="hidden fixed inset-0 z-50
+                   justify-center items-center
+                   w-full h-full
+                   bg-black/60 backdrop-blur-sm"
         >
             <div class="w-full max-w-md mx-auto px-6 sm:px-8 my-16 sm:my-24">
                 <div
                     class="relative bg-gradient-to-b from-gray-950 to-gray-900 rounded-3xl
-                   shadow-[0_0_35px_rgba(255,0,0,0.15)] border border-red-500/30 text-white"
+                           shadow-[0_0_35px_rgba(255,0,0,0.15)]
+                           border border-red-500/30 text-white"
                 >
                     <button
                         id="deleteClose"
@@ -119,7 +150,7 @@ import CancionesPanel from "../components/panelAdmin/CancionesPanel.astro";
 
                     <div
                         class="px-10 pt-16 pb-16 md:px-12 md:pt-20 md:pb-20
-                       text-center flex flex-col items-center gap-8"
+                               text-center flex flex-col items-center gap-8"
                     >
                         <h3
                             id="deleteModalTitle"
@@ -143,7 +174,7 @@ import CancionesPanel from "../components/panelAdmin/CancionesPanel.astro";
                                 id="deleteCancel"
                                 type="button"
                                 class="flex-1 px-5 py-3 rounded-lg border border-gray-600
-                               bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium transition-all"
+                                       bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium transition-all"
                             >
                                 Cancelar
                             </button>
@@ -151,7 +182,7 @@ import CancionesPanel from "../components/panelAdmin/CancionesPanel.astro";
                                 id="deleteConfirm"
                                 type="button"
                                 class="flex-1 px-5 py-3 rounded-lg bg-red-600 hover:bg-red-700
-                               focus:ring-4 focus:ring-red-500/40 text-white font-semibold transition-all"
+                                       focus:ring-4 focus:ring-red-500/40 text-white font-semibold transition-all"
                             >
                                 Sí, eliminar
                             </button>
@@ -161,9 +192,7 @@ import CancionesPanel from "../components/panelAdmin/CancionesPanel.astro";
             </div>
         </div>
     </main>
+
+    <script type="module" src="/src/scripts/admin/MenuLateralPanel"></script>
+    <script src="/src/scripts/admin/ModalEliminar.js" defer></script>
 </Layout>
-
-<script type="module" src="/src/scripts/admin/MenuLateralPanel"></script>
-<script src="/src/scripts/admin/ModalEliminar.js" defer></script>
-
-

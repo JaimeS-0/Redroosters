@@ -29,8 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // ---- SELECTS DE ALBUMS ----
         const selAlbumCrear = root.querySelector('[data-select-album="crear"]');
         const selAlbumEditar = root.querySelector('[data-select-album="editar"]');
+        const selAlbumEliminar = root.querySelector('[data-select-album="eliminar"]'); // 👈 NUEVA LINEA
 
         // ---- SELECTS DE CANCIONES ----
+
         const selCancionEditar = root.querySelector('[data-select-cancion="editar"]');
         const selCancionEliminar = root.querySelector('[data-select-cancion="eliminar"]');
 
@@ -102,6 +104,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 selAlbumEditar.innerHTML =
                     '<option value="">Mantener album / sin album</option>';
             }
+            if (selAlbumEliminar) {
+                selAlbumEliminar.innerHTML =
+                    '<option value="">Selecciona un album</option>';
+            }
+
 
             albums.forEach((al) => {
                 const opt = document.createElement("option");
@@ -114,11 +121,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (selAlbumEditar) {
                     selAlbumEditar.appendChild(opt.cloneNode(true));
                 }
+                if (selAlbumEliminar) {
+                    selAlbumEliminar.appendChild(opt.cloneNode(true));
+                }
+
             });
 
             if (window.jQuery && $.fn.select2) {
                 if (selAlbumCrear) $(selAlbumCrear).select2();
                 if (selAlbumEditar) $(selAlbumEditar).select2();
+                if (selAlbumEliminar) $(selAlbumEliminar).select2();
             }
         }
 
@@ -170,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // ========= EVENTOS GLOBALES =========
         document.addEventListener("artistas-actualizados", recargarArtistas);
-        document.addEventListener("albums-actualizados", recargarAlbums);
+        document.addEventListener("album-actualizados", recargarAlbums);
         document.addEventListener("canciones-actualizadas", recargarCanciones);
     });
 });
