@@ -4,33 +4,33 @@ import InicioSesion from "../components/login/InicioSesion.astro";
 import Registro from "../components/login/Registro.astro";
 ---
 
-<!-- IZQUIERDA -->
-<div class="floating-column floating-left-1">
-    <img src="/img/footer/Logoinstagram.webp" class="floating-icon i1" />
-    <img src="/img/iconos/nota2.svg" class="floating-icon i2" />
-    <img src="/img/iconos/nota3.svg" class="floating-icon i3" />
-</div>
-
-<div class="floating-column floating-left-2">
-    <img src="/img/iconos/nota2.svg" class="floating-icon i1" />
-    <img src="/img/iconos/nota3.svg" class="floating-icon i2" />
-    <img src="/img/iconos/nota1.svg" class="floating-icon i3" />
-</div>
-
-<!-- DERECHA -->
-<div class="floating-column floating-right-1">
-    <img src="/img/iconos/nota1.svg" class="floating-icon i1" />
-    <img src="/img/iconos/nota2.svg" class="floating-icon i2" />
-    <img src="/img/iconos/nota3.svg" class="floating-icon i3" />
-</div>
-
-<div class="floating-column floating-right-2">
-    <img src="/img/iconos/nota3.svg" class="floating-icon i1" />
-    <img src="/img/iconos/nota1.svg" class="floating-icon i2" />
-    <img src="/img/iconos/nota2.svg" class="floating-icon i3" />
-</div>
-
 <Layout title="login" headerVerLogo={true} headerFondoNegro={true}>
+    <!-- IZQUIERDA -->
+    <div class="floating-column floating-left-1">
+        <img src="/img/footer/Logoinstagram.webp" class="floating-icon i1" />
+        <img src="/img/iconos/nota2.svg" class="floating-icon i2" />
+        <img src="/img/iconos/nota3.svg" class="floating-icon i3" />
+    </div>
+
+    <div class="floating-column floating-left-2">
+        <img src="/img/iconos/nota2.svg" class="floating-icon i1" />
+        <img src="/img/iconos/nota3.svg" class="floating-icon i2" />
+        <img src="/img/iconos/nota1.svg" class="floating-icon i3" />
+    </div>
+
+    <!-- DERECHA -->
+    <div class="floating-column floating-right-1">
+        <img src="/img/iconos/nota1.svg" class="floating-icon i1" />
+        <img src="/img/iconos/nota2.svg" class="floating-icon i2" />
+        <img src="/img/iconos/nota3.svg" class="floating-icon i3" />
+    </div>
+
+    <div class="floating-column floating-right-2">
+        <img src="/img/iconos/nota3.svg" class="floating-icon i1" />
+        <img src="/img/iconos/nota1.svg" class="floating-icon i2" />
+        <img src="/img/iconos/nota2.svg" class="floating-icon i3" />
+    </div>
+
     <main
         class="min-h-screen flex flex-col justify-center bg-transparent pt-12 pb-30 md:pt-16 md:pb-35 xl:pb-40"
     >
@@ -38,9 +38,10 @@ import Registro from "../components/login/Registro.astro";
         <div class="w-full flex flex-col items-center gap-8">
             <h1
                 id="tituloLogin"
-                class="text-1xl md:text-2xl max-w-xl text-center text-black"
+                class="text-1xl md:text-2xl text-center text-black"
             >
-                👋🏻 Registrate para guardar tus canciones favoritas
+                👋🏻 Registrate para guardar tus canciones favoritas y aumentar
+                las escuchas del artista
             </h1>
 
             <input id="authToggle" type="checkbox" class="sr-only peer" />

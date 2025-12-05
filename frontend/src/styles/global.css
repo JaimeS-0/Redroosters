@@ -12,8 +12,6 @@
 @font-face {
     font-family: "Avestrava";
     src: url("/fonts/Avestrava.ttf") format("truetype");
-
-
 }
 
 
@@ -89,7 +87,53 @@
 }
 
 
+/* para que las letras del Input se desplacen a la derecha del buscador */
+[data-search-input] {
+    padding-left: 48px !important;
+}
 
+.lupa {
+    width: 16px;
+    /* tamaño pequeño de la lupa */
+    height: 16px;
+    border: 2px solid white;
+    border-radius: 50%;
+
+    /* Permite posicionar libremente */
+    position: absolute;
+    /* Centra verticalmente a la mitad del contenedor (50%) */
+    top: 50%;
+    /* Espacio desde la izquierda del contenedor */
+    left: 12px;
+    /* Ajuste fino para centrar verticalmente */
+    transform: translateY(-50%);
+    /* Asegura que esté por encima del input */
+    z-index: 10;
+    display: block;
+    box-sizing: border-box;
+}
+
+.lupa::after {
+    content: "";
+    position: absolute;
+    /* grosor del mango */
+    width: 2px;
+    /* longitud del mango */
+    height: 7px;
+    background: white;
+    transform: rotate(-45deg);
+
+    /* posicionamiento muy importante */
+
+    /* baja el mango */
+    bottom: -4px;
+    /* lo coloca a la derecha */
+    right: -2px;
+    border-radius: 2px;
+}
+
+
+/* Barra de desplazamiento roja*/
 /* Aplica a todos los elemento que tenga scroll */
 *::-webkit-scrollbar {
     width: 12px;
@@ -114,7 +158,7 @@
 }
 
 
-
+/* Iconos flotando Inciar sesion*/
 
 /* Contenedor base */
 .floating-column {
@@ -197,4 +241,23 @@
         opacity: 0;
         transform: translate(-50%, -130vh);
     }
+}
+
+/* Barra roja discografía Artista */
+
+.disc-underline {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 120px;
+    height: 3px;
+    background-color: #ff0000;
+    border-radius: 9999px;
+    z-index: 5;
+    opacity: 0;
+    transition: left 0.35s ease, width 0.35s ease;
+}
+
+#tabsDiscografia .tab-disc {
+    transition: color 0.25s ease;
 }

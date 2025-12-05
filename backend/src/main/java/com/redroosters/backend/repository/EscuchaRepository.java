@@ -4,6 +4,7 @@ import com.redroosters.backend.model.Escucha;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,7 +20,6 @@ public interface EscuchaRepository extends JpaRepository<Escucha, Long> {
 
     // Devuelve todas las escuchas de un usuario
     //List<Escucha> findByUsuarioId(Long usuarioId);
-
 
     // Contador global por cancion
     @Query("""
@@ -43,6 +43,9 @@ public interface EscuchaRepository extends JpaRepository<Escucha, Long> {
     @Query("select coalesce(sum(e.vecesEscuchada), 0) from Escucha e")
     long sumAllEscuchas();
 
+    // Cuenta todas las escuchas de un artista
+    @Query("SELECT COUNT(e) FROM Escucha e WHERE e.cancion.artista.id = :artistaId")
+    long countByArtistaId(@Param("artistaId") Long artistaId);
 
     interface TopCancionProjection {
         Long getCancionId();

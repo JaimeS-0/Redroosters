@@ -24,26 +24,44 @@ try {
 }
 
 // rellenar hasta tener siempre 3
-while (artistas.length < 3) {
-  artistas.push({
-    id: -1,
-    nombre: "Proximamente...",
-    descripcion: "Nuevo artista destacado en camino...",
-    portadaUrl: "",
-    destacado: false,
-  });
+// ORDENAMOS: por id ascendente (el 1º que creaste tiene el id mas bajo)
+artistas.sort((a, b) => a.id - b.id);
+
+// Orden real:
+console.log(
+  "Orden final artistas destacados:",
+  artistas.map((a) => `${a.id} - ${a.nombre}`),
+);
+
+// Placeholder (relleno)
+const placeholder: Artista = {
+  id: -1,
+  nombre: "Proximamente...",
+  descripcion: "Nuevo artista destacado en camino.",
+  portadaUrl: "",
+  destacado: false,
+};
+
+// Ajustamos para tener SIEMPRE 3 posiciones
+if (artistas.length === 0) {
+  // [P, P, P]
+  artistas = [placeholder, placeholder, placeholder];
+} else if (artistas.length === 1) {
+  // [P, REAL1, P] → el real esta SIEMPRE en el centro (index 1)
+  artistas = [placeholder, artistas[0], placeholder];
+} else if (artistas.length === 2) {
+  // [REAL1, REAL2, P] → el 2º real (el que te importa) esta en el centro (index 1)
+  artistas = [artistas[0], artistas[1], placeholder];
+} else {
+  // 3 o mas → nos quedamos con los 3 primeros (ordenados)
+  artistas = artistas.slice(0, 3);
 }
 
 // dejar solo 3 artistas
 artistas = artistas.slice(0, 3);
 ---
 
-<Layout
-  title="home"
-  headerVerLogo={false}
-  headerFondoNegro={false}
-  mainClass="pt-0"
->
+<Layout title="home" headerVerLogo={false} headerFondoNegro={false}>
   <main>
     <HomeHero />
 
@@ -63,35 +81,52 @@ artistas = artistas.slice(0, 3);
         class="flex flex-col md:flex-row justify-center items-center gap-12 w-full max-w-8xl px-4"
       >
         {
-          artistas.map((artista, index) => (
-            <article
-              class={`bg-slate-100 rounded-xl shadow-xl overflow-hidden transition-transform duration-300 ${
-                index === 1
-                  ? "w-[550px] hover:scale-110" // central
-                  : "w-[450px] hover:scale-105" // laterales
-              }  hover:shadow-2xl`}
-            >
-              {/* imagen */}
-              <div class="h-[500px] overflow-hidden">
-                {artista.portadaUrl && artista.id !== -1 ? (
-                  <img
-                    src={artista.portadaUrl}
-                    alt={artista.nombre}
-                    class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-                  />
-                ) : null}
-              </div>
+          artistas.map((artista, index) => {
+            const classesBase = `
+        bg-slate-100 rounded-xl shadow-xl overflow-hidden
+        transition-transform duration-300 hover:shadow-2xl
+      `;
+            const widthClasses =
+              index === 1
+                ? "w-[550px] hover:scale-110" // central
+                : "w-[450px] hover:scale-105"; // laterales
 
-              <div class="p-6 text-center space-y-3">
-                <p class="font-semibold text-gray-900 text-xl tracking-wide">
-                  {artista.nombre}
-                </p>
-                <p class="text-sm text-gray-600 leading-relaxed">
-                  {artista.descripcion}
-                </p>
-              </div>
-            </article>
-          ))
+            const card = (
+              <article class={`${classesBase} ${widthClasses}`}>
+                {/* imagen */}
+                <div class="h-[500px] overflow-hidden">
+                  {artista.portadaUrl && artista.id !== -1 ? (
+                    <img
+                      src={artista.portadaUrl}
+                      alt={artista.nombre}
+                      class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                    />
+                  ) : null}
+                </div>
+
+                <div class="p-6 text-center space-y-3">
+                  <p class="font-semibold text-gray-900 text-xl tracking-wide">
+                    {artista.nombre}
+                  </p>
+                  <p class="text-sm text-gray-600 leading-relaxed">
+                    {artista.descripcion}
+                  </p>
+                </div>
+              </article>
+            );
+
+            // Si es placeholder (id = -1), NO hay enlace
+            if (artista.id === -1) {
+              return card;
+            }
+
+            // Artista real → lo envolvemos en <a> dinámico
+            return (
+              <a href={`/artista/${artista.id}`} class="block cursor-pointer">
+                {card}
+              </a>
+            );
+          })
         }
       </div>
 

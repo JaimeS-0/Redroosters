@@ -308,6 +308,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     setMsg(msgCrear, true, "Cancion creada correctamente ✅");
                     formCrear.reset();
 
+                    // Actualizar estadísticas
+                    document.dispatchEvent(new CustomEvent("artistas-actualizados"));
+
+
                     await recargarSelectCanciones();
 
                 } catch (err) {
@@ -471,6 +475,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
 
                     await recargarSelectCanciones();
+
+                    // Actualizar estadísticas
+                    window.dispatchEvent(new Event("estadisticas:actualizar"));
+
+
 
                 } catch (err) {
                     //console.error("Error eliminando cancion", err);

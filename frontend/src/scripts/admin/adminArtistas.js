@@ -193,6 +193,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Avisamos globalmente
                     document.dispatchEvent(new CustomEvent("artistas-actualizados"));
 
+                    // Actualizar estadísticas
+                    window.dispatchEvent(new Event("estadisticas:actualizar"));
+
+
                 } catch (err) {
                     //console.error("Error creando artista", err);
                     if (String(err.message).includes("401")) {
@@ -285,7 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
             formEliminar.addEventListener("submit", async (e) => {
                 e.preventDefault();
 
-                console.log("[adminArtistas] submit eliminar artista");
+                //console.log("[adminArtistas] submit eliminar artista");
 
 
                 if (!baseAdmin) {
@@ -320,6 +324,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     // Avisamos globalmente
                     document.dispatchEvent(new CustomEvent("artistas-actualizados"));
+
+                    // Actualizar estadísticas
+                    window.dispatchEvent(new Event("estadisticas:actualizar"));
+
 
                 } catch (err) {
                     //console.error("Error eliminando artista", err);

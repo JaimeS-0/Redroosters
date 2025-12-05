@@ -1,19 +1,25 @@
 package com.redroosters.backend.service;
 
-import com.redroosters.backend.dto.AlbumResponseDTO;
+
 import com.redroosters.backend.dto.ArtistaRequestDTO;
 import com.redroosters.backend.dto.ArtistaResponseDTO;
 import com.redroosters.backend.exception.ArtistaNotFoundException;
 import com.redroosters.backend.mapper.ArtistaMapper;
 import com.redroosters.backend.model.Artista;
 import com.redroosters.backend.repository.ArtistaRepository;
+import com.redroosters.backend.repository.EscuchaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+
+import java.util.ArrayList;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // Logica de CRUD y visualizar Artistas
 
@@ -22,10 +28,12 @@ public class ArtistaService {
 
     private final ArtistaRepository artistaRepository;
     private final ArtistaMapper artistaMapper;
+    private final EscuchaRepository escuchaRepository;
 
-    public ArtistaService(ArtistaRepository artistaRepository, ArtistaMapper artistaMapper) {
+    public ArtistaService(ArtistaRepository artistaRepository, ArtistaMapper artistaMapper, EscuchaRepository escuchaRepository) {
         this.artistaRepository = artistaRepository;
         this.artistaMapper = artistaMapper;
+        this.escuchaRepository = escuchaRepository;
     }
 
     // Privado ADMIN
@@ -47,22 +55,41 @@ public class ArtistaService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
 
         return artistaRepository.findAll(pageable)
-                .map(artista -> new ArtistaResponseDTO(
-                        artista.getId(),
-                        artista.getNombre(),
-                        artista.getUrlNombre(),
-                        artista.getDescripcion(),
-                        artista.getPortadaUrl(),
-                        artista.isDestacado()
-                ));
+                .map(artista -> {
+
+                    long totalEscuchas = escuchaRepository.countByArtistaId(artista.getId());
+
+                    return new ArtistaResponseDTO(
+                            artista.getId(),
+                            artista.getNombre(),
+                            artista.getUrlNombre(),
+                            artista.getDescripcion(),
+                            artista.getPortadaUrl(),
+                            artista.isDestacado(),
+                            totalEscuchas
+                    );
+                });
     }
 
     // Publico USER
     // Listar solo 6 artistas pagina de artistas
     public List<ArtistaResponseDTO> randomArtistas(int size, List<Long> excludeIds) {
-        if (excludeIds == null) excludeIds = List.of();
-        return artistaRepository.findRandom(size, excludeIds)
-                .stream()
+        List<Long> finalExcludeIds = (excludeIds == null) ? List.of() : excludeIds;
+
+        // Cargamos todos los artistas
+        List<Artista> todos = artistaRepository.findAll();
+
+        // Filtramos excluidos y lo metemos en una lista MODIFICABLE
+        List<Artista> filtrados = todos.stream()
+                .filter(a -> !finalExcludeIds.contains(a.getId()))
+                .collect(Collectors.toCollection(ArrayList::new)); 
+
+        // Ahora sí podemos barajar
+        Collections.shuffle(filtrados);
+
+        // Limitamos a size y mapeamos a DTO
+        return filtrados.stream()
+                .limit(size)
                 .map(artistaMapper::toDTO)
                 .toList();
     }
@@ -72,7 +99,19 @@ public class ArtistaService {
     public ArtistaResponseDTO getId(Long id) {
         Artista artista = artistaRepository.findById(id)
                 .orElseThrow(() -> new ArtistaNotFoundException(id));
-        return artistaMapper.toDTO(artista);
+
+        long totalEscuchas = escuchaRepository.countByArtistaId(id);
+
+        return new ArtistaResponseDTO(
+                artista.getId(),
+                artista.getNombre(),
+                artista.getUrlNombre(),
+                artista.getDescripcion(),
+                artista.getPortadaUrl(),
+                artista.isDestacado(),
+                totalEscuchas
+        );
+        //return artistaMapper.toDTO(artista);
     }
 
     // Privado ADMIN
@@ -131,8 +170,5 @@ public class ArtistaService {
         // Converti DTO y se devuelve
         return artistaMapper.toDToList(destacados);
     }
-
-
-
 
 }

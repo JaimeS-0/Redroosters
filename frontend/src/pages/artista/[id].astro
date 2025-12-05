@@ -1,0 +1,227 @@
+---
+export const prerender = false;
+
+import Layout from "../../layouts/Layout.astro";
+import ArtistaCancionesLista from "../../components/artistas/ArtistaCancionesLista.astro";
+import ArtistaSinglesLista from "../../components/artistas/ArtistaSinglesLista.astro";
+import ArtistaAlbumesLista from "../../components/artistas/ArtistaAlbumesLista.astro";
+
+interface Artista {
+    id: number;
+    nombre: string;
+    urlNombre: string;
+    descripcion: string;
+    portadaUrl: string;
+    destacado: boolean;
+    totalEscuchas: number;
+}
+
+const { id } = Astro.params;
+let artista: Artista | null = null;
+
+try {
+    const res = await fetch(`http://backend:9000/api/public/artista/${id}`);
+
+    if (res.ok) {
+        artista = await res.json();
+    }
+} catch (err) {
+    //console.error("Error cargando artista", err);
+}
+---
+
+<Layout title={artista?.nombre ?? "Artista"}>
+    <main
+        class="min-h-screen bg-gradient-to-b from-black via-[#0b0203] to-black text-white"
+    >
+        <div class="h-56"></div>
+
+        <section class="w-full pt-32 pb-16 flex justify-center">
+            <div
+                class="w-full max-w-5xl px-4 md:px-6
+           flex flex-col md:flex-row items-center justify-center gap-16"
+            >
+                <!-- FOTO -->
+                <div
+                    class="w-64 h-64 sm:w-72 sm:h-72 rounded-3xl overflow-hidden
+             border border-white/25 bg-black/60
+             shadow-[0_0_50px_rgba(255,0,0,0.25)] hover:scale-110"
+                >
+                    <img
+                        src={artista?.portadaUrl}
+                        alt={artista?.nombre}
+                        class="w-full h-full object-cover"
+                        loading="lazy"
+                    />
+                </div>
+
+                <!-- INFO -->
+                <div class="text-center space-y-4 max-w-xl">
+                    <h1 class="font-avestrava text-5xl tracking-wide">
+                        {artista?.nombre}
+                    </h1>
+
+                    <p class="text-white/80 leading-relaxed">
+                        {artista?.descripcion}
+                    </p>
+
+                    <p class="text-white/60 text-sm">
+                        Escuchas totales: {artista?.totalEscuchas ?? 0}
+                    </p>
+
+                    {
+                        artista?.destacado && (
+                            <span class="px-4 py-1 rounded-full bg-red-600 text-white text-sm inline-block">
+                                ⭐ Artista destacado
+                            </span>
+                        )
+                    }
+                </div>
+            </div>
+        </section>
+
+        <!-- DISCOGRAFIA -->
+        <div class="h-22"></div>
+
+        <section class="w-full flex justify-center">
+            <div class="max-w-5xl w-full px-4 md:px-6">
+                <h2
+                    class="font-avestrava text-4xl sm:text-4xl text-center mb-8
+             drop-shadow-[0_0_10px_rgba(0,0,0,0.8)]"
+                >
+                    Discografía
+                </h2>
+                <div class="h-7"></div>
+
+                <!-- TABS CENTRADOS -->
+                <div class="w-full flex justify-center mt-6">
+                    <div id="tabsDiscografia" class="relative flex gap-10 pb-3">
+                        <button
+                            type="button"
+                            class="tab-disc text-white text-sm sm:text-base"
+                            data-tab="canciones"
+                        >
+                            Canciones
+                        </button>
+
+                        <button
+                            type="button"
+                            class="tab-disc text-white/60 text-sm sm:text-base"
+                            data-tab="albumes"
+                        >
+                            Álbumes
+                        </button>
+
+                        <button
+                            type="button"
+                            class="tab-disc text-white/60 text-sm sm:text-base"
+                            data-tab="singles"
+                        >
+                            Singles
+                        </button>
+
+                        <!-- Barra roja -->
+                        <div class="disc-underline"></div>
+                    </div>
+                </div>
+
+                <!-- Discografia -->
+                <div
+                    class="mt-8 max-w-4xl mx-auto
+             rounded-3xl bg-white/5 border border-white/10
+             p-8 sm:p-10 backdrop-blur-xl
+             shadow-[0_0_30px_rgba(0,0,0,0.6)]"
+                >
+                    <div data-tab-content="canciones">
+                        <ArtistaCancionesLista artistaId={Number(id)} />
+                    </div>
+
+                    <div data-tab-content="albumes" class="hidden">
+                        <ArtistaAlbumesLista artistaId={Number(id)} />
+                    </div>
+
+                    <div data-tab-content="singles" class="hidden">
+                        <ArtistaSinglesLista artistaId={Number(id)} />
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</Layout>
+
+<script type="module">
+    document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById("tabsDiscografia");
+        if (!container) return;
+
+        const underline = container.querySelector(".disc-underline");
+        const tabs = Array.from(container.querySelectorAll(".tab-disc"));
+
+        if (!underline || tabs.length === 0) return;
+
+        // Todos los bloques de contenido (canciones, albumes, singles)
+        const contents = Array.from(
+            document.querySelectorAll("[data-tab-content]"),
+        );
+
+        // Por defecto: primera pestaña (Canciones)
+        let activeTab = tabs[0];
+
+        function moverBarra(btn) {
+            const rect = btn.getBoundingClientRect();
+            const contRect = container.getBoundingClientRect();
+
+            const left = rect.left - contRect.left;
+
+            underline.style.left = `${left}px`;
+            underline.style.width = `${rect.width}px`;
+
+            // Colores activo / inactivo
+            tabs.forEach((t) => {
+                t.classList.remove("text-white");
+                t.classList.add("text-white/60");
+            });
+
+            btn.classList.add("text-white");
+            btn.classList.remove("text-white/60");
+
+            activeTab = btn;
+        }
+
+        function activarTab(btn) {
+            const target = btn.dataset.tab; // "canciones" | "albumes" | "singles"
+
+            // Mostrar solo el contenido de la pestaña pulsada
+            contents.forEach((c) => {
+                const tabName = c.getAttribute("data-tab-content");
+
+                if (tabName === target) {
+                    c.classList.remove("hidden");
+                } else {
+                    c.classList.add("hidden");
+                }
+            });
+
+            moverBarra(btn);
+        }
+
+        // --- Inicial ---
+        const oldTransition = underline.style.transition;
+        underline.style.transition = "none";
+
+        activarTab(activeTab);
+
+        requestAnimationFrame(() => {
+            underline.style.transition = oldTransition || "";
+            underline.style.opacity = "1";
+        });
+
+        // --- Eventos click ---
+        tabs.forEach((tab) => {
+            tab.addEventListener("click", () => activarTab(tab));
+        });
+
+        // --- Resize ---
+        window.addEventListener("resize", () => moverBarra(activeTab));
+    });
+</script>

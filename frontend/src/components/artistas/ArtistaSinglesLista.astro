@@ -1,0 +1,74 @@
+---
+interface Cancion {
+    id: number;
+    titulo: string;
+    descripcion: string;
+    duracionTexto: string;
+    portada: string;
+    tituloAlbum: string | null;
+}
+
+interface Props {
+    artistaId: number;
+}
+
+const { artistaId } = Astro.props;
+
+const BASE_URL = "http://backend:9000";
+
+let singles: Cancion[] = [];
+
+try {
+    const res = await fetch(
+        `${BASE_URL}/api/public/artista/${artistaId}/cancion`,
+    );
+
+    if (res.ok) {
+        const data = await res.json();
+        const todas: Cancion[] = Array.isArray(data)
+            ? (data as Cancion[])
+            : (data.content ?? []);
+
+        // Solo canciones sin album
+        singles = todas.filter((c) => !c.tituloAlbum);
+    }
+} catch (err) {
+    console.error("[ArtistaSinglesLista] Error cargando singles:", err);
+}
+---
+
+{
+    singles.length > 0 && (
+        <section>
+            <ul class="flex flex-col gap-2 divide-white/10">
+                {singles.map((c) => (
+                    <li class="flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-white/5 transition cursor-pointer">
+                        <img
+                            src={c.portada}
+                            alt={c.titulo}
+                            class="w-12 h-12 rounded-lg object-cover border border-white/10"
+                            loading="lazy"
+                        />
+
+                        <div class="flex-1 flex flex-col">
+                            <p class="text-white font-medium">
+                                {c.titulo} - {c.descripcion}
+                            </p>
+                            <p class="text-xs text-gray-400">Single</p>
+                        </div>
+
+                        <p class="text-sm text-gray-300 tabular-nums">
+                            {c.duracionTexto}
+                        </p>
+                    </li>
+                ))}
+            </ul>
+        </section>
+    )
+}
+
+{
+    singles.length === 0 && (
+        <p class="text-sm text-gray-400">No hay singles disponibles.</p>
+    )
+}

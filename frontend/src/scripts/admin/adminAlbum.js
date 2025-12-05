@@ -259,6 +259,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         new CustomEvent("albums-actualizados")
                     );
 
+                    // Actualizar estadísticas
+                    window.dispatchEvent(new Event("estadisticas:actualizar"));
+
+
                 } catch (err) {
                     if (String(err.message).includes("401")) {
                         setMsg(
@@ -289,8 +293,28 @@ document.addEventListener("DOMContentLoaded", () => {
                     const albumId = selAlbumEditar.value;
                     const raw = new FormData(formEditar);
 
-                    const titulo = raw.get("titulo") || null;
-                    const descripcion = raw.get("descripcion") || null;
+                    //const titulo = raw.get("titulo")
+                    //const descripcion = raw.get("descripcion")
+
+                    // Limpiamos valor escrito en el input
+                    let titulo =
+                        typeof tituloRaw === "string" ? tituloRaw.trim() : "";
+
+                    // Si el input está vacio, usamos el texto del <option> seleccionado
+                    if (!titulo && selAlbumEditar.selectedIndex >= 0) {
+                        const opt =
+                            selAlbumEditar.options[selAlbumEditar.selectedIndex];
+                        if (opt && typeof opt.textContent === "string") {
+                            titulo = opt.textContent.trim();
+                        }
+                    }
+
+                    // 3) Descripcion puede ser opcional
+                    const descripcion =
+                        typeof descripcionRaw === "string" &&
+                            descripcionRaw.trim() !== ""
+                            ? descripcionRaw.trim()
+                            : null;
 
                     const artistaIdRaw = raw.get("artistaId");
                     const artistaId = artistaIdRaw ? Number(artistaIdRaw) : null;
@@ -326,13 +350,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     // El PUT del backend espera JSON (AlbumRequestDTO)
                     const dto = {
-                        titulo: titulo && titulo.trim() !== "" ? titulo.trim() : null,
+                        titulo: titulo,
                         descripcion: descripcion,
                         // portadaUrl no se toca aqui (se mantiene la que tiene)
                         portadaUrl: null,
                         artistaId: artistaId,
                         cancionesIds: cancionesIds,
                     };
+
+
 
                     await fetchAdmin(`${baseEditar}/${albumId}`, {
                         method: "PUT",
@@ -412,6 +438,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.dispatchEvent(
                         new CustomEvent("albums-actualizados")
                     );
+
+                    // Actualizar estadísticas
+                    window.dispatchEvent(new Event("estadisticas:actualizar"));
+
 
                 } catch (err) {
                     if (String(err.message).includes("401")) {

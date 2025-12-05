@@ -4,6 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import ArtistasPanel from "../components/panelAdmin/ArtistasPanel.astro";
 import CancionesPanel from "../components/panelAdmin/CancionesPanel.astro";
 import AlbumPanel from "../components/panelAdmin/AlbumPanel.astro";
+import EstadisticasPanel from "../components/panelAdmin/EstadisticasPanel.astro";
 ---
 
 <Layout title="Panel de Administracion">
@@ -118,9 +119,7 @@ import AlbumPanel from "../components/panelAdmin/AlbumPanel.astro";
                 </div>
 
                 <div id="vista-estadisticas" class="hidden w-full">
-                    <h2 class="text-white text-3xl text-center">
-                        salen Estadisticas
-                    </h2>
+                    <EstadisticasPanel base="/api/admin/estadisticas" />
                 </div>
             </div>
         </section>

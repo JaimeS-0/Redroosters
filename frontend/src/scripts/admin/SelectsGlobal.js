@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // ---- SELECTS DE ALBUMS ----
         const selAlbumCrear = root.querySelector('[data-select-album="crear"]');
         const selAlbumEditar = root.querySelector('[data-select-album="editar"]');
-        const selAlbumEliminar = root.querySelector('[data-select-album="eliminar"]'); // 👈 NUEVA LINEA
+        const selAlbumEliminar = root.querySelector('[data-select-album="eliminar"]');
 
         // ---- SELECTS DE CANCIONES ----
 
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 artistas = await cargarLista(urlArtistas);
             } catch (err) {
-                console.error("Error recargando artistas", err);
+                //console.error("Error recargando artistas", err);
                 return;
             }
 
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 albums = await cargarLista(urlAlbums);
             } catch (err) {
-                console.error("Error recargando albums", err);
+                //console.error("Error recargando albums", err);
                 return;
             }
 
@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 canciones = await cargarLista(urlCanciones);
             } catch (err) {
-                console.error("Error recargando canciones", err);
+                //console.error("Error recargando canciones", err);
                 return;
             }
 
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // ========= EVENTOS GLOBALES =========
         document.addEventListener("artistas-actualizados", recargarArtistas);
-        document.addEventListener("album-actualizados", recargarAlbums);
+        document.addEventListener("albums-actualizados", recargarAlbums);
         document.addEventListener("canciones-actualizadas", recargarCanciones);
     });
 });

@@ -9,5 +9,7 @@ public record ArtistaResponseDTO(
         String urlNombre,
         String descripcion,
         String portadaUrl,
-        boolean destacado
+        boolean destacado,
+        long totalEscuchas
+
 ) {}
