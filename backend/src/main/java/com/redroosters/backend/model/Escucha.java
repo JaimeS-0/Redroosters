@@ -17,6 +17,7 @@ public class Escucha {
     private Usuario usuario;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "cancion_id")
     private Cancion cancion;
 
     private Long vecesEscuchada = 1L;

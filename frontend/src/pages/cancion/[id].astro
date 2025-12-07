@@ -1,0 +1,424 @@
+---
+export const prerender = false;
+
+import Layout from "../../layouts/Layout.astro";
+import { PUBLIC_BACKEND_URL, INTERNAL_BACKEND_URL } from "../../config/backend";
+
+
+interface Cancion {
+    id: number;
+    titulo: string;
+    descripcion: string;
+    duracionSegundos: number;
+    duracionTexto: string;
+    portada: string;
+    urlAudio: string;
+    nombreArtista: string;
+    tituloAlbum: string | null;
+}
+
+const { id } = Astro.params;
+
+let cancion: Cancion | null = null;
+
+try {
+    const res = await fetch(`${INTERNAL_BACKEND_URL}/api/public/cancion/${id}`);
+
+    if (res.ok) {
+        cancion = await res.json();
+    }
+} catch (err) {
+    //console.error("[CancionDetalle] Error cargando cancion:", err);
+}
+---
+
+<Layout title={cancion ? cancion.titulo : "Cancion"}>
+    <main class="min-h-screen bg-black text-white flex justify-center items-center">
+        {
+            cancion ? (
+                <section class="w-full max-w-3xl px-4 py-8 flex flex-col gap-6">
+                    <div class="flex gap-6 items-center">
+                        <img
+                            src={cancion.portada}
+                            alt={cancion.titulo}
+                            class="w-40 h-40 rounded-2xl object-cover border border-white/10"
+                        />
+                        <div class="flex flex-col gap-1">
+                            <p class="text-sm text-gray-400">Cancion</p>
+                            <h1 class="text-2xl font-bold">
+                                {cancion.titulo}
+                            </h1>
+                            <p class="text-gray-300 underline">
+                                {cancion.nombreArtista}
+                            </p>
+                            <p class="text-sm text-gray-400">
+                                {cancion.tituloAlbum ? cancion.tituloAlbum : "Single"}
+                            </p>
+                            <p class="text-sm text-gray-400 mt-2">
+                                Duracion: {cancion.duracionTexto}
+                            </p>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-gray-300">
+                        {cancion.descripcion}
+                    </p>
+
+                    {/* REPRODUCTOR */}
+                    <div
+                        id="custom-audio-player"
+                        class="w-full mt-6 bg-white/5 p-6 rounded-xl shadow-lg border border-white/10 flex flex-col gap-4"
+                    >
+                        {/* Audio real controlado por el player */}
+                        <audio
+                            id="audio-source"
+                            src={`${PUBLIC_BACKEND_URL}${cancion.urlAudio}`}
+                            class="hidden"
+                        ></audio>
+
+                        {/* Controles principales */}
+                        <div class="flex items-center justify-center gap-6">
+                            {/* Anterior (decorativo) */}
+                            <button
+                                id="prev-btn"
+                                class="text-white hover:text-gray-300 transition disabled:opacity-50"
+                                aria-label="Anterior canción"
+                                disabled
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-8 h-8"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path d="M19 20V4" />
+                                    <path d="M5 12l6 6V6l-6 6z" />
+                                </svg>
+                            </button>
+
+                            {/* Play / Pause */}
+                            <button
+                                id="play-pause-btn"
+                                class="bg-white text-black p-3 rounded-full hover:bg-gray-300 transition"
+                                aria-label="Reproducir"
+                            >
+                                <svg
+                                    id="play-icon"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-6 h-6 fill-current"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path d="M7 6v12l10-6z" />
+                                </svg>
+                                <svg
+                                    id="pause-icon"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-6 h-6 fill-current hidden"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path d="M6 6h4v12H6zm8 0h4v12h-4z" />
+                                </svg>
+                            </button>
+
+                            {/* Siguiente (decorativo) */}
+                            <button
+                                id="next-btn"
+                                class="text-white hover:text-gray-300 transition disabled:opacity-50"
+                                aria-label="Siguiente canción"
+                                disabled
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-8 h-8"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path d="M5 4v16" />
+                                    <path d="M19 12l-6 6V6l6 6z" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {/* Barra de progreso y tiempos */}
+                        <div class="flex items-center gap-4">
+                            <span
+                                id="current-time"
+                                class="text-xs text-gray-400"
+                            >
+                                0:00
+                            </span>
+
+                            <input
+                                type="range"
+                                id="progress-bar"
+                                value="0"
+                                min="0"
+                                max={cancion.duracionSegundos}
+                                class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer range-lg [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
+                            />
+
+                            <span
+                                id="duration"
+                                class="text-xs text-gray-400"
+                            >
+                                {cancion.duracionTexto}
+                            </span>
+                        </div>
+
+                        {/* Like + Volumen */}
+                        <div class="flex justify-between items-center mt-2">
+                            {/* Like */}
+                            <button
+                                id="like-btn"
+                                class="text-white hover:text-red-500 transition"
+                                aria-label="Me gusta"
+                            >
+                                <svg
+                                    id="heart-icon-empty"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-6 h-6 fill-none stroke-current"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                </svg>
+                            </button>
+
+                            {/* Volumen */}
+                            <div class="flex items-center gap-2 text-gray-400">
+  
+                            <!-- 🔊 Volumen alto -->
+                            <svg
+                                id="vol-icon"
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="w-6 h-6 cursor-pointer"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="M11 5L6 9H2v6h4l5 4z" />
+                                <path d="M15 10c1.5 1 1.5 3 0 4" />
+                                <path d="M17.5 8c2.5 2 2.5 6 0 8" />
+                                <path d="M20 6c3.5 3 3.5 9 0 12" />
+                            </svg>
+
+                            <!-- 🔇 Mute -->
+                            <svg
+                                id="vol-icon-muted"
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="w-6 h-6 cursor-pointer hidden"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="M11 5L6 9H2v6h4l5 4z" />
+                                <line x1="22" y1="9" x2="16" y2="15" />
+                                <line x1="16" y1="9" x2="22" y2="15" />
+                            </svg>
+
+                            <input
+                                type="range"
+                                id="volume-slider"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                value="1"
+                                class="w-20 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer range-lg [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
+                            />
+                            </div>
+                        </div>
+                        <a
+                            href={`/artista/${id}`}
+                            class="mt-6 inline-block px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition text-center"
+                            >
+                            Ir al artista
+                        </a>
+                    </div>
+
+                    <script is:inline>
+                        
+                        document.addEventListener("DOMContentLoaded", () => {
+
+                            /* Elementos principales del reproductor */
+
+                            // Elemento <audio>
+                            const audio = document.getElementById("audio-source");
+                            if (!audio) return; // Si no existe, salimos y evitamos errores
+
+                            // Boton play/pause y sus iconos
+                            const botonReproducirPausar = document.getElementById("play-pause-btn");
+                            const iconoPlay = document.getElementById("play-icon");
+                            const iconoPause = document.getElementById("pause-icon");
+
+                            // Barra de progreso y textos de tiempo
+                            const barraProgreso = document.getElementById("progress-bar");
+                            const tiempoActualTexto = document.getElementById("current-time");
+                            const duracionTexto = document.getElementById("duration");
+
+                            // Boton de "like" y su icono
+                            const botonLike = document.getElementById("like-btn");
+                            const iconoCorazonVacio = document.getElementById("heart-icon-empty");
+
+                            // Iconos de volumen
+                            const iconoVolumen = document.getElementById("vol-icon");
+                            const iconoVolumenMuteado = document.getElementById("vol-icon-muted");
+
+                            // Control deslizante de volumen
+                            const controlVolumen = document.getElementById("volume-slider");
+
+                            // Funcion para dar formato al tiempo (segundos -> mm:ss)
+                            function formatearTiempo(segundos) {
+                                const minutos = Math.floor(segundos / 60);     // Minutos
+                                const restoSegundos = Math.floor(segundos % 60); // Segundos restantes
+                                // Pone un 0 delante si los segundos son menores de 10 (ej: 3 -> 03)
+                                return `${minutos}:${restoSegundos < 10 ? "0" : ""}${restoSegundos}`;
+                        }
+
+                            /* 1. Reproducir / Pausar */
+                            if (botonReproducirPausar) {
+                                botonReproducirPausar.addEventListener("click", () => {
+
+                                    // Si el audio esta pausado -> reproducir
+                                    if (audio.paused) {
+                                        audio.play();
+
+                                        // Cambia iconos
+                                        iconoPlay && iconoPlay.classList.add("hidden");
+                                        iconoPause && iconoPause.classList.remove("hidden");
+                                        botonReproducirPausar.setAttribute("aria-label", "Pausar");
+
+                                    } else {
+                                        // Si estaba reproduciendo -> pausar
+                                        audio.pause();
+
+                                        // Cambia iconos
+                                        iconoPlay && iconoPlay.classList.remove("hidden");
+                                        iconoPause && iconoPause.classList.add("hidden");
+                                        botonReproducirPausar.setAttribute("aria-label", "Reproducir");
+                                    }
+                                });
+                            }
+
+
+                            /* 2. Actualizar tiempo y barra de progreso mientras se reproduce */
+                            audio.addEventListener("timeupdate", () => {
+
+                                // Texto de tiempo actual (mm:ss)
+                                if (tiempoActualTexto) {
+                                    tiempoActualTexto.textContent = formatearTiempo(audio.currentTime);
+                                }
+
+                                // Si no hay barra o duracion -> no hacemos nada
+                                if (!barraProgreso || !audio.duration) return;
+
+                                const progreso = (audio.currentTime / audio.duration) * 100;
+
+                                // Valor de la barra
+                                barraProgreso.value = audio.currentTime;
+
+                                // Relleno dinamico de la barra (color)
+                                barraProgreso.style.background = `
+                                    linear-gradient(
+                                        to right,
+                                        white 0%,
+                                        white ${progreso}%,
+                                        #4b5563 ${progreso}%,
+                                        #4b5563 100%
+                                    )
+                                `;
+                            });
+
+                            // Cuando termina la cancion, volvemos al estado inicial
+                            audio.addEventListener("ended", () => {
+                                iconoPlay && iconoPlay.classList.remove("hidden");
+                                iconoPause && iconoPause.classList.add("hidden");
+                                audio.currentTime = 0;
+                            });
+
+
+                            /* 3. Cambiar tiempo manualmente desde la barra */
+                            if (barraProgreso) {
+                                barraProgreso.addEventListener("input", () => {
+                                    audio.currentTime = Number(barraProgreso.value);
+                                });
+                            }
+
+
+                            /* 4. Boton Like (solo animacion visual) */
+                            if (botonLike) {
+                                botonLike.addEventListener("click", () => {
+
+                                    // Añade o quita una clase CSS para recordar si esta pulsado
+                                    const estaLikeado = botonLike.classList.toggle("is-liked");
+                                    if (!iconoCorazonVacio) return;
+
+                                    if (estaLikeado) {
+                                        // Corazon rojo
+                                        iconoCorazonVacio.classList.add("fill-red-500", "stroke-red-500");
+                                        iconoCorazonVacio.classList.remove("fill-none", "stroke-current");
+                                    } else {
+                                        // Corazon vacio
+                                        iconoCorazonVacio.classList.remove("fill-red-500", "stroke-red-500");
+                                        iconoCorazonVacio.classList.add("fill-none", "stroke-current");
+                                    }
+                                });
+                            }
+
+
+                            /* 5. Control de volumen (slider + iconos) */
+                            if (controlVolumen) {
+                                controlVolumen.addEventListener("input", (evento) => {
+                                    const valor = evento.target;
+                                    audio.volume = Number(valor.value);
+
+                                    // Mostrar icono segun volumen
+                                    if (audio.volume === 0) {
+                                        iconoVolumen && iconoVolumen.classList.add("hidden");
+                                        iconoVolumenMuteado && iconoVolumenMuteado.classList.remove("hidden");
+                                    } else {
+                                        iconoVolumen && iconoVolumen.classList.remove("hidden");
+                                        iconoVolumenMuteado && iconoVolumenMuteado.classList.add("hidden");
+                                    }
+                                });
+                            }
+
+
+                            /* 6. Cuando cargan metadatos (duracion total) */
+                            audio.addEventListener("loadedmetadata", () => {
+
+                                // Duracion total del audio
+                                if (duracionTexto) {
+                                    duracionTexto.textContent = formatearTiempo(audio.duration);
+                                }
+
+                                // Maximo valor de la barra (en segundos)
+                                if (barraProgreso) {
+                                    barraProgreso.max = audio.duration;
+                                }
+                            });
+                        });
+                    </script>
+
+                </section>
+            ) : (
+                <p class="text-gray-400">No se ha podido cargar la cancion.</p>
+            )
+        }
+    </main>
+</Layout>

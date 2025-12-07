@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import HomeHero from "../components/home/HomeHero.astro";
+import { INTERNAL_BACKEND_URL } from "../config/backend";
 
 interface Artista {
   id: number;
@@ -13,7 +14,7 @@ interface Artista {
 let artistas: Artista[] = [];
 
 try {
-  const res = await fetch("http://backend:9000/api/public/artistas");
+  const res = await fetch(`${INTERNAL_BACKEND_URL}/api/public/artistas`);
   const data = await res.json();
 
   // Solo los que vienen marcados como destacados
@@ -27,11 +28,6 @@ try {
 // ORDENAMOS: por id ascendente (el 1º que creaste tiene el id mas bajo)
 artistas.sort((a, b) => a.id - b.id);
 
-// Orden real:
-console.log(
-  "Orden final artistas destacados:",
-  artistas.map((a) => `${a.id} - ${a.nombre}`),
-);
 
 // Placeholder (relleno)
 const placeholder: Artista = {
@@ -42,23 +38,23 @@ const placeholder: Artista = {
   destacado: false,
 };
 
-// Ajustamos para tener SIEMPRE 3 posiciones
+
 if (artistas.length === 0) {
-  // [P, P, P]
+  // No hay artistas destacados
   artistas = [placeholder, placeholder, placeholder];
 } else if (artistas.length === 1) {
-  // [P, REAL1, P] → el real esta SIEMPRE en el centro (index 1)
+  // Solo hay 1 artista real
+  // Ponemos el real en el centro (posicion 1) para que quede equilibrado
   artistas = [placeholder, artistas[0], placeholder];
 } else if (artistas.length === 2) {
-  // [REAL1, REAL2, P] → el 2º real (el que te importa) esta en el centro (index 1)
+  // Hay 2 artistas reales
+  // Mantenemos los dos reales y completamos con un placeholder
   artistas = [artistas[0], artistas[1], placeholder];
 } else {
-  // 3 o mas → nos quedamos con los 3 primeros (ordenados)
+  // Nos quedamos solo con los 3 primeros
   artistas = artistas.slice(0, 3);
 }
 
-// dejar solo 3 artistas
-artistas = artistas.slice(0, 3);
 ---
 
 <Layout title="home" headerVerLogo={false} headerFondoNegro={false}>

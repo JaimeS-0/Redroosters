@@ -40,28 +40,36 @@ public class EscuchaService {
 
     @Transactional
     public EscuchaResponseDTO registrarEscucha(Long usuarioId, Long cancionId) {
-        Escucha escucha = escuchaRepository.findByUsuarioIdAndCancionId(usuarioId, cancionId)
 
-                .orElseGet(() -> {
-                    Usuario usuario = usuarioRepository.findById(usuarioId)
-                            .orElseThrow(() -> new UsuarioNotFoundException(String.valueOf(usuarioId)));
+        // Miramos si ya existe una escucha de ese usuario para esa cancion
+        Escucha escucha = escuchaRepository
+                .findByUsuarioIdAndCancionId(usuarioId, cancionId)
+                .orElse(null);
 
-                    Cancion cancion = cancionRepository.findById(cancionId)
-                            .orElseThrow(() -> new CancionNotFoundException(cancionId));
+        if (escucha != null) {
+            // Ya la ha escuchado antes -> NO incrementamos
+            // Solo actualizamos la fecha de ultima escucha
+            escucha.setUltimaEscucha(LocalDateTime.now());
 
-                    Escucha e = new Escucha();
-                    e.setUsuario(usuario);
-                    e.setCancion(cancion);
-                    e.setVecesEscuchada(0L); // se incrementa abajo
-                    return e;
-                });
+        } else {
+            // Primera vez que este usuario escucha esta cancion
+            Usuario usuario = usuarioRepository.findById(usuarioId)
+                    .orElseThrow(() -> new UsuarioNotFoundException(String.valueOf(usuarioId)));
 
-        escucha.setVecesEscuchada(escucha.getVecesEscuchada() + 1);
-        escucha.setUltimaEscucha(LocalDateTime.now());
+            Cancion cancion = cancionRepository.findById(cancionId)
+                    .orElseThrow(() -> new CancionNotFoundException(cancionId));
+
+            escucha = new Escucha();
+            escucha.setUsuario(usuario);
+            escucha.setCancion(cancion);
+            escucha.setVecesEscuchada(1L);                 // SIEMPRE 1
+            escucha.setUltimaEscucha(LocalDateTime.now());
+        }
 
         Escucha guardada = escuchaRepository.save(escucha);
         return escuchaMapper.toDto(guardada);
     }
+
 
 
     // Contador global (publico)

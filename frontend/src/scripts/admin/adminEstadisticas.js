@@ -38,18 +38,20 @@ async function cargarEstadisticas() {
         if (stats.cancionMasEscuchada) {
             setText(
                 "cancionMasEscuchada",
-                `${stats.cancionMasEscuchada.titulo} (${stats.cancionMasEscuchada.escuchas} escuchas)`
+                `${stats.cancionMasEscuchada.tituloCancion} - ${stats.cancionMasEscuchada.nombreArtista} (${stats.cancionMasEscuchada.total} escuchas)`
             );
         }
+
 
         if (stats.cancionConMasLikes) {
             setText(
                 "cancionConMasLikes",
-                `${stats.cancionConMasLikes.titulo} (${stats.cancionConMasLikes.likes} likes)`
+                `${stats.cancionConMasLikes.tituloCancion} (${stats.cancionConMasLikes.total} likes)`
             );
         }
+
     } catch (err) {
-        console.error("[Estadisticas] Error cargando estadisticas", err);
+        //console.error("[Estadisticas] Error cargando estadisticas", err);
     }
 }
 

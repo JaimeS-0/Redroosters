@@ -1,4 +1,6 @@
 ---
+import { INTERNAL_BACKEND_URL } from "../../config/backend";
+
 interface Cancion {
     id: number;
     titulo: string;
@@ -14,13 +16,11 @@ interface Props {
 
 const { artistaId } = Astro.props;
 
-const BASE_URL = "http://backend:9000";
-
 let singles: Cancion[] = [];
 
 try {
     const res = await fetch(
-        `${BASE_URL}/api/public/artista/${artistaId}/cancion`,
+        `${INTERNAL_BACKEND_URL}/api/public/artista/${artistaId}/cancion`,
     );
 
     if (res.ok) {
@@ -33,7 +33,7 @@ try {
         singles = todas.filter((c) => !c.tituloAlbum);
     }
 } catch (err) {
-    console.error("[ArtistaSinglesLista] Error cargando singles:", err);
+    //console.error("[ArtistaSinglesLista] Error cargando singles:", err);
 }
 ---
 
@@ -43,23 +43,29 @@ try {
             <ul class="flex flex-col gap-2 divide-white/10">
                 {singles.map((c) => (
                     <li class="flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-white/5 transition cursor-pointer">
-                        <img
-                            src={c.portada}
-                            alt={c.titulo}
-                            class="w-12 h-12 rounded-lg object-cover border border-white/10"
-                            loading="lazy"
-                        />
+                        <a
+                            href={`/cancion/${c.id}`}
+                            class="w-full flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-white/5 transition cursor-pointer"
+                        >
+                            <img
+                                src={c.portada}
+                                alt={c.titulo}
+                                class="w-12 h-12 rounded-lg object-cover border border-white/10"
+                                loading="lazy"
+                            />
 
-                        <div class="flex-1 flex flex-col">
-                            <p class="text-white font-medium">
-                                {c.titulo} - {c.descripcion}
+                            <div class="flex-1 flex flex-col">
+                                <p class="text-white font-medium">
+                                    {c.titulo} - {c.descripcion}
+                                </p>
+                                <p class="text-xs text-gray-400">Single</p>
+                            </div>
+
+                            <p class="text-sm text-gray-300 tabular-nums">
+                                {c.duracionTexto}
                             </p>
-                            <p class="text-xs text-gray-400">Single</p>
-                        </div>
-
-                        <p class="text-sm text-gray-300 tabular-nums">
-                            {c.duracionTexto}
-                        </p>
+                            <div />
+                        </a>
                     </li>
                 ))}
             </ul>

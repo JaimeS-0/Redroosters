@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const selCancionEditar = root.querySelector('[data-select-cancion="editar"]');
         const selCancionEliminar = root.querySelector('[data-select-cancion="eliminar"]');
 
-        // ========= ARTISTAS =========
+        // ARTISTAS 
         async function recargarArtistas() {
             if (!urlArtistas) return;
 
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // ========= ALBUMS =========
+        //  ALBUMS
         async function recargarAlbums() {
             if (!urlAlbums) return;
 
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // ========= CANCIONES =========
+        //  CANCIONES
         async function recargarCanciones() {
             if (!urlCanciones) return;
             if (!selCancionEditar && !selCancionEliminar) return;

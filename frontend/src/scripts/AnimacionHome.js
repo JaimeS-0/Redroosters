@@ -1,7 +1,5 @@
 
-
 // Animacion: llevo el gallo del hero hasta el logo del header al hacer scroll
-
 
 window.addEventListener("load", () => {
 

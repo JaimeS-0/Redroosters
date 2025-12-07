@@ -55,6 +55,8 @@ services:
       PUBLIC_API_URL: "${PUBLIC_API_URL}"
       CHOKIDAR_USEPOLLING: "true" # Desarrollo, comprueba periodicamente archivos
       CHOKIDAR_INTERVAL: "300" # Desarrolo, tiempo envio cada de peticion
+      PUBLIC_BACKEND_URL: "${PUBLIC_BACKEND_URL}"
+      BACKEND_INTERNAL_URL: "${BACKEND_INTERNAL_URL}"
     volumes:
       - ./frontend:/app
       - /app/node_modules # Evita sobrescribir las dependencias del contenedor

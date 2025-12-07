@@ -23,16 +23,17 @@ public interface EscuchaRepository extends JpaRepository<Escucha, Long> {
 
     // Contador global por cancion
     @Query("""
-           select coalesce(sum(e.vecesEscuchada), 0)
-           from Escucha e
-           where e.cancion.id = :cancionId
-           """)
+       select count(e)
+       from Escucha e
+       where e.cancion.id = :cancionId
+       """)
     Long sumaGlobalPorCancion(Long cancionId);
+
 
     // TOP global por cancion
     @Query("""
            select e.cancion.id as cancionId,
-                  coalesce(sum(e.vecesEscuchada), 0) as total
+                  count (e) as total
            from Escucha e
            group by e.cancion.id
            order by total desc
@@ -40,7 +41,7 @@ public interface EscuchaRepository extends JpaRepository<Escucha, Long> {
     List<TopCancionProjection> topGlobal(Pageable pageable);
 
     // Suma las veces escuchas totales
-    @Query("select coalesce(sum(e.vecesEscuchada), 0) from Escucha e")
+    @Query("select count(e) from Escucha e")
     long sumAllEscuchas();
 
     // Cuenta todas las escuchas de un artista

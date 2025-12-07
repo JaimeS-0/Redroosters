@@ -1,9 +1,11 @@
 ---
+import { INTERNAL_BACKEND_URL } from "../../config/backend";
+
 interface Album {
     id: number;
     titulo: string;
     descripcion: string | null;
-    portada?: string | null;
+    portada?: string;
     portadaUrl?: string | null;
 }
 
@@ -17,17 +19,17 @@ let albums: Album[] = [];
 
 try {
     const res = await fetch(
-        `http://backend:9000/api/public/artista/${artistaId}/album`,
+        `${INTERNAL_BACKEND_URL}/api/public/artista/${artistaId}/album`,
     );
 
     if (res.ok) {
         const data = await res.json();
         albums = Array.isArray(data) ? (data as Album[]) : (data.content ?? []);
     } else {
-        console.error("[ArtistaAlbumesLista] HTTP error:", res.status);
+        //console.error("[ArtistaAlbumesLista] error:", res.status);
     }
 } catch (err) {
-    console.error("[ArtistaAlbumesLista] Error cargando albumes:", err);
+    //console.error("[ArtistaAlbumesLista] Error cargando albumes:", err);
 }
 
 // helper para elegir bien la portada

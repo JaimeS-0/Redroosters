@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const data = await res.json();
-            //console.log("✅ Login correcto:", data);
+            //console.log("Login correcto:", data);
 
             if (mensajeLogin) {
                 mensajeLogin.textContent = "Te has Logueado correctamente.";

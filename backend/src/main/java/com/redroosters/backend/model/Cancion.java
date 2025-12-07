@@ -29,6 +29,14 @@ public class Cancion {
     @ManyToOne
     private Album album;
 
+    @OneToMany(
+            mappedBy = "cancion",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private java.util.List<Escucha> escuchas = new java.util.ArrayList<>();
+
+
     public Cancion() {
     }
 

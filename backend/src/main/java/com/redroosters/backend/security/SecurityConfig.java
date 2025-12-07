@@ -57,8 +57,10 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v3/api-docs/**",
                                 "/api/swagger-ui.html",
-                                "/api/swagger-ui/**")
-                        .permitAll()
+                                "/api/swagger-ui/**",
+                                "/uploads/**",   // portadas
+                                "/media/**"      // audios)
+                        ).permitAll()
                         // hasRole("ADMIN")
 
                         // Rutas de usuarios registrados

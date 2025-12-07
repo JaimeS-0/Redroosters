@@ -7,28 +7,28 @@ import Registro from "../components/login/Registro.astro";
 <Layout title="login" headerVerLogo={true} headerFondoNegro={true}>
     <!-- IZQUIERDA -->
     <div class="floating-column floating-left-1">
-        <img src="/img/footer/Logoinstagram.webp" class="floating-icon i1" />
-        <img src="/img/iconos/nota2.svg" class="floating-icon i2" />
-        <img src="/img/iconos/nota3.svg" class="floating-icon i3" />
+        <img src="/img/musica.svg" class="floating-icon i1" loading="lazy" />
+        <img src="/img/musica.svg" class="floating-icon i2" loading="lazy" />
+        <img src="/img/musica.svg" class="floating-icon i3" loading="lazy" />
     </div>
 
     <div class="floating-column floating-left-2">
-        <img src="/img/iconos/nota2.svg" class="floating-icon i1" />
-        <img src="/img/iconos/nota3.svg" class="floating-icon i2" />
-        <img src="/img/iconos/nota1.svg" class="floating-icon i3" />
+        <img src="/img/musica.svg" class="floating-icon i1" loading="lazy" />
+        <img src="/img/musica.svg" class="floating-icon i2" loading="lazy" />
+        <img src="/img/musica.svg" class="floating-icon i3" loading="lazy" />
     </div>
 
     <!-- DERECHA -->
     <div class="floating-column floating-right-1">
-        <img src="/img/iconos/nota1.svg" class="floating-icon i1" />
-        <img src="/img/iconos/nota2.svg" class="floating-icon i2" />
-        <img src="/img/iconos/nota3.svg" class="floating-icon i3" />
+        <img src="/img/musica.svg" class="floating-icon i1" loading="lazy" />
+        <img src="/img/musica.svg" class="floating-icon i2" loading="lazy" />
+        <img src="/img/musica.svg" class="floating-icon i3" loading="lazy" />
     </div>
 
     <div class="floating-column floating-right-2">
-        <img src="/img/iconos/nota3.svg" class="floating-icon i1" />
-        <img src="/img/iconos/nota1.svg" class="floating-icon i2" />
-        <img src="/img/iconos/nota2.svg" class="floating-icon i3" />
+        <img src="/img/musica.svg" class="floating-icon i1" loading="lazy" />
+        <img src="/img/musica.svg" class="floating-icon i2" loading="lazy" />
+        <img src="/img/musica.svg" class="floating-icon i3" loading="lazy" />
     </div>
 
     <main
@@ -40,7 +40,7 @@ import Registro from "../components/login/Registro.astro";
                 id="tituloLogin"
                 class="text-1xl md:text-2xl text-center text-black"
             >
-                👋🏻 Registrate para guardar tus canciones favoritas y aumentar
+                👋🏻 Regístrate para guardar tus canciones favoritas y aumentar
                 las escuchas del artista
             </h1>
 
@@ -105,42 +105,8 @@ import Registro from "../components/login/Registro.astro";
     </main>
 </Layout>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const titulo = document.getElementById("tituloLogin");
-
-        if (!titulo) return;
-
-        // Leemos el user del localStorage
-        const userData = localStorage.getItem("rr_user");
-
-        if (!userData) {
-            // No hay sesion no hacemos nada
-            return;
-        }
-
-        let user;
-        try {
-            user = JSON.parse(userData);
-        } catch (e) {
-            // console.error("Error parseando rr_user:", e);
-            return;
-        }
-
-        // leemos el token de la cookie
-        const tokenMatch = document.cookie.match(/rr_token=([^;]+)/);
-        const token = tokenMatch ? tokenMatch[1] : null;
-
-        // console.log("-> user:", user, "token:", token)
-
-        // Si existe usuario, cambiamos el texto
-        titulo.textContent = user.username
-            ? `👋🏻 ¡Bienvenido, ${user.username}! ya has iniciado sesión`
-            : "👋🏻 ¡Bienvenido de nuevo!";
-    });
-</script>
-
-<script src="/src/scripts/login/verContraseñaLogin.js"></script>
-<script src="/src/scripts/login/enlacesAncla.js"></script>
-<script src="/src/scripts/login/authRegister.js"></script>
-<script src="/src/scripts/login/authLogin.js"></script>
+<script type="module" src="/src/scripts/login/verContraseñaLogin.js"></script>
+<script type="module" src="/src/scripts/login/enlacesAncla.js"></script>
+<script type="module" src="/src/scripts/login/authRegister.js"></script>
+<script type="module" src="/src/scripts/login/authLogin.js"></script>
+<script type="module" src="/src/scripts/login/CambiarTitulo.js"></script>
