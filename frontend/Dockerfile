@@ -28,7 +28,7 @@ WORKDIR /app
 
 # Instalo dependencias y compilo el proyecto
 COPY package*.json ./
-RUN npm ci --silent --no-audit --prefer-offline
+RUN npm install --silent --no-audit --prefer-offline
 COPY . .
 RUN npm run build
 
