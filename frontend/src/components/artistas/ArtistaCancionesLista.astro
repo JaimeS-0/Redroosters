@@ -1,6 +1,4 @@
 ---
-export const prerender = false;
-
 import { INTERNAL_BACKEND_URL } from "../../config/backend";
 
 interface Cancion {
@@ -19,6 +17,7 @@ interface Props {
 const { artistaId } = Astro.props;
 
 let canciones: Cancion[] = [];
+let errorMensaje = "";
 
 try {
     const res = await fetch(
@@ -28,27 +27,43 @@ try {
     if (res.ok) {
         const data = await res.json();
 
-        // Coger data.content
         if (Array.isArray(data)) {
             canciones = data as Cancion[];
         } else if (Array.isArray(data.content)) {
             canciones = data.content as Cancion[];
+        } else {
+            errorMensaje = "Formato de datos inesperado.";
         }
+    } else {
+        errorMensaje = `Error ${res.status} al cargar las canciones.`;
     }
 } catch (err) {
-    //console.error("[ArtistaCancionesLista] Error cargando canciones:", err);
+    errorMensaje = "No se ha podido conectar con el servidor.";
 }
+
+const PAGE_SIZE = 8;
 ---
 
 {
-    canciones.length > 0 && (
-        <section>
+    canciones.length > 0 ? (
+        <section
+            data-artista-canciones
+            data-page-size={PAGE_SIZE}
+            class="w-full"
+        >
             <ul class="flex flex-col gap-2 divide-white/10">
-                {canciones.map((c) => (
-                    <li class="flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-white/5 transition cursor-pointer">
+                {canciones.map((c, index) => (
+                    <li
+                        data-item
+                        data-index={index}
+                        class={
+                            "flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-white/5 transition cursor-pointer" +
+                            (index >= PAGE_SIZE ? " hidden" : "")
+                        }
+                    >
                         <a
                             href={`/cancion/${c.id}`}
-                            class="w-full flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-white/5 transition cursor-pointer"
+                            class="w-full flex items-center gap-4"
                         >
                             <img
                                 src={c.portada}
@@ -57,9 +72,9 @@ try {
                                 loading="lazy"
                             />
 
-                            <div class="flex-1 flex flex-col">
-                                <p class="text-white font-medium">
-                                    {c.titulo} - {c.descripcion}{" "}
+                            <div class="flex-1 flex flex-col min-w-0">
+                                <p class="text-white font-medium truncate">
+                                    {c.titulo} - {c.descripcion}
                                 </p>
 
                                 <p class="text-xs text-gray-400">
@@ -67,21 +82,66 @@ try {
                                 </p>
                             </div>
 
-                            <div class="text-sm text-gray-300 tabular-nums mr-6">
+                            <div
+                                class="text-sm text-gray-300 tabular-nums mr-6"
+                                style="margin-right: 20px;"
+                            >
                                 {c.duracionTexto}
                             </div>
-
-                            <div />
                         </a>
                     </li>
                 ))}
             </ul>
+
+            {canciones.length > PAGE_SIZE && (
+                <div
+                    class="mt-4 flex justify-center"
+                    style="margin-top: 15px; margin-bottom: 15px;"
+                >
+                    <button
+                        data-load-more-canciones
+                        class="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-700 w-full max-w-xs text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition duration-300 hover:scale-105
+                        shadow-[0_0_25px_rgba(255,0,0,0.4)]"
+                        style="
+                        padding-left: 40px;
+                        padding-right: 40px;"
+                    >
+                        Cargar mas
+                    </button>
+                </div>
+            )}
         </section>
+    ) : (
+        <p class="text-sm text-gray-400">
+            {errorMensaje || "No hay canciones disponibles."}
+        </p>
     )
 }
 
-{
-    canciones.length === 0 && (
-        <p class="text-sm text-gray-400">No hay canciones disponibles.</p>
-    )
-}
+<script type="module">
+    const section = document.querySelector("[data-artista-canciones]");
+    if (section) {
+        const pageSize = Number(section.dataset.pageSize) || 8;
+        const items = Array.from(section.querySelectorAll("[data-item]"));
+        const btn = section.querySelector("[data-load-more-canciones]");
+
+        if (btn && items.length > pageSize) {
+            let currentLimit = pageSize;
+
+            btn.addEventListener("click", () => {
+                currentLimit += pageSize;
+
+                items.forEach((el, index) => {
+                    if (index < currentLimit) {
+                        el.classList.remove("hidden");
+                    }
+                });
+
+                if (currentLimit >= items.length) {
+                    btn.disabled = true;
+                    btn.textContent = "No hay mas canciones";
+                }
+            });
+        }
+    }
+</script>

@@ -20,10 +20,14 @@ public interface CancionMapper {
 
     @Mapping(target = "nombreArtista", source = "artista.nombre")
     @Mapping(target = "tituloAlbum", source = "album.titulo")
+    @Mapping(target = "artistaId", source = "artista.id")
+    @Mapping(target = "albumId", source = "album.id")
     @Mapping(
             target = "duracionTexto",
             expression = "java(c.getDuracionSegundos() != null ? AudioUtils.formatMmSs(c.getDuracionSegundos().intValue()) : null)"
     )
+    @Mapping(target = "anteriorId", ignore = true)
+    @Mapping(target = "siguienteId", ignore = true)
     CancionResponseDTO toDto(Cancion c);
 
     List<CancionResponseDTO> toDtoList(List<Cancion> canciones);

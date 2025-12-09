@@ -3,6 +3,7 @@ package com.redroosters.backend.security;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,7 +27,7 @@ public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
-            CustomUserDetailsService userDetailsService) {
+                          CustomUserDetailsService userDetailsService) {
         this.jwtFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
     }
@@ -35,33 +36,37 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
+                // Activamos CORS usando la config de abajo
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
                 // No guardamos sesion en el servidor
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // Si no hay token o es invalido devolvemos 401
+                // Si no hay token devolvemos 401
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(
-                                (request, response, authException) -> response
-                                        .sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")))
-
+                                (request, response, authException) ->
+                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
+                        )
+                )
                 .authorizeHttpRequests(auth -> auth
 
-                        // Rutas públicas
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/public/**").permitAll()
+                        // Permitir preflight CORS (OPTIONS) para todas las rutas
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // OpenApi documentacion
+                        // Rutas públicas (sin autenticación)
                         .requestMatchers(
-                                "/api/v3/api-docs/**",
+                                "/api/auth/**",
+                                "/api/public/**",
+                                "/uploads/**",      // Imagenes
+                                "/media/**"         // Canciones
+                        ).permitAll()
+
+                        // Swagger Open api Documentacion
+                        .requestMatchers(
                                 "/api/swagger-ui.html",
                                 "/api/swagger-ui/**",
-                                "/uploads/**",   // portadas
-                                "/media/**"      // audios)
+                                "/api/v3/api-docs/**"
                         ).permitAll()
-                        // hasRole("ADMIN")
 
                         // Rutas de usuarios registrados
                         .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
@@ -70,21 +75,29 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
                         // Cualquier otra petición requiere autenticación
-                        .anyRequest().authenticated())
-
+                        .anyRequest().authenticated()
+                )
                 // Añadimos nuestro filtro antes del filtro por defecto de spring
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-
                 .build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // frontend -> Aqui ira la url real de
-                                                                           // produccion
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost",
+                "http://localhost:*",
+                "http://127.0.0.1",
+                "http://127.0.0.1:*",          // Local
+                "https://redroosterstv.com"   // produccion
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        // Cabeceras que puede enviar el frontend
         configuration.setAllowedHeaders(List.of("*"));
+        // Cabeceras que exponemos al frontend
+        configuration.setExposedHeaders(List.of("Authorization"));
+        // Permitimos credenciales (Authorization, cookies, etc.)
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

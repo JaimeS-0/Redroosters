@@ -23,8 +23,14 @@ public class Album {
     @ManyToOne(optional = false)
     private Artista artista;
 
-    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    @OneToMany(
+            mappedBy = "album",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
     private List<Cancion> canciones = new ArrayList<>();
+
 
     public Album(){}
 

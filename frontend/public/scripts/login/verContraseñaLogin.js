@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
             inputContrasena.type = esOculta ? "text" : "password";
 
             // Cambiar icono
-            botonVerContrasena.innerHTML = esOculta
+            botonVerContrasena.textContent = esOculta
                 ? `
           <!-- ojo normal -->
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

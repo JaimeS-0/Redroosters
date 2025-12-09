@@ -76,7 +76,13 @@ try {
 
                     {
                         artista?.destacado && (
-                            <span class="mt-2 px-5 py-2 rounded-full bg-red-600 text-white text-sm inline-block">
+                            <span
+                                class="mt-2 px-5 py-2 rounded-full bg-red-600 text-white text-sm inline-block"
+                                style="
+                                    padding-left: 20px;
+                                    padding-right: 20px;
+                                "
+                            >
                                 ⭐ Artista destacado
                             </span>
                         )
@@ -154,5 +160,4 @@ try {
     </main>
 </Layout>
 
-<script type="module" src="/src/scripts/artistas/BarraArtistaAnimada.js"
-></script>
+<script type="module" src="/scripts/artistas/BarraArtistaAnimada.js"></script>

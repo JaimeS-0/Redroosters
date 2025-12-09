@@ -1,0 +1,144 @@
+---
+export const prerender = false;
+
+import Layout from "../../layouts/Layout.astro";
+import { INTERNAL_BACKEND_URL } from "../../config/backend";
+
+interface CancionAlbum {
+    id: number;
+    titulo: string;
+}
+
+interface Album {
+    id: number;
+    titulo: string;
+    descripcion: string | null;
+    portadaUrl: string | null;
+    nombreArtista: string;
+    canciones: CancionAlbum[];
+    artistaId: number;
+}
+
+const { id } = Astro.params;
+
+let album: Album | null = null;
+
+try {
+    const res = await fetch(`${INTERNAL_BACKEND_URL}/api/public/album/${id}`);
+
+    if (res.ok) {
+        album = await res.json();
+    } else {
+        album = null;
+    }
+} catch (err) {
+    album = null;
+}
+
+function getPortadaUrl(a: Album): string {
+    return a.portadaUrl ?? "";
+}
+---
+
+<Layout title={album ? album.titulo : "Álbum"}>
+    <main
+        class="min-h-screen bg-gradient-to-b from-black via-[#0b0203] to-black text-white
+               flex flex-col items-center pt-32 pb-20"
+    >
+        <div class="h-56"></div>
+
+        {
+            album ? (
+                <section class="w-full max-w-4xl px-4 md:px-6 flex flex-col gap-10">
+                    {/* CABECERA ÁLBUM */}
+                    <div class="flex flex-col md:flex-row gap-8 items-center md:items-end">
+                        <div
+                            class="w-52 h-52 sm:w-64 sm:h-64 rounded-3xl overflow-hidden
+                                   border border-white/20 bg-black/60
+                                   shadow-[0_0_40px_rgba(255,0,0,0.25)]"
+                        >
+                            <img
+                                src={getPortadaUrl(album)}
+                                alt={album.titulo}
+                                class="w-full h-full object-cover"
+                                loading="lazy"
+                            />
+                        </div>
+
+                        <div class="flex-1 flex flex-col gap-3 text-center md:text-left">
+                            <p class="text-xs uppercase tracking-[0.2em] text-white/60">
+                                Álbum
+                            </p>
+
+                            <h1 class="text-3xl sm:text-4xl font-bold tracking-wide">
+                                {album.titulo}
+                            </h1>
+
+                            <p class="text-white/80">{album.nombreArtista}</p>
+
+                            {album.descripcion && (
+                                <p class="text-sm text-white/70 mt-2 max-w-xl">
+                                    {album.descripcion}
+                                </p>
+                            )}
+
+                            <div class="text-center mt-6">
+                                <a
+                                    href={`/artista/${album.artistaId}`}
+                                    class="inline-block bg-red-600 hover:bg-red-700 
+                                           text-sm font-semibold text-white
+                                           px-5 py-2 rounded-lg transition"
+                                >
+                                    Volver al artista
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* LISTA DE CANCIONES */}
+                    <section class="mt-4">
+                        <h2 class="text-xl font-semibold mb-4">Canciones</h2>
+
+                        {album.canciones.length > 0 ? (
+                            <ul class="flex flex-col divide-y divide-white/10 rounded-2xl bg-white/5 border border-white/10">
+                                {album.canciones.map((cancion, index) => (
+                                    <li>
+                                        <a
+                                            href={`/cancion/${cancion.id}`}
+                                            class="flex items-center justify-between px-4 py-3 hover:bg-white/10 transition"
+                                        >
+                                            <div class="flex items-center gap-3">
+                                                <span class="text-sm text-white/50 w-6 text-right">
+                                                    {index + 1}
+                                                </span>
+                                                <p class="text-sm sm:text-base text-white">
+                                                    {cancion.titulo}
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p class="text-sm text-gray-400">
+                                Este álbum todavía no tiene canciones asociadas.
+                            </p>
+                        )}
+                    </section>
+                </section>
+            ) : (
+                <section class="w-full max-w-3xl px-4 md:px-6 text-center mt-20">
+                    <p class="text-lg text-white/80 mb-4">
+                        No se ha encontrado el álbum.
+                    </p>
+                    <a
+                        href="/artistas"
+                        class="inline-block px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition"
+                    >
+                        Volver a artistas
+                    </a>
+                </section>
+            )
+        }
+    </main>
+</Layout>

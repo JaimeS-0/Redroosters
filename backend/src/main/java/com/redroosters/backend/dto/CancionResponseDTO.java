@@ -12,6 +12,10 @@ public record CancionResponseDTO(
         String portada,
         String urlAudio,
         String nombreArtista,
-        String tituloAlbum // puede ser null
+        String tituloAlbum, // puede ser null
+        Long artistaId,
+        Long albumId,        // puede ser null
+        Long anteriorId,
+        Long siguienteId
 ) {
 }

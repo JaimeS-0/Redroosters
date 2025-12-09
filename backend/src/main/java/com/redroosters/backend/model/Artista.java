@@ -27,11 +27,22 @@ public class Artista {
 
     private boolean destacado;
 
-    @OneToMany(mappedBy = "artista", cascade = CascadeType.ALL)
-    private List<Cancion> canciones;
+    @OneToMany(
+            mappedBy = "artista",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Cancion> canciones = new java.util.ArrayList<>();
 
-    @OneToMany(mappedBy = "artista", cascade = CascadeType.ALL)
-    private List<Album> albumes;
+    @OneToMany(
+            mappedBy = "artista",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Album> albumes = new java.util.ArrayList<>();
+
 
 
     public Artista() {

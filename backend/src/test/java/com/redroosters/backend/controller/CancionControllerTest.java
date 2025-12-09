@@ -95,7 +95,7 @@ class CancionControllerTest {
         when(cancionService.crearConArchivo(any(CancionRequestDTO.class), any(), any()))
                 .thenReturn(new CancionResponseDTO(
                         10L, "Lia", "Artista Famosa y Guapa", 215, "2:30",
-                        "/audios/tema.mp3", "/audios/tema.mp3", "Aitana", "Cuarto Azul"
+                        "/audios/tema.mp3", "/audios/tema.mp3", "Aitana", "Cuarto Azul", 1L, 1L, 1L, 2L
                 ));
 
         // Se realiza la petición HTTP POST multipart simulada y se comprueba la respuesta

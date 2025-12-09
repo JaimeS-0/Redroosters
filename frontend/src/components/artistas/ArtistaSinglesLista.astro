@@ -35,17 +35,26 @@ try {
 } catch (err) {
     //console.error("[ArtistaSinglesLista] Error cargando singles:", err);
 }
+
+const PAGE_SIZE = 8;
 ---
 
 {
     singles.length > 0 && (
-        <section>
+        <section data-artista-singles data-page-size={PAGE_SIZE} class="w-full">
             <ul class="flex flex-col gap-2 divide-white/10">
-                {singles.map((c) => (
-                    <li class="flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-white/5 transition cursor-pointer">
+                {singles.map((c, index) => (
+                    <li
+                        data-item
+                        data-index={index}
+                        class={
+                            "flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-white/5 transition cursor-pointer" +
+                            (index >= PAGE_SIZE ? " hidden" : "")
+                        }
+                    >
                         <a
                             href={`/cancion/${c.id}`}
-                            class="w-full flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-white/5 transition cursor-pointer"
+                            class="w-full flex items-center gap-4"
                         >
                             <img
                                 src={c.portada}
@@ -54,21 +63,41 @@ try {
                                 loading="lazy"
                             />
 
-                            <div class="flex-1 flex flex-col">
-                                <p class="text-white font-medium">
+                            <div class="flex-1 flex flex-col min-w-0">
+                                <p class="text-white font-medium truncate">
                                     {c.titulo} - {c.descripcion}
                                 </p>
                                 <p class="text-xs text-gray-400">Single</p>
                             </div>
 
-                            <p class="text-sm text-gray-300 tabular-nums">
+                            <p
+                                class="text-sm text-gray-300 tabular-nums"
+                                style="margin-right: 20px;"
+                            >
                                 {c.duracionTexto}
                             </p>
-                            <div />
                         </a>
                     </li>
                 ))}
             </ul>
+
+            {singles.length > PAGE_SIZE && (
+                <div
+                    class="mt-4 flex justify-center"
+                    style="margin-top: 15px; margin-bottom: 15px;"
+                >
+                    <button
+                        data-load-more-singles
+                        class="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-700 w-full max-w-xs text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition duration-300 hover:scale-105
+                        shadow-[0_0_25px_rgba(255,0,0,0.4)]"
+                        style="
+                        padding-left: 40px;
+                        padding-right: 40px;"
+                    >
+                        Cargar mas
+                    </button>
+                </div>
+            )}
         </section>
     )
 }
@@ -78,3 +107,33 @@ try {
         <p class="text-sm text-gray-400">No hay singles disponibles.</p>
     )
 }
+
+<script type="module">
+    const sectionSingles = document.querySelector("[data-artista-singles]");
+    if (sectionSingles) {
+        const pageSize = Number(sectionSingles.dataset.pageSize) || 8;
+        const items = Array.from(
+            sectionSingles.querySelectorAll("[data-item]"),
+        );
+        const btn = sectionSingles.querySelector("[data-load-more-singles]");
+
+        if (btn && items.length > pageSize) {
+            let currentLimit = pageSize;
+
+            btn.addEventListener("click", () => {
+                currentLimit += pageSize;
+
+                items.forEach((el, index) => {
+                    if (index < currentLimit) {
+                        el.classList.remove("hidden");
+                    }
+                });
+
+                if (currentLimit >= items.length) {
+                    btn.disabled = true;
+                    btn.textContent = "No hay mas singles";
+                }
+            });
+        }
+    }
+</script>

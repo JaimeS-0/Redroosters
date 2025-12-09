@@ -17,10 +17,17 @@ public class BuscarService {
         this.buscar = buscar;
     }
 
+    /*
     public List<BusquedaDTO> buscar(String q, int page, int size) {
         int p = Math.max(0, page);
         int s = Math.max(1, size);
         int offset = p * s;
         return buscar.buscarTodo(q, s, offset);
+    }*/
+
+    public List<BusquedaDTO> buscar(String q) {
+        return buscar.buscarTodo(q);
     }
+
+
 }

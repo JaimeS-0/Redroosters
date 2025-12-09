@@ -22,8 +22,8 @@ public interface MensajeContactoPublicApi {
                     examples = @ExampleObject(name="Ejemplo",
                             value = """
                 {
-                  "nombre": "Jaime",
-                  "email": "jaime@example.com",
+                  "nombre": "Federico",
+                  "email": "Federico@example.com",
                   "asunto": "Colaboración",
                   "mensaje": "Hola, me interesa subir un tema nuevo."
                 }

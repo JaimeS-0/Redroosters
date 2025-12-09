@@ -21,7 +21,15 @@ public class BuscarPublicController implements BuscarPublicApi {
         this.buscarService = buscarService;
     }
 
+    @GetMapping("/buscar")
+    @Override
+    public List<BusquedaDTO> buscar(@RequestParam("q") String q) {
+        return buscarService.buscar(q);
+    }
+
+
     // Endpoint para realizar busquedas
+    /*
     @GetMapping("/buscar")
     @Override
     public ResponseEntity<List<BusquedaDTO>> buscar(
@@ -30,5 +38,5 @@ public class BuscarPublicController implements BuscarPublicApi {
             @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(buscarService.buscar(q, page, size));
-    }
+    }*/
 }

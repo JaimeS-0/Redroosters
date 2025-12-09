@@ -157,7 +157,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // ESCUCHAR CAMBIOS DE ARTISTAS (para refrescar selects dependientes)
         document.addEventListener("artistas-actualizados", () => {
-            //console.log("Evento artistas-actualizados recibido en adminCanciones → recargarSelectCanciones()");
             recargarSelectCanciones();
         });
 

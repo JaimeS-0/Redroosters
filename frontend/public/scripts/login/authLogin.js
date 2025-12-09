@@ -1,13 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     const formLogin = document.getElementById("formLogin");
     const btnLogin = document.getElementById("btnLogin");
-
+    const rememberCheck = document.getElementById("remember-check");
     if (!formLogin) return;
 
-    // Comprobar si YA hay sesion iniciada NADA MAS CARGAR
-    const token = localStorage.getItem("token");
+    // Comprobar si YA hay sesion iniciada al cargar
+    const storedToken = localStorage.getItem("token");
 
-    if (token) {
+    if (storedToken) {
         const loginEmail = document.getElementById("login-email");
         const loginPassword = document.getElementById("login-password");
         const mensajeLogin = document.getElementById("login-mensaje");
@@ -23,17 +23,16 @@ document.addEventListener("DOMContentLoaded", () => {
             btnLogin.classList.add("opacity-60", "cursor-not-allowed");
         }
 
-        // Mensaje bonito
+        // Mensaje
         if (mensajeLogin) {
             mensajeLogin.textContent = "Ya tienes una sesion iniciada.";
             mensajeLogin.className = "text-green-500 text-center mt-4";
         }
 
-        // No registramos el submit. Salimos ya.
-        return;
+        return; // no registramos el submit
     }
 
-    // Si NO hay sesion, aqui sigue tu login normal
+    // Si NO hay sesion, aqui sigue login normal
     let enviando = false;
 
     formLogin.addEventListener("submit", async (e) => {
@@ -72,7 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
             valido = false;
         } else if (password.length < 10) {
             if (errorPassword)
-                errorPassword.textContent = "La contraseña debe tener al menos 10 caracteres.";
+                errorPassword.textContent =
+                    "La contraseña debe tener al menos 10 caracteres.";
             valido = false;
         }
 
@@ -86,10 +86,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
+
+            const remember = rememberCheck?.checked === true;
+
             const res = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password, rememberMe: remember, }),
             });
 
             if (!res.ok) {
@@ -97,8 +100,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 try {
                     const errorBody = await res.json();
+
                     if (errorBody.detail) mensaje = errorBody.detail;
+
                     else if (errorBody.title) mensaje = errorBody.title;
+
                     if (res.status === 401 || res.status === 403)
                         mensaje = "Email o contraseña incorrectos.";
                 } catch { }
@@ -121,32 +127,31 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const data = await res.json();
-            //console.log("Login correcto:", data);
 
             if (mensajeLogin) {
                 mensajeLogin.textContent = "Te has Logueado correctamente.";
                 mensajeLogin.className = "text-green-500 text-center mt-4";
             }
 
-            document.cookie = `rr_token=${data.token}; path=/; max-age=86400`;
 
             localStorage.setItem("token", data.token);
 
+
+
+            // Datos de usuario
             localStorage.setItem(
                 "rr_user",
                 JSON.stringify({
                     username: data.username,
                     email: data.email,
                     role: data.role,
-                })
+                }),
             );
 
             setTimeout(() => {
                 window.location.href = "/";
             }, 300);
         } catch (err) {
-            //console.error(err);
-
             const errorEmail = document.getElementById("login-error-email");
             if (errorEmail)
                 errorEmail.textContent = "No se pudo conectar con el servidor";

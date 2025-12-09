@@ -44,17 +44,19 @@ public class AuthController implements AuthApi {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO request) {
 
-        // Verifica username, email y password
+        // Verifica email y password
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())
-
         );
 
         Usuario usuario = usuarioRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UsuarioNotFoundException(request.email()));
 
-        // Generar token con su email
-        String token = jwtService.generateToken(usuario.getEmail());
+        // Si rememberMe es null -> lo tratamos como false
+        boolean rememberMe = Boolean.TRUE.equals(request.rememberMe());
+
+        // Generar token con su email y rememberMe
+        String token = jwtService.generateToken(usuario.getEmail(), rememberMe);
 
         return ResponseEntity.ok(new LoginResponseDTO(
                 token,
@@ -63,6 +65,7 @@ public class AuthController implements AuthApi {
                 usuario.getRole().name()
         ));
     }
+
 
     // Registro de usuario
     @Override

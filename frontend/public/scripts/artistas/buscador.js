@@ -21,62 +21,64 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const pintarResultados = (resultados) => {
-        //console.log("Resultados:", resultados);
+        cajaResultado.innerHTML = "";
+        cajaResultado.classList.remove("hidden");
 
         if (!resultados.length) {
-            cajaResultado.innerHTML = `
-                <p class="px-4 py-3 text-sm text-gray-400">
-                    No se han encontrado resultados
-                </p>
-            `;
-            cajaResultado.classList.remove("hidden");
+            const p = document.createElement("p");
+            p.className = "px-4 py-3 text-sm text-gray-400";
+            p.textContent = "No se han encontrado resultados";
+            cajaResultado.appendChild(p);
             return;
         }
 
-        const html = resultados
-            .map((item) => {
-                let tipoTexto = "";
-                let url = "#";
+        resultados.forEach((item) => {
+            let tipoTexto = "";
+            let url = "#";
 
-                switch (item.tipo) {
-                    case "ARTISTA":
-                        tipoTexto = "Artista";
-                        url = `/artista/${item.id}`;
-                        break;
-                    case "ALBUM":
-                        tipoTexto = "Album";
-                        url = `/album/${item.id}`;
-                        break;
-                    case "CANCION":
-                        tipoTexto = "Cancion";
-                        url = `/cancion/${item.id}`;
-                        break;
-                }
+            switch (item.tipo) {
+                case "ARTISTA":
+                    tipoTexto = "Artista";
+                    url = `/artista/${item.id}`;
+                    break;
+                case "ALBUM":
+                    tipoTexto = "Album";
+                    url = `/album/${item.id}`;
+                    break;
+                case "CANCION":
+                    tipoTexto = "Cancion";
+                    url = `/cancion/${item.id}`;
+                    break;
+            }
 
-                const subtitulo = item.subtitulo
-                    ? ` · ${item.subtitulo}`
-                    : "";
+            const a = document.createElement("a");
+            a.href = url;
+            a.className =
+                "flex items-center gap-4 px-5 py-4 border-b border-white/5 last:border-none hover:bg-gray-800/80 transition-colors";
 
-                return `
-                        <a
-                            href="${url}"
-                            class="flex items-center gap-4 px-5 py-4 border-b border-white/5 last:border-none
-                                hover:bg-gray-800/80 transition-colors"
-                        >
+            const cont = document.createElement("div");
+            cont.className = "flex flex-col leading-tight";
 
-                            <div class="flex flex-col leading-tight">
-                                <p class="text-sm font-medium text-white">${item.titulo}</p>
-                                <p class="text-xs text-gray-400">${tipoTexto}${subtitulo}</p>
-                            </div>
-                        </a>
-                    `;
+            const titulo = document.createElement("p");
+            titulo.className = "text-sm font-medium text-white";
+            titulo.textContent = item.titulo;
 
-            })
-            .join("");
+            const subt = document.createElement("p");
+            subt.className = "text-xs text-gray-400";
 
-        cajaResultado.innerHTML = html;
-        cajaResultado.classList.remove("hidden");
+            const subtituloTexto = item.subtitulo
+                ? `${tipoTexto} · ${item.subtitulo}`
+                : tipoTexto;
+
+            subt.textContent = subtituloTexto;
+
+            cont.appendChild(titulo);
+            cont.appendChild(subt);
+            a.appendChild(cont);
+            cajaResultado.appendChild(a);
+        });
     };
+
 
     const buscar = async (q) => {
         if (controller) {

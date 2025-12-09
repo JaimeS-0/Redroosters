@@ -5,5 +5,6 @@ package com.redroosters.backend.dto;
 public record LoginRequestDTO(
 
         String email,
-        String password
+        String password,
+        Boolean rememberMe
 ) {}

@@ -44,9 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (confirmBtn) {
                 confirmBtn.classList.remove("hidden");
                 confirmBtn.onclick = () => {
-                    document.cookie = "rr_token=; path=/; max-age=0";
-                    localStorage.removeItem("rr_user");
                     localStorage.removeItem("token");
+                    localStorage.removeItem("rr_user");
+                    sessionStorage.removeItem("token");
+                    document.cookie = "rr_token=; path=/; max-age=0";
                     window.location.href = "/login";
                 };
             }

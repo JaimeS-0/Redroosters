@@ -81,7 +81,7 @@ class BuscarPublicControllerTest {
         );
 
         // Simulamos que el servicio devuelve estos resultados cuando se busca "Cuarto azul"
-        when(buscarService.buscar(anyString(), anyInt(), anyInt())).thenReturn(resultados);
+        when(buscarService.buscar(anyString())).thenReturn(resultados);
 
         // Simulamos una petición GET al endpoint con parámetros q, page y size
         mvc.perform(get("/api/public/buscar")

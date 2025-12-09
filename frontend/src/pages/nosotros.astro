@@ -1,0 +1,62 @@
+---
+export const prerender = false;
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Nosotros">
+    <main class="min-h-screen bg-black text-white flex justify-center">
+        <section
+            class="max-w-3xl w-full px-6 pt-40 pb-20 mx-auto text-center"
+            style="margin-top: 150px;"
+        >
+            <h1
+                class="text-3xl sm:text-4xl font-bold mb-4"
+                style="margin-bottom: 50px;"
+            >
+                Sobre RedRoosters
+            </h1>
+
+            <div
+                class="px-6 sm:px-8 w-full max-w-3xl mx-auto space-y-6 text-sm sm:text-base leading-relaxed text-white/90"
+            >
+                <p>
+                    Red Roosters TV es el impulso que tu talento merece. Aquí
+                    potenciamos tu carrera mientras descubres nuevas
+                    oportunidades, refuerzas tu identidad y activas tu verdadero
+                    impacto. Te guiamos con estrategia, apoyo legal y visión
+                    mediática para que abras camino, crezcas sin límites y
+                    sientas que tu proyecto encaja naturalmente en el ritmo real
+                    de la industria musical.
+                </p>
+                <br />
+                <br />
+                <p>
+                    Nuestro equipo profesional se centra en reconocer potencial
+                    genuino y en acompañar a quienes avanzan desde la base con
+                    compromiso. Si deseas explorar nuevas posibilidades, este
+                    podría ser el momento adecuado.
+                </p>
+            </div>
+            <div class="mt-16 space-y-4">
+                <p class="text-white mt-2 underline" style="margin-top: 70px;">
+                    Puedes escribirnos para dudas, propuestas o colaboraciones.
+                </p>
+                <a
+                    href="/contacto"
+                    class="inline-flex justify-center px-14 py-4 rounded-full bg-red-600 text-white text-base font-semibold
+                        shadow-[0_0_20px_rgba(255,0,0,0.4)]
+                        transform transition-transform duration-300
+                        hover:-translate-y-1 hover:scale-105 hover:bg-red-700"
+                    style="
+                        padding-left: 40px;
+                        padding-right: 40px;
+                        margin-top: 20px;
+                    "
+                >
+                    Ir al formulario
+                </a>
+            </div>
+        </section>
+    </main>
+</Layout>

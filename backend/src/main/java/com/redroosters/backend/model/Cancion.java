@@ -32,9 +32,19 @@ public class Cancion {
     @OneToMany(
             mappedBy = "cancion",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
     )
     private java.util.List<Escucha> escuchas = new java.util.ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "cancion",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private java.util.List<Like> likes = new java.util.ArrayList<>();
+
 
 
     public Cancion() {

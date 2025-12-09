@@ -34,6 +34,52 @@ public class BuscarRepository {
         }
     };
 
+    public List<BusquedaDTO> buscarTodo(String q) {
+
+        String sql = """
+            WITH q AS (SELECT :term AS term)
+            
+            SELECT a.id AS id,
+                   'ARTISTA' AS tipo,
+                   a.nombre AS titulo,
+                   NULL AS subtitulo,
+                   1.0::float8 AS score
+            FROM artistas a, q
+            WHERE a.nombre ILIKE '%%' || q.term || '%%'
+
+            UNION ALL
+
+            SELECT c.id AS id,
+                   'CANCION' AS tipo,
+                   c.titulo AS titulo,
+                   ar.nombre AS subtitulo,
+                   0.8::float8 AS score
+            FROM canciones c
+            JOIN artistas ar ON ar.id = c.artista_id, q
+            WHERE c.titulo ILIKE '%%' || q.term || '%%'
+               OR ar.nombre ILIKE '%%' || q.term || '%%'
+
+            UNION ALL
+
+            SELECT al.id AS id,
+                   'ALBUM' AS tipo,
+                   al.titulo AS titulo,
+                   ar.nombre AS subtitulo,
+                   0.7::float8 AS score
+            FROM albumes al
+            JOIN artistas ar ON ar.id = al.artista_id, q
+            WHERE al.titulo ILIKE '%%' || q.term || '%%'
+               OR ar.nombre ILIKE '%%' || q.term || '%%'
+
+            ORDER BY score DESC, titulo ASC
+            """;
+
+        return jdbc.query(
+                sql,
+                Map.of("term", q == null ? "" : q.trim()),
+                ROW_MAPPER
+        );
+
 
     // Busqueda de Artistas, Albumes y Canciones a la vez
 
@@ -44,6 +90,7 @@ public class BuscarRepository {
 
     // Justamos todos los resultados (UNION ALL),
     // Los ordenamos primero por score(Canciones, Albumes, Artistas) y alfanbeticamente
+    /*
     public List<BusquedaDTO> buscarTodo(String q, int limit, int offset) {
 
         String sql = """
@@ -52,7 +99,7 @@ public class BuscarRepository {
                    'ARTISTA' AS tipo,
                    a.nombre AS titulo,
                    NULL AS subtitulo,
-                   0.7::float8 AS score
+                   1.0::float8 AS score
             FROM artistas a, q
             WHERE a.nombre ILIKE '%%' || q.term || '%%'
 
@@ -62,7 +109,7 @@ public class BuscarRepository {
                    'CANCION' AS tipo,
                    c.titulo AS titulo,
                    ar.nombre AS subtitulo,
-                   0.9::float8 AS score
+                   0.7::float8 AS score
             FROM canciones c
             JOIN artistas ar ON ar.id = c.artista_id, q
             WHERE c.titulo ILIKE '%%' || q.term || '%%'
@@ -92,6 +139,6 @@ public class BuscarRepository {
                         "offset", Math.max(0, offset)
                 ),
                 ROW_MAPPER
-        );
+        );*/
     }
 }

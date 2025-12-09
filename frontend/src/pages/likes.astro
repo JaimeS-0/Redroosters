@@ -1,0 +1,45 @@
+---
+export const prerender = false;
+
+import Layout from "../layouts/Layout.astro";
+import { PUBLIC_BACKEND_URL } from "../config/backend";
+---
+
+<Layout title="Tus canciones guardadas">
+    <div class="h-24 md:h-24"></div>
+    <main class="min-h-screen bg-black text-white flex justify-center">
+        <section
+            class="max-w-6xl mx-auto px-4 py-10 text-center justify-center items-center"
+            data-backend-url={PUBLIC_BACKEND_URL}
+        >
+            <h1
+                class="text-2xl font-bold mb-2 inline-block"
+                style="margin-top: 20px;"
+            >
+                Tus canciones guardadas
+            </h1>
+            <p id="likes-message" class="text-sm text-gray-400 mb-6">
+                Cargando tus likes...
+            </p>
+
+            <div
+                id="likes-grid"
+                class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-4 justify-center"
+                style="margin-top: 20px;"
+            >
+            </div>
+
+            <div class="mt-8 flex justify-center">
+                <button
+                    id="load-more-btn"
+                    class="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-700 w-full max-w-xs text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition duration-300 hover:scale-105
+             shadow-[0_0_25px_rgba(255,0,0,0.4)]"
+                    style="margin-top: 30px;"
+                >
+                    Cargar mas
+                </button>
+            </div>
+        </section>
+        <script type="module" src="/scripts/like/like.js"></script>
+    </main>
+</Layout>

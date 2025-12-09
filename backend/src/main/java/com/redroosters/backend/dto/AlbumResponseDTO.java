@@ -11,5 +11,6 @@ public record AlbumResponseDTO(
         String descripcion,
         String portadaUrl,
         String nombreArtista,
-        List<String> titulosCanciones
+        List<AlbumCancionDTO> canciones,
+        Long artistaId
 ) {}

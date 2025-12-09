@@ -1,0 +1,56 @@
+---
+export const prerender = false;
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Mensajes de contacto">
+    <main
+        class="min-h-screen bg-black text-white flex justify-center items-start"
+        style="padding-top: 150px;"
+    >
+        <section
+            class="w-full max-w-5xl px-6 py-16 space-y-4"
+            data-admin-mensajes
+            data-endpoint="/api/admin/VerMensajes"
+        >
+            <h1 class="text-3xl font-bold">Mensajes de contacto</h1>
+
+            <p id="mensajes-estado" class="text-sm text-gray-400">
+                Cargando mensajes...
+            </p>
+
+            <div class="overflow-x-auto mt-4" style="padding-top: 50px;">
+                <table
+                    class="w-full text-sm border border-white/10 rounded-lg overflow-hidden
+                           border-separate border-spacing-x-6 border-spacing-y-2"
+                >
+                    <thead class="bg-white/5">
+                        <tr>
+                            <th class="px-6 py-4 text-left font-semibold"
+                                >Fecha</th
+                            >
+                            <th class="px-6 py-4 text-left font-semibold"
+                                >Nombre</th
+                            >
+                            <th class="px-6 py-4 text-left font-semibold"
+                                >Email</th
+                            >
+                            <th class="px-6 py-4 text-left font-semibold"
+                                >Mensaje</th
+                            >
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <hr class="border-white/20 my-2" />
+                            </td>
+                        </tr>
+                    </thead>
+
+                    <tbody id="mensajes-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <script type="module" src="/scripts/admin/mensajes.js"></script>
+    </main>
+</Layout>

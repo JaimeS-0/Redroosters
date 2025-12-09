@@ -288,8 +288,30 @@ public class CancionService {
     public CancionResponseDTO verDetalleCancion(Long id) {
         Cancion cancion = cancionRepository.findById(id)
                 .orElseThrow(() -> new CancionNotFoundException(id));
-        return cancionMapper.toDto(cancion);
+
+        Long anteriorId = cancionRepository.findAnteriorId(id);
+        Long siguienteId = cancionRepository.findSiguienteId(id);
+
+        CancionResponseDTO base = cancionMapper.toDto(cancion);
+
+        return new CancionResponseDTO(
+                base.id(),
+                base.titulo(),
+                base.descripcion(),
+                base.duracionSegundos(),
+                base.duracionTexto(),
+                base.portada(),
+                base.urlAudio(),
+                base.nombreArtista(),
+                base.tituloAlbum(),
+                base.artistaId(),
+                base.albumId(),
+                anteriorId,
+                siguienteId
+        );
     }
+
+
 
     // Listar por artista
     public Page<CancionResponseDTO> listarCancionesPorArtista(Long artistaId, int page, int size, String sort) {

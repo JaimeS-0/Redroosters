@@ -21,6 +21,7 @@ const uid = "artistas-" + Math.random().toString(36).slice(2);
                bg-gradient-to-b from-gray-900/70 to-gray-800/80
                shadow-[0_0_40px_rgba(255,0,0,0.18)] backdrop-blur-sm
                p-8 md:p-12 space-y-10"
+        style="padding-top: 20px;"
     >
         <!-- Titulo -->
         <div class="relative flex justify-center mb-4">
@@ -150,13 +151,21 @@ const uid = "artistas-" + Math.random().toString(36).slice(2);
                             </label>
                         </div>
 
-                        <button
-                            class="px-6 py-3 rounded-xl bg-red-500 text-white font-medium
+                        <div
+                            class="flex justify-center items-center pt-4"
+                            style="padding-bottom: 10px;"
+                        >
+                            <button
+                                class="px-6 py-3 rounded-xl bg-red-500 text-white font-medium
                                hover:bg-red-600 active:scale-[.98] hover:scale-105
                                transition cursor-pointer"
-                        >
-                            Crear artista
-                        </button>
+                                style="
+                        padding-left: 40px;
+                        padding-right: 40px;"
+                            >
+                                Crear Artista
+                            </button>
+                        </div>
                     </div>
 
                     <p
@@ -257,12 +266,20 @@ const uid = "artistas-" + Math.random().toString(36).slice(2);
                         </label>
                     </div>
 
-                    <button
-                        class="px-6 py-3 rounded-xl bg-green-600 text-white font-medium
-                               hover:bg-green-500 active:scale-[.98] transition cursor-pointer hover:scale-105"
+                    <div
+                        class="flex justify-center items-center pt-4"
+                        style="padding-bottom: 10px;"
                     >
-                        Guardar cambios
-                    </button>
+                        <button
+                            class="px-6 py-3 rounded-xl bg-green-600 text-white font-medium
+                               hover:bg-green-500 active:scale-[.98] transition cursor-pointer hover:scale-105"
+                            style="
+                        padding-left: 40px;
+                        padding-right: 40px;"
+                        >
+                            Guardar cambios
+                        </button>
+                    </div>
                 </div>
 
                 <p
@@ -304,12 +321,18 @@ const uid = "artistas-" + Math.random().toString(36).slice(2);
 
                 <div class="h-10 md:h-10"></div>
 
-                <div class="flex justify-center items-center pt-6">
+                <div
+                    class="flex justify-center items-center pt-6"
+                    style="padding-bottom: 10px"
+                >
                     <button
                         type="button"
                         data-delete-trigger
                         class="px-6 py-3 rounded-xl bg-red-600 text-white font-medium
                                hover:bg-red-500 active:scale-[.98] transition cursor-pointer hover:scale-105"
+                        style="
+                        padding-left: 40px;
+                        padding-right: 40px;"
                     >
                         Eliminar artista
                     </button>
@@ -324,9 +347,9 @@ const uid = "artistas-" + Math.random().toString(36).slice(2);
         </div>
     </div>
 
-    <script type="module" src="/src/scripts/admin/IndicadorInput.js"></script>
-    <script type="module" src="/src/scripts/admin/adminArtistas.js"></script>
-    <script type="module" src="/src/scripts/admin/SelectsGlobal.js"></script>
+    <script type="module" src="/scripts/admin/IndicadorInput.js"></script>
+    <script type="module" src="/scripts/admin/adminArtistas.js"></script>
+    <script type="module" src="/scripts/admin/SelectsGlobal.js"></script>
 
     <style is:global>
         .tab {

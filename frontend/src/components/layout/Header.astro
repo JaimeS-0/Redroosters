@@ -44,11 +44,18 @@ const inlineHide = verLogo
             </li>
             <li>
                 <a
-                    href="/hot"
-                    class="text-white font-avestrava text-[clamp(25px,8vw,70px)] tracking-wide
-                 hover:text-red-400 transition-colors"
+                    href="#"
+                    class="pointer-events-none text-white/70 font-avestrava
+           text-[clamp(25px,8vw,70px)] tracking-wide
+           flex flex-col items-center leading-none"
                 >
-                    Hot
+                    <span class="leading-none"> Hot </span>
+
+                    <small
+                        class="text-white text-[9px] transform -translate-y-2 font-sans leading-none tracking-wider"
+                    >
+                        (próximamente)
+                    </small>
                 </a>
             </li>
         </ul>
@@ -103,6 +110,7 @@ const inlineHide = verLogo
                 <button
                     id="menuBtn"
                     type="button"
+                    title="Menu"
                     aria-expanded="false"
                     aria-controls="sideMenu"
                     class="relative group"
@@ -165,8 +173,8 @@ const inlineHide = verLogo
     </nav>
 </header>
 
-<script type="module" src="/src/scripts/menu/menu.js"></script>
-<script type="module" src="/src/scripts/menu/logout.js"></script>
+<script type="module" src="/scripts/menu/menu.js"></script>
+<script type="module" src="/scripts/menu/logout.js"></script>
 
 <script>
     window.addEventListener("scroll", () => {

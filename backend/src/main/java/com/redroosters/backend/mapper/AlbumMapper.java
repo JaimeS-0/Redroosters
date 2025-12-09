@@ -20,7 +20,13 @@ public interface AlbumMapper {
     Album toEntity(AlbumRequestDTO dto);
 
     @Mapping(target = "nombreArtista", source = "artista.nombre")
-    @Mapping(target = "titulosCanciones", expression = "java(album.getCanciones().stream().map(c -> c.getTitulo()).toList())")
+    @Mapping(
+            target = "canciones",
+            expression = "java( album.getCanciones().stream()" +
+                    ".map(c -> new com.redroosters.backend.dto.AlbumCancionDTO(c.getId(), c.getTitulo()))" +
+                    ".toList() )"
+    )
+    @Mapping(target = "artistaId", source = "artista.id")
     AlbumResponseDTO toDto(Album album);
 
     List<AlbumResponseDTO> toDtoList(List<Album> albums);

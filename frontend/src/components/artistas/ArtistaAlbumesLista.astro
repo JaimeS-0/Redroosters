@@ -1,12 +1,15 @@
 ---
 import { INTERNAL_BACKEND_URL } from "../../config/backend";
 
-interface Album {
+interface AlbumApi {
     id: number;
     titulo: string;
     descripcion: string | null;
-    portada?: string;
-    portadaUrl?: string | null;
+    portadaUrl: string | null;
+}
+
+interface PaginatedAlbums {
+    content: AlbumApi[];
 }
 
 interface Props {
@@ -15,7 +18,8 @@ interface Props {
 
 const { artistaId } = Astro.props;
 
-let albums: Album[] = [];
+let albums: AlbumApi[] = [];
+let errorMensaje = "";
 
 try {
     const res = await fetch(
@@ -23,63 +27,113 @@ try {
     );
 
     if (res.ok) {
-        const data = await res.json();
-        albums = Array.isArray(data) ? (data as Album[]) : (data.content ?? []);
+        const data = (await res.json()) as PaginatedAlbums;
+
+        if (Array.isArray(data.content)) {
+            albums = data.content;
+        } else {
+            albums = [];
+            errorMensaje = "No se encontraron álbumes para este artista.";
+        }
     } else {
-        //console.error("[ArtistaAlbumesLista] error:", res.status);
+        errorMensaje = `Error ${res.status} al cargar los álbumes.`;
     }
 } catch (err) {
-    //console.error("[ArtistaAlbumesLista] Error cargando albumes:", err);
+    errorMensaje = "No se ha podido conectar con el servidor.";
 }
 
-// helper para elegir bien la portada
-function getPortada(al: Album): string {
-    // Si el backend devuelve "/uploads/portadas/xxx.png" en "portada" o "portadaUrl"
-    const raw =
-        al.portadaUrl && al.portadaUrl !== ""
-            ? al.portadaUrl
-            : al.portada && al.portada !== ""
-              ? al.portada
-              : null;
-
-    if (!raw) {
-        return "";
-    }
-
-    return raw;
-}
+const PAGE_SIZE = 8;
 ---
 
 {
-    albums.length > 0 && (
-        <section>
+    albums.length > 0 ? (
+        <section data-artista-albumes data-page-size={PAGE_SIZE} class="w-full">
             <ul class="flex flex-col gap-2 divide-white/10">
-                {albums.map((al) => (
-                    <li class="flex items-center gap-4 py-3 px-2 rounded-xl hover:bg-white/5 transition">
-                        <img
-                            src={getPortada(al)}
-                            alt={al.titulo}
-                            class="w-12 h-12 rounded-lg object-cover border border-white/10"
-                            loading="lazy"
-                        />
+                {albums.map((al, index) => (
+                    <li
+                        data-item
+                        data-index={index}
+                        class={
+                            "rounded-xl hover:bg-white/5 transition" +
+                            (index >= PAGE_SIZE ? " hidden" : "")
+                        }
+                    >
+                        <a
+                            href={`/album/${al.id}`}
+                            class="flex items-center gap-4 py-3 px-2"
+                        >
+                            <img
+                                src={al.portadaUrl ?? ""}
+                                alt={al.titulo}
+                                class="w-12 h-12 rounded-lg object-cover border border-white/10"
+                                loading="lazy"
+                            />
 
-                        <div class="flex-1 flex flex-col">
-                            <p class="text-white font-medium">{al.titulo}</p>
-                            {al.descripcion && (
-                                <p class="text-xs text-gray-400 line-clamp-2">
-                                    {al.descripcion}
+                            <div class="flex-1 flex flex-col min-w-0">
+                                <p class="text-white font-medium truncate">
+                                    {al.titulo}
                                 </p>
-                            )}
-                        </div>
+
+                                {al.descripcion && (
+                                    <p class="text-xs text-gray-400 line-clamp-2">
+                                        {al.descripcion}
+                                    </p>
+                                )}
+                            </div>
+                        </a>
                     </li>
                 ))}
             </ul>
+
+            {albums.length > PAGE_SIZE && (
+                <div
+                    class="mt-4 flex justify-center"
+                    style="margin-top: 15px; margin-bottom: 15px;"
+                >
+                    <button
+                        data-load-more-albumes
+                        class="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-700 w-full max-w-xs text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition duration-300 hover:scale-105
+                        shadow-[0_0_25px_rgba(255,0,0,0.4)]"
+                        style="
+                        padding-left: 40px;
+                        padding-right: 40px;"
+                    >
+                        Cargar mas
+                    </button>
+                </div>
+            )}
         </section>
+    ) : (
+        <p class="text-sm text-gray-400">
+            {errorMensaje || "No hay álbumes disponibles."}
+        </p>
     )
 }
 
-{
-    albums.length === 0 && (
-        <p class="text-sm text-gray-400">No hay álbumes disponibles.</p>
-    )
-}
+<script type="module">
+    const sectionAlbums = document.querySelector("[data-artista-albumes]");
+    if (sectionAlbums) {
+        const pageSize = Number(sectionAlbums.dataset.pageSize) || 6;
+        const items = Array.from(sectionAlbums.querySelectorAll("[data-item]"));
+        const btn = sectionAlbums.querySelector("[data-load-more-albumes]");
+
+        if (btn && items.length > pageSize) {
+            let currentLimit = pageSize;
+
+            btn.addEventListener("click", () => {
+                currentLimit += pageSize;
+
+                items.forEach((el, index) => {
+                    if (index < currentLimit) {
+                        el.classList.remove("hidden");
+                    }
+                });
+
+                if (currentLimit >= items.length) {
+                    btn.disabled = true;
+                    btn.textContent = "No hay mas álbumes";
+                }
+            });
+        }
+    }
+</script>
