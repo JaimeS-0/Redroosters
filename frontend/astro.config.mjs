@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 
-import tailwindcss from '@tailwindcss/vite';
+import tailwind from "@astrojs/tailwind";
 
 // Proxy para desarrollo
 /*
@@ -20,7 +20,9 @@ export default defineConfig({
 });*/
 export default defineConfig({
   output: "static",
-  integrations: [tailwind()],
+  integrations: [
+    tailwind(),
+  ],
 });
 
 
