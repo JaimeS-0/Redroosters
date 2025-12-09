@@ -17,30 +17,33 @@ interface Props {
 const { artistaId } = Astro.props;
 
 let singles: Cancion[] = [];
+let errorMensaje = "";
 
 try {
     const res = await fetch(
-        `${INTERNAL_BACKEND_URL}/api/public/artista/${artistaId}/cancion`,
+        `${INTERNAL_BACKEND_URL}/api/public/artista/${artistaId}/singles?page=0&size=100`,
     );
 
     if (res.ok) {
         const data = await res.json();
-        const todas: Cancion[] = Array.isArray(data)
-            ? (data as Cancion[])
-            : (data.content ?? []);
 
-        // Solo canciones sin album
-        singles = todas.filter((c) => !c.tituloAlbum);
+        if (Array.isArray(data.content)) {
+            singles = data.content as Cancion[];
+        } else {
+            errorMensaje = "Formato de datos inesperado.";
+        }
+    } else {
+        errorMensaje = `Error ${res.status} al cargar los singles.`;
     }
 } catch (err) {
-    //console.error("[ArtistaSinglesLista] Error cargando singles:", err);
+    errorMensaje = "No se ha podido conectar con el servidor.";
 }
 
 const PAGE_SIZE = 8;
 ---
 
 {
-    singles.length > 0 && (
+    singles.length > 0 ? (
         <section data-artista-singles data-page-size={PAGE_SIZE} class="w-full">
             <ul class="flex flex-col gap-2 divide-white/10">
                 {singles.map((c, index) => (
@@ -88,8 +91,7 @@ const PAGE_SIZE = 8;
                 >
                     <button
                         data-load-more-singles
-                        class="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-700 w-full max-w-xs text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition duration-300 hover:scale-105
-                        shadow-[0_0_25px_rgba(255,0,0,0.4)]"
+                        class="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-700 w-full max-w-xs text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition duration-300 hover:scale-105 shadow-[0_0_25px_rgba(255,0,0,0.4)]"
                         style="
                         padding-left: 40px;
                         padding-right: 40px;"
@@ -99,12 +101,10 @@ const PAGE_SIZE = 8;
                 </div>
             )}
         </section>
-    )
-}
-
-{
-    singles.length === 0 && (
-        <p class="text-sm text-gray-400">No hay singles disponibles.</p>
+    ) : (
+        <p class="text-sm text-gray-400">
+            {errorMensaje || "No hay singles disponibles."}
+        </p>
     )
 }
 
