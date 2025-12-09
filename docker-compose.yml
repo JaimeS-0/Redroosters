@@ -42,7 +42,8 @@ services:
   frontend:
     build:
       context: ./frontend
-      target: dev # Desarrollo
+      #target: dev # Desarrollo
+      target: build # Produccion
     container_name: frontend
     #ports:
     #  - "${FRONT_PORT}:${FRONT_PORT}"

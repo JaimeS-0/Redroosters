@@ -9,6 +9,7 @@ WORKDIR /app
 COPY . .
 
 # Compila el proyecto con Maven y genera el jar
+RUN chmod +x mvnw
 RUN ./mvnw package -DskipTests
 
 # Una imagen más ligera solo con JRE para ejecutar el jar
