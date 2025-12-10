@@ -35,7 +35,6 @@ services:
     volumes:
       - redroosters_audio:/app/uploads/audio
       - redroosters_portadas:/app/uploads/portadas
-
     depends_on:
       - db
 
@@ -67,6 +66,9 @@ services:
       - "${NGINX_PORT}:${NGINX_PORT}"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      # Volumen de audios
+      - redroosters_audio:/app/uploads/audio:ro
+      # Volumen de portadas
       - redroosters_portadas:/app/uploads/portadas:ro
 
     depends_on:
