@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const mensajes = await res.json();
-            console.log("MENSAJES:", mensajes);
+            //console.log("MENSAJES:", mensajes);
 
             tbody.innerHTML = "";
 
@@ -150,6 +150,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 4) Llamada inicial
+    // Llamada inicial
     cargarMensajes();
 });

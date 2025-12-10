@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         } catch (error) {
-            console.error(error);
+            //console.error(error);
             mensajeEstado.textContent =
                 "No se pudo conectar con el servidor";
             mensajeEstado.classList.add("text-red-500");
