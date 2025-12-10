@@ -185,6 +185,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 .filter((n) => !Number.isNaN(n));
         }
 
+        // 🔹 Helper para resetear selects (normal o select2)
+        function resetSelect(select, isMultiple = false) {
+            if (!select) return;
+
+            if (window.jQuery && $.fn.select2) {
+                $(select).val(isMultiple ? null : "").trigger("change");
+            } else {
+                select.value = "";
+            }
+        }
+
         // ========= CREAR ALBUM (POST /api/admin/album) =========
         if (formCrear) {
             formCrear.addEventListener("submit", async (e) => {
@@ -251,6 +262,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         body: fd,
                     });
 
+                    // limpiar selects de CREAR (artista + canciones)
+                    resetSelect(selArtistaCrear);
+                    resetSelect(selCancionesCrear, true);
+
                     setMsg(msgCrear, true, "Album creado correctamente ✅");
                     formCrear.reset();
 
@@ -261,7 +276,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     // Actualizar estadísticas
                     window.dispatchEvent(new Event("estadisticas:actualizar"));
-
 
                 } catch (err) {
                     if (String(err.message).includes("401")) {
@@ -293,35 +307,46 @@ document.addEventListener("DOMContentLoaded", () => {
                     const albumId = selAlbumEditar.value;
                     const raw = new FormData(formEditar);
 
-                    //const titulo = raw.get("titulo")
-                    //const descripcion = raw.get("descripcion")
+                    const tituloRaw = raw.get("titulo");
+                    const descripcionRaw = raw.get("descripcion");
+                    const artistaIdRaw = raw.get("artistaId");
 
-                    // Limpiamos valor escrito en el input
-                    let titulo =
-                        typeof tituloRaw === "string" ? tituloRaw.trim() : "";
+                    // Titulo nuevo
+                    let titulo = typeof tituloRaw === "string" ? tituloRaw.trim() : "";
 
-                    // Si el input está vacio, usamos el texto del <option> seleccionado
+                    // Si el input esta vacio => usar titulo ACTUAL del album (option del select)
                     if (!titulo && selAlbumEditar.selectedIndex >= 0) {
-                        const opt =
-                            selAlbumEditar.options[selAlbumEditar.selectedIndex];
+                        const opt = selAlbumEditar.options[selAlbumEditar.selectedIndex];
                         if (opt && typeof opt.textContent === "string") {
                             titulo = opt.textContent.trim();
                         }
                     }
 
-                    // 3) Descripcion puede ser opcional
+                    // Descripcion opcional
                     const descripcion =
-                        typeof descripcionRaw === "string" &&
-                            descripcionRaw.trim() !== ""
+                        typeof descripcionRaw === "string" && descripcionRaw.trim() !== ""
                             ? descripcionRaw.trim()
                             : null;
 
-                    const artistaIdRaw = raw.get("artistaId");
                     const artistaId = artistaIdRaw ? Number(artistaIdRaw) : null;
 
-                    const cancionesIds = obtenerIdsDesdeSelectMultiple(
-                        selCancionesEditar
-                    );
+                    // cancionesIds OPCIONAL para editar
+                    let cancionesIds = null;
+
+                    // Si existe el select y el usuario ha seleccionado alguna cancion,
+                    // entonces SI tocamos canciones
+                    if (selCancionesEditar) {
+                        const haySeleccion = Array.from(selCancionesEditar.options).some(
+                            (opt) => opt.selected && opt.value
+                        );
+
+                        if (haySeleccion) {
+                            cancionesIds = obtenerIdsDesdeSelectMultiple(selCancionesEditar);
+                        } else {
+                            // ninguna seleccion => null => NO cambiar canciones en el backend
+                            cancionesIds = null;
+                        }
+                    }
 
                     let hayError = false;
 
@@ -330,6 +355,16 @@ document.addEventListener("DOMContentLoaded", () => {
                             formEditar,
                             "albumId",
                             "Debes seleccionar un album"
+                        );
+                        hayError = true;
+                    }
+
+                    // solo comprobamos que, despues del fallback, haya alguno.
+                    if (!titulo) {
+                        setFieldError(
+                            formEditar,
+                            "titulo",
+                            "El titulo del album no es valido"
                         );
                         hayError = true;
                     }
@@ -348,18 +383,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         return;
                     }
 
-                    // El PUT del backend espera JSON (AlbumRequestDTO)
                     const dto = {
                         titulo: titulo,
                         descripcion: descripcion,
-                        // portadaUrl no se toca aqui (se mantiene la que tiene)
                         portadaUrl: null,
                         artistaId: artistaId,
-                        cancionesIds: cancionesIds,
+                        cancionesIds: cancionesIds, // null => no tocar, [] => quitar todas
                     };
 
-
-
+                    // Llamamos al backend
                     await fetchAdmin(`${baseEditar}/${albumId}`, {
                         method: "PUT",
                         headers: {
@@ -367,6 +399,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         },
                         body: JSON.stringify(dto),
                     });
+
+                    // Limpiamos selects (album + artista + canciones)
+                    resetSelect(selAlbumEditar);
+                    resetSelect(selArtistaEditar);
+                    resetSelect(selCancionesEditar, true);
+
+                    formEditar.reset();
 
                     setMsg(msgEditar, true, "Album editado correctamente ✅");
 
@@ -430,10 +469,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         "Album eliminado correctamente ✅"
                     );
 
-                    selAlbumEliminar.value = "";
-                    if (window.jQuery && $.fn.select2) {
-                        $(selAlbumEliminar).trigger("change");
-                    }
+                    // Limpiar selección del select2 de ELIMINAR
+                    resetSelect(selAlbumEliminar);
+
+                    // resetear formulario
+                    formEliminar.reset();
 
                     document.dispatchEvent(
                         new CustomEvent("albums-actualizados")
@@ -441,7 +481,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     // Actualizar estadísticas
                     window.dispatchEvent(new Event("estadisticas:actualizar"));
-
 
                 } catch (err) {
                     if (String(err.message).includes("401")) {

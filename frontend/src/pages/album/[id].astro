@@ -85,9 +85,11 @@ function getPortadaUrl(a: Album): string {
                             <div class="text-center mt-6">
                                 <a
                                     href={`/artista/${album.artistaId}`}
-                                    class="inline-block bg-red-600 hover:bg-red-700 
-                                           text-sm font-semibold text-white
-                                           px-5 py-2 rounded-lg transition"
+                                    class="mt-6 inline-block px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl text-center transition-all duration-300 hover:scale-105"
+                                    style="
+                                        padding-left: 40px;
+                                        padding-right: 40px;
+                                    "
                                 >
                                     Volver al artista
                                 </a>
@@ -97,7 +99,12 @@ function getPortadaUrl(a: Album): string {
 
                     {/* LISTA DE CANCIONES */}
                     <section class="mt-4">
-                        <h2 class="text-xl font-semibold mb-4">Canciones</h2>
+                        <h2
+                            class="text-xl font-semibold mb-4"
+                            style="margin-bottom: 20px;"
+                        >
+                            Canciones
+                        </h2>
 
                         {album.canciones.length > 0 ? (
                             <ul class="flex flex-col divide-y divide-white/10 rounded-2xl bg-white/5 border border-white/10">

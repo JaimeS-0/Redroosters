@@ -1,3 +1,4 @@
+// /scripts/admin/adminArtistas.js
 document.addEventListener("DOMContentLoaded", () => {
     const secciones = document.querySelectorAll(
         'section[data-uid][data-base][data-base-public]'
@@ -6,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     secciones.forEach((root) => {
         const baseAdmin = root.dataset.base;
-        const basePublic = root.dataset.basePublic;
 
         const formCrear = root.querySelector('form[data-form="crear"]');
         const formEditar = root.querySelector('form[data-form="editar"]');
@@ -38,12 +38,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 panel.classList.toggle("block", activo);
             });
 
+            // SOLO aqui inicializamos select2 de artistas
             if (window.jQuery && $.fn.select2) {
-                if (tab === "editar" && selArtistaEditar) {
-                    $(selArtistaEditar).select2({ width: "100%" });
+                const opts = { width: "100%" };
+
+                if (tab === "editar" && selArtistaEditar &&
+                    !$(selArtistaEditar).hasClass("select2-hidden-accessible")) {
+                    $(selArtistaEditar).select2(opts);
                 }
-                if (tab === "eliminar" && selArtistaEliminar) {
-                    $(selArtistaEliminar).select2({ width: "100%" });
+
+                if (tab === "eliminar" && selArtistaEliminar &&
+                    !$(selArtistaEliminar).hasClass("select2-hidden-accessible")) {
+                    $(selArtistaEliminar).select2(opts);
                 }
             }
         }
@@ -54,9 +60,10 @@ document.addEventListener("DOMContentLoaded", () => {
             activar(btn.dataset.tab);
         });
 
+        // Empezamos en CREAR
         activar("crear");
 
-        // --------- Mensajes ---------
+        // --------- Helpers mensajes / fetch ---------
         function setMsg(el, ok, texto) {
             if (!el) return;
             el.textContent = texto;
@@ -76,38 +83,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers,
             });
 
-            //console.log("Respuesta backend:", res.status, url);
-
             if (!res.ok) {
                 const text = await res.text().catch(() => "");
-                //console.log("Body error backend:", text);
+                console.error("Error backend artistas:", res.status, text);
                 throw new Error(`HTTP ${res.status}`);
             }
             return res;
         }
 
-        // --------------Errores-------------
-
-        // Limpia todos los errores de campos dentro de un formulario
+        // --------- Errores ---------
         function clearFieldErrors(form) {
             if (!form) return;
 
-            // Vaciar los <p data-error="...">
             form.querySelectorAll("[data-error]").forEach((el) => {
                 el.textContent = "";
             });
 
-            // Quitar estilos rojos de los inputs
             form.querySelectorAll(".input-error").forEach((el) => {
-                el.classList.remove("input-error");
-                el.classList.remove("border-red-500");
-                el.classList.remove("ring-2");
-                el.classList.remove("ring-red-500/70");
+                el.classList.remove(
+                    "input-error",
+                    "border-red-500",
+                    "ring-2",
+                    "ring-red-500/70"
+                );
             });
-
         }
 
-        // Poner error a un campo concreto
         function setFieldError(form, fieldName, message) {
             if (!form) return;
 
@@ -115,10 +116,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const error = form.querySelector(`[data-error="${fieldName}"]`);
 
             if (input) {
-                input.classList.add("input-error");
-                input.classList.add("border-red-500");
-                input.classList.add("ring-2");
-                input.classList.add("ring-red-500/70");
+                input.classList.add(
+                    "input-error",
+                    "border-red-500",
+                    "ring-2",
+                    "ring-red-500/70"
+                );
             }
 
             if (error) {
@@ -129,17 +132,34 @@ document.addEventListener("DOMContentLoaded", () => {
         function activarLimpiezaErrores(form) {
             if (!form) return;
 
-            // Para inputs de texto
-            form.querySelectorAll("input[name]").forEach((input) => {
+            form.querySelectorAll("input[name], textarea[name]").forEach((input) => {
                 input.addEventListener("input", () => {
                     const field = input.name;
                     const error = form.querySelector(`[data-error="${field}"]`);
 
-                    input.classList.remove("input-error", "border-red-500", "ring-2", "ring-red-500/70");
+                    input.classList.remove(
+                        "input-error",
+                        "border-red-500",
+                        "ring-2",
+                        "ring-red-500/70"
+                    );
                     if (error) error.textContent = "";
                 });
+            });
 
+            form.querySelectorAll("select[name]").forEach((select) => {
+                select.addEventListener("change", () => {
+                    const field = select.name;
+                    const error = form.querySelector(`[data-error="${field}"]`);
 
+                    select.classList.remove(
+                        "input-error",
+                        "border-red-500",
+                        "ring-2",
+                        "ring-red-500/70"
+                    );
+                    if (error) error.textContent = "";
+                });
             });
         }
 
@@ -149,6 +169,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
                 if (!baseAdmin) return;
 
+                clearFieldErrors(formCrear);
+
                 try {
                     const raw = new FormData(formCrear);
 
@@ -157,20 +179,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     const destacadoChecked = raw.get("destacado") === "on";
                     const portadaFile = raw.get("portada");
 
-                    clearFieldErrors(formCrear);
-                    let hayError = false
+                    let hayError = false;
 
                     if (!nombre || !nombre.trim()) {
-                        setFieldError(formCrear, "nombre", "El artista no puede estar vacio");
+                        setFieldError(
+                            formCrear,
+                            "nombre",
+                            "El artista no puede estar vacio"
+                        );
                         hayError = true;
                     }
 
-                    // Si hay errores, no llamamos al backend
                     if (hayError) {
                         setMsg(msgCrear, false, "Revisa los campos marcados en rojo");
                         return;
                     }
-
 
                     const fd = new FormData();
                     fd.append("nombre", nombre.trim());
@@ -190,17 +213,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     setMsg(msgCrear, true, "Artista creado correctamente ✅");
                     formCrear.reset();
 
-                    // Avisamos globalmente
                     document.dispatchEvent(new CustomEvent("artistas-actualizados"));
-
-                    // Actualizar estadísticas
                     window.dispatchEvent(new Event("estadisticas:actualizar"));
-
-
                 } catch (err) {
-                    //console.error("Error creando artista", err);
                     if (String(err.message).includes("401")) {
-                        setMsg(msgCrear, false, "No autorizado. Vuelve a iniciar sesion.");
+                        setMsg(
+                            msgCrear,
+                            false,
+                            "No autorizado. Vuelve a iniciar sesion."
+                        );
                     } else {
                         setMsg(
                             msgCrear,
@@ -218,26 +239,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
                 if (!baseAdmin) return;
 
+                clearFieldErrors(formEditar);
+
                 try {
                     const raw = new FormData(formEditar);
 
-                    const id = selArtistaEditar.value; // <- ID de la cancion
+                    const id = selArtistaEditar.value;
 
                     const nombre = raw.get("nombre") || null;
                     const descripcion = raw.get("descripcion") || null;
                     const destacadoChecked = raw.get("destacado") === "on";
                     const portadaFile = raw.get("portada");
 
-
-                    clearFieldErrors(formEditar);
-                    let hayError = false
+                    let hayError = false;
 
                     if (!id) {
-                        setFieldError(formEditar, "artistaId", "Debes seleccionar un artista");
+                        setFieldError(
+                            formEditar,
+                            "artistaId",
+                            "Debes seleccionar un artista"
+                        );
                         hayError = true;
                     }
 
-                    // Si hay errores, no llamamos al backend
                     if (hayError) {
                         setMsg(msgEditar, false, "Revisa los campos marcados en rojo");
                         return;
@@ -262,11 +286,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     setMsg(msgEditar, true, "Artista editado correctamente ✅");
 
-                    // Avisamos globalmente
                     document.dispatchEvent(new CustomEvent("artistas-actualizados"));
-
                 } catch (err) {
-                    //console.error("Error editando artista", err);
                     if (String(err.message).includes("401")) {
                         setMsg(
                             msgEditar,
@@ -288,13 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (formEliminar && selArtistaEliminar) {
             formEliminar.addEventListener("submit", async (e) => {
                 e.preventDefault();
-
-                //console.log("[adminArtistas] submit eliminar artista");
-
-
-                if (!baseAdmin) {
-                    return;
-                }
+                if (!baseAdmin) return;
 
                 clearFieldErrors(formEliminar);
 
@@ -322,15 +337,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         "Artista eliminado correctamente ✅"
                     );
 
-                    // Avisamos globalmente
                     document.dispatchEvent(new CustomEvent("artistas-actualizados"));
-
-                    // Actualizar estadísticas
                     window.dispatchEvent(new Event("estadisticas:actualizar"));
-
-
                 } catch (err) {
-                    //console.error("Error eliminando artista", err);
                     if (String(err.message).includes("401")) {
                         setMsg(
                             msgEliminar,
@@ -348,5 +357,4 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     });
-
 });

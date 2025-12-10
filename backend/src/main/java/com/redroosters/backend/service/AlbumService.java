@@ -79,27 +79,43 @@ public class AlbumService {
     // Privado admin
     public AlbumResponseDTO editarAlbum(Long id, AlbumRequestDTO dto) {
 
-        // Buscar el album exsitente
+        // Buscar el album existente
         Album existente = albumRepository.findById(id)
                 .orElseThrow(() -> new AlbumNotFoundException(id));
 
         // Actualizar los campos editables
         existente.setTitulo(dto.titulo());
         existente.setDescripcion(dto.descripcion());
-        existente.setPortadaUrl(dto.portadaUrl());
 
-        // Cambiar artista
+        // Solo tocar portada si viene NO nula y no vacia
+        if (dto.portadaUrl() != null && !dto.portadaUrl().isBlank()) {
+            existente.setPortadaUrl(dto.portadaUrl());
+        }
+
+        // Cambiar artista obligatorio
         Artista artista = artistaRepository.findById(dto.artistaId())
                 .orElseThrow(() -> new ArtistaNotFoundException(dto.artistaId()));
         existente.setArtista(artista);
 
-        // Cambiar canciones
-        List<Cancion> canciones = cancionRepository.findAllById(dto.cancionesIds());
-        existente.setCanciones(canciones);
+        // SOLO tocamos canciones si el DTO trae cancionesIds no null
+        if (dto.cancionesIds() != null) {
+            List<Long> ids = dto.cancionesIds();
+            List<Cancion> canciones = ids.isEmpty()
+                    ? List.of()
+                    : cancionRepository.findAllById(ids);
+
+            if (canciones.size() != ids.size()) {
+                throw new CancionNotFoundException("Alguna cancion no existe: " + ids);
+            }
+
+            existente.setCanciones(canciones);
+        }
 
         Album actualizado = albumRepository.save(existente);
         return albumMapper.toDto(actualizado);
     }
+
+
 
     // Privado admin
     public void eliminarAlbum(Long id) {
