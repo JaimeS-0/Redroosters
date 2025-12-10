@@ -11,6 +11,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - redroosters_audio:/app/uploads/audio
+      - redroosters_portadas:/app/uploads/portadas
 
   backend:
     build:
@@ -70,7 +71,6 @@ services:
       - redroosters_audio:/app/uploads/audio:ro
       # Volumen de portadas
       - redroosters_portadas:/app/uploads/portadas:ro
-
     depends_on:
       - frontend
       - backend

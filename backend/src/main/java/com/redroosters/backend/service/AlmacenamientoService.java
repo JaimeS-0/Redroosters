@@ -30,7 +30,7 @@ public class AlmacenamientoService {
             archivo.transferTo(destino.toFile());
 
             // URL accesible desde NGINX
-            return "/uploads/portadas/" + nombreArchivo;
+            return "/media/portadas/" + nombreArchivo;
 
         } catch (IOException e) {
             throw new RuntimeException("Error al guardar portada", e);
