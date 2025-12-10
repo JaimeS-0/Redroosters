@@ -27,6 +27,10 @@ public interface AlbumMapper {
                     ".toList() )"
     )
     @Mapping(target = "artistaId", source = "artista.id")
+    @Mapping(
+            target = "totalCanciones",
+            expression = "java(album.getCanciones() != null ? album.getCanciones().size() : 0)"
+    )
     AlbumResponseDTO toDto(Album album);
 
     List<AlbumResponseDTO> toDtoList(List<Album> albums);

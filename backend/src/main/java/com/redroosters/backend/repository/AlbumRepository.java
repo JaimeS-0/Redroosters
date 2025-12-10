@@ -14,5 +14,8 @@ public interface AlbumRepository extends JpaRepository<Album, Long> {
     // Ver todos los albumes de un artista
     Page<Album> findByArtistaId(Long artistaId, Pageable pageable);
 
+    // Cuenta cuantas canciones tiene el artista
+    long countByArtistaId(Long artistaId);
+
 
 }

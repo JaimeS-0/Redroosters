@@ -1,6 +1,7 @@
 package com.redroosters.backend.docs.publico;
 
 import com.redroosters.backend.dto.AlbumResponseDTO;
+import com.redroosters.backend.dto.ArtistaDetalleDTO;
 import com.redroosters.backend.dto.ArtistaResponseDTO;
 import com.redroosters.backend.dto.CancionResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,7 +49,7 @@ public interface ArtistaPublicApi {
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ArtistaResponseDTO.class)))
     @ApiResponse(responseCode = "404", description = "Artista no encontrado", content = @Content)
-    ResponseEntity<ArtistaResponseDTO> verDetalle(
+    ResponseEntity<ArtistaDetalleDTO> verDetalle(
             @Parameter(description = "ID del artista") Long id
     );
 

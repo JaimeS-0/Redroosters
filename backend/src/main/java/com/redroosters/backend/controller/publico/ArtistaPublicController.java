@@ -10,6 +10,8 @@ import com.redroosters.backend.service.CancionService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.redroosters.backend.dto.ArtistaDetalleDTO;
+
 
 import java.util.List;
 
@@ -55,9 +57,10 @@ public class ArtistaPublicController implements ArtistaPublicApi {
     // Ver los destalles de un artista id
     @GetMapping("/artista/{id}")
     @Override
-    public ResponseEntity<ArtistaResponseDTO> verDetalle(@PathVariable Long id) {
-        return ResponseEntity.ok(artistaService.getId(id));
+    public ResponseEntity<ArtistaDetalleDTO> verDetalle(@PathVariable Long id) {
+        return ResponseEntity.ok(artistaService.obtenerDetalle(id));
     }
+
 
     //  Álbumes del artista
     @GetMapping("/artista/{id}/album")

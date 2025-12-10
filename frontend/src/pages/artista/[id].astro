@@ -16,6 +16,9 @@ interface Artista {
     portadaUrl: string;
     destacado: boolean;
     totalEscuchas: number;
+    totalLikes: number;
+    totalCanciones: number;
+    totalAlbumes: number;
 }
 
 const { id } = Astro.params;
@@ -68,6 +71,18 @@ try {
 
                     <p class="text-white/80 leading-relaxed">
                         {artista?.descripcion}
+                    </p>
+
+                    <p class="text-white/60 text-sm">
+                        Canciones totales: {artista?.totalCanciones}
+                    </p>
+
+                    <p class="text-white/60 text-sm">
+                        Albumes totales: {artista?.totalAlbumes}
+                    </p>
+
+                    <p class="text-white/60 text-sm">
+                        Likes totales: {artista?.totalLikes}
                     </p>
 
                     <p class="text-white/60 text-sm">

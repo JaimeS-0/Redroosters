@@ -1,13 +1,13 @@
 package com.redroosters.backend.service;
 
 
+import com.redroosters.backend.dto.ArtistaDetalleDTO;
 import com.redroosters.backend.dto.ArtistaRequestDTO;
 import com.redroosters.backend.dto.ArtistaResponseDTO;
 import com.redroosters.backend.exception.ArtistaNotFoundException;
 import com.redroosters.backend.mapper.ArtistaMapper;
 import com.redroosters.backend.model.Artista;
-import com.redroosters.backend.repository.ArtistaRepository;
-import com.redroosters.backend.repository.EscuchaRepository;
+import com.redroosters.backend.repository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,11 +29,19 @@ public class ArtistaService {
     private final ArtistaRepository artistaRepository;
     private final ArtistaMapper artistaMapper;
     private final EscuchaRepository escuchaRepository;
+    private final CancionRepository cancionRepository;
+    private final AlbumRepository albumRepository;
+    private final LikeRepository likeRepository;
 
-    public ArtistaService(ArtistaRepository artistaRepository, ArtistaMapper artistaMapper, EscuchaRepository escuchaRepository) {
+
+    public ArtistaService(ArtistaRepository artistaRepository, ArtistaMapper artistaMapper, EscuchaRepository escuchaRepository
+    , CancionRepository cancionRepository, AlbumRepository albumRepository, LikeRepository likeRepository) {
         this.artistaRepository = artistaRepository;
         this.artistaMapper = artistaMapper;
         this.escuchaRepository = escuchaRepository;
+        this.cancionRepository = cancionRepository;
+        this.albumRepository = albumRepository;
+        this.likeRepository = likeRepository;
     }
 
     // Privado ADMIN
@@ -158,6 +166,33 @@ public class ArtistaService {
 
         artistaRepository.deleteById(id);
     }
+
+    // Detalles sobre el artista
+    public ArtistaDetalleDTO obtenerDetalle(Long id) {
+
+        Artista artista = artistaRepository.findById(id)
+                .orElseThrow(() -> new ArtistaNotFoundException(id));
+
+        long totalEscuchas = escuchaRepository.countByArtistaId(id);
+        long totalCanciones = cancionRepository.countByArtistaId(id);
+        long totalAlbumes = albumRepository.countByArtistaId(id);
+        long totalLikes = likeRepository.countByCancion_Artista_Id(id);
+
+
+        return new ArtistaDetalleDTO(
+                artista.getId(),
+                artista.getNombre(),
+                artista.getUrlNombre(),
+                artista.getDescripcion(),
+                artista.getPortadaUrl(),
+                artista.isDestacado(),
+                totalEscuchas,
+                totalLikes,
+                totalCanciones,
+                totalAlbumes
+        );
+    }
+
 
     // Metodos del repositorio
 

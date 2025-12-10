@@ -26,6 +26,8 @@ public interface CancionRepository extends JpaRepository<Cancion, Long> {
     // Al crear un ALbum muestra solo las canciones "libres" o sin album asociado.
     Page<Cancion> findByArtistaIdAndAlbumIsNull(Long artistaId, Pageable pageable);
 
+    // Cuenta cuantos albues tiene el artista
+    long countByArtistaId(Long artistaId);
 
     // Para el buscador (la q la abrebiatura de query que contega la misma palabra que buscas)
     Page<Cancion> findByTituloContainingIgnoreCase(String q, Pageable pageable);

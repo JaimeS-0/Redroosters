@@ -17,6 +17,7 @@ interface Album {
     nombreArtista: string;
     canciones: CancionAlbum[];
     artistaId: number;
+    totalCanciones: number;
 }
 
 const { id } = Astro.params;
@@ -81,6 +82,11 @@ function getPortadaUrl(a: Album): string {
                                     {album.descripcion}
                                 </p>
                             )}
+
+                            <p class="text-sm sm:text-base text-white">
+                                Este álbum tiene {album.totalCanciones}{" "}
+                                canciones.
+                            </p>
 
                             <div class="text-center mt-6">
                                 <a

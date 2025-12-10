@@ -31,6 +31,9 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     // Contar los likes completos para mostrarlos
     long countByCancionId(Long cancionId);
 
+    // Cuenta los likes que tienen todas las canciones de un artista
+    long countByCancion_Artista_Id(Long artistaId);
+
     // TOP global por likes (estadisticas)
     @Query("""
            select l.cancion.id as cancionId, count(l) as total
