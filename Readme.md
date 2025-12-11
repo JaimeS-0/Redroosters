@@ -39,7 +39,7 @@ https://github.com/JaimeS-0/Redroosters.git
 cd redroosters
 ```
 3. Crea un archivo `.env` -> Mirar el `.env.example` para guia
-## (ejecuta este comando para renombrarlo a .env)
+### (ejecuta este comando para renombrarlo a .env)
 ```
 cp .env.example .env
 ```
@@ -99,6 +99,7 @@ ADMIN_PASSWORD=12345678910
 
 
 #### 📋 La documentacion de todo el proyecto la tengo por separada en Notion. (me falta ajustar muchas cosas nuevas)
+
 
 
 
