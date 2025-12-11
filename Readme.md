@@ -28,21 +28,28 @@ Este proyecto está desarrollado para un productor musical y se ha construido co
 
 ---
 
-## ⚙️ Cómo ejecutar (modo desarrollo)
+## ⚙️ Cómo ejecutar en local (modo desarrollo)
 
 1. Clona este repositorio
 ```
-git clone [URL del repositorio]
+https://github.com/JaimeS-0/Redroosters.git
 ```
-2. Crea un archivo `.env` -> Mirar el `.env.example` para guia
-
-
-3. Ejecuta la app con Docker:
+2. Entra en la carpeta
 ```
-docker compose up -d --build 
+cd redroosters
+```
+3. Crea un archivo `.env` -> Mirar el `.env.example` para guia
+(ejecuta este comando para renombrarlo a .env)
+```
+cp .env.example .env
+```
+4. Ejecuta la app con Docker:
+```
+docker compose up --build -d 
 ```
 
-#### 📋 La documentacion de todo el proyecto la tengo por separada en Notion.
+#### 📋 La documentacion de todo el proyecto la tengo por separada en Notion. (me falta ajustar muchas cosas nuevas)
+
 
 
 
