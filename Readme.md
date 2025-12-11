@@ -88,11 +88,17 @@ docker compose up --build -d
   </tbody>
 </table>
 
+## Algunas funciones de la plataforma solo están disponibles para administradores.
 
-
+## Para acceder al panel de administración, inicia sesión con las credenciales definidas en tu archivo .env, por defecto son:
+```
+ADMIN_EMAIL=admin@gmail.com
+ADMIN_PASSWORD=12345678910
+```
 
 
 #### 📋 La documentacion de todo el proyecto la tengo por separada en Notion. (me falta ajustar muchas cosas nuevas)
+
 
 
 
