@@ -1,4 +1,3 @@
-// /scripts/admin/adminArtistas.js
 document.addEventListener("DOMContentLoaded", () => {
     const secciones = document.querySelectorAll(
         'section[data-uid][data-base][data-base-public]'
@@ -38,18 +37,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 panel.classList.toggle("block", activo);
             });
 
-            // SOLO aqui inicializamos select2 de artistas
+            // Inicializamos select2 de artistas
             if (window.jQuery && $.fn.select2) {
-                const opts = { width: "100%" };
-
-                if (tab === "editar" && selArtistaEditar &&
-                    !$(selArtistaEditar).hasClass("select2-hidden-accessible")) {
-                    $(selArtistaEditar).select2(opts);
+                if (tab === "editar") {
+                    if (selArtistaEditar) $(selArtistaEditar).select2();
                 }
-
-                if (tab === "eliminar" && selArtistaEliminar &&
-                    !$(selArtistaEliminar).hasClass("select2-hidden-accessible")) {
-                    $(selArtistaEliminar).select2(opts);
+                if (tab === "eliminar") {
+                    if (selArtistaEliminar) $(selArtistaEliminar).select2();
                 }
             }
         }
@@ -63,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Empezamos en CREAR
         activar("crear");
 
-        // --------- Helpers mensajes / fetch ---------
+        // Helpers mensajes / fetch 
         function setMsg(el, ok, texto) {
             if (!el) return;
             el.textContent = texto;
@@ -91,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return res;
         }
 
-        // --------- Errores ---------
+        // Errores 
         function clearFieldErrors(form) {
             if (!form) return;
 
@@ -163,7 +157,20 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // --------- CREAR ---------
+
+        // Helper para resetear selects (normal o select2)
+        function resetSelect(select, isMultiple = false) {
+            if (!select) return;
+
+            if (window.jQuery && $.fn.select2) {
+                $(select).val(isMultiple ? null : "").trigger("change");
+            } else {
+                select.value = "";
+            }
+        }
+
+
+        // ========= CREAR ARTISTA (POST /api/admin/artista) =========
         if (formCrear) {
             formCrear.addEventListener("submit", async (e) => {
                 e.preventDefault();
@@ -233,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // --------- EDITAR ---------
+        // ========= EDITAR ARTISTA (PUT /api/admin/artista/{id}) =========
         if (formEditar && selArtistaEditar) {
             formEditar.addEventListener("submit", async (e) => {
                 e.preventDefault();
@@ -284,6 +291,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         body: fd,
                     });
 
+                    formEditar.reset();
+
                     setMsg(msgEditar, true, "Artista editado correctamente ✅");
 
                     document.dispatchEvent(new CustomEvent("artistas-actualizados"));
@@ -305,7 +314,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // --------- ELIMINAR ---------
+        // ========= ELIMINAR ARTISTAS (DELETE /api/admin/artista/{id}) =========
         if (formEliminar && selArtistaEliminar) {
             formEliminar.addEventListener("submit", async (e) => {
                 e.preventDefault();

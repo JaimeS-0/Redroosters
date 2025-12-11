@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "El nombre debe tener al menos 2 caracteres";
             valid = false;
         }
-        if (!email.includes("@") || email.length < 5) {
+        if (!email.includes("@") || email.length < 4) {
             errorEmail.textContent = "Email no valido";
             valid = false;
         }

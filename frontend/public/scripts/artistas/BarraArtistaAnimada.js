@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
         moverBarra(btn);
     }
 
-    // --- Inicial ---
+    // Inicial
     const oldTransition = underline.style.transition;
     underline.style.transition = "none";
 
@@ -64,11 +64,11 @@ document.addEventListener("DOMContentLoaded", () => {
         underline.style.opacity = "1";
     });
 
-    // --- Eventos click ---
+    // Eventos click
     tabs.forEach((tab) => {
         tab.addEventListener("click", () => activarTab(tab));
     });
 
-    // --- Resize ---
+    // Resize 
     window.addEventListener("resize", () => moverBarra(activeTab));
 });

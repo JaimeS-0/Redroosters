@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         enlaceRegistro.addEventListener("click", (e) => {
 
             e.preventDefault()
-            interruptor.checked = true // Cambiamos al modo "Registro"
+            interruptor.checked = true // Cambiamos al modo Registro
             window.scrollTo({ top: 0, behavior: "smooth" }) // Subimos suavemente al inicio
         })
     }
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (interruptor && enlaceLogin) {
         enlaceLogin.addEventListener("click", (e) => {
             e.preventDefault()
-            interruptor.checked = false // Cambiamos al modo "Iniciar sesión"
+            interruptor.checked = false // Cambiamos al modo Iniciar sesión
             window.scrollTo({ top: 0, behavior: "smooth" })
         })
     }

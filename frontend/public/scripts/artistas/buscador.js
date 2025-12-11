@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
             pintarResultados(data);
         } catch (err) {
-            if (err.name === "AbortError") return; // se cancelo, no es error real
+            if (err.name === "AbortError") return; // se cancelo
 
             cajaResultado.innerHTML = `
                 <p class="px-4 py-3 text-sm text-red-400">

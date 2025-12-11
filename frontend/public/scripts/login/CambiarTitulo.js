@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         user = JSON.parse(userData);
     } catch (e) {
-        // console.error("Error parseando rr_user:", e);
+        // console.error("Error rr_user:", e);
         return;
     }
 

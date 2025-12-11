@@ -38,6 +38,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            // Si ya tienen Select2, destruir antes de cambiar innerHTML
+            if (window.jQuery && $.fn.select2) {
+                if (selArtistaCrear && $(selArtistaCrear).hasClass("select2-hidden-accessible")) {
+                    $(selArtistaCrear).select2("destroy");
+                }
+                if (selArtistaEditar && $(selArtistaEditar).hasClass("select2-hidden-accessible")) {
+                    $(selArtistaEditar).select2("destroy");
+                }
+                if (selArtistaEliminar && $(selArtistaEliminar).hasClass("select2-hidden-accessible")) {
+                    $(selArtistaEliminar).select2("destroy");
+                }
+            }
+
+            // Rellenar opciones
             if (selArtistaCrear) {
                 selArtistaCrear.innerHTML =
                     '<option value="">Selecciona un artista</option>';
@@ -60,6 +74,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (selArtistaEditar) selArtistaEditar.appendChild(opt.cloneNode(true));
                 if (selArtistaEliminar) selArtistaEliminar.appendChild(opt.cloneNode(true));
             });
+
+            if (window.jQuery && $.fn.select2) {
+                if (selArtistaCrear) $(selArtistaCrear).select2({ width: "100%" });
+                if (selArtistaEditar) $(selArtistaEditar).select2({ width: "100%" });
+                if (selArtistaEliminar) $(selArtistaEliminar).select2({ width: "100%" });
+            }
+
         }
 
         // ---------- ALBUMS ----------
@@ -73,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            // Rellenar opciones
             if (selAlbumCrear) {
                 selAlbumCrear.innerHTML =
                     '<option value="">Sin album</option>';
@@ -115,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            // Rellenar opciones
             if (selCancionEditar) {
                 selCancionEditar.innerHTML =
                     '<option value="">Selecciona una cancion</option>';

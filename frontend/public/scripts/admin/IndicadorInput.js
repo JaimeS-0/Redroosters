@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         if (!preview) return;
 
-        // ----- Pone ✔ (check) al seleccionar un archivo y su nombre debajo del input -----
+        // Pone ✔ (check) al seleccionar un archivo y su nombre debajo del input
         input.addEventListener("change", () => {
             if (input.files && input.files.length > 0) {
                 const file = input.files[0];
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // ----- Limpia al enviar el formulario -----
+        // Limpia al enviar el formulario 
         document.querySelectorAll("form").forEach((form) => {
             form.addEventListener("submit", () => {
                 setTimeout(() => {

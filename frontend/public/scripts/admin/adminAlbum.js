@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const selArtistaCrear = root.querySelector("#select-artista-album-crear");
         const selArtistaEditar = root.querySelector("#select-artista-album-editar");
 
-        // (Opcional) select multiple canciones en crear/editar
+        // select multiple canciones en crear/editar
         const selCancionesCrear = root.querySelector(
             '[name="cancionesIds"][data-role="crear"]'
         );
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Inicio en crear
         activar("crear");
 
-        // --------- Helpers mensajes / fetch / errores ---------
+        // Helpers mensajes / fetch / errores 
         function setMsg(el, ok, texto) {
             if (!el) return;
             el.textContent = texto;
@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .filter((n) => !Number.isNaN(n));
         }
 
-        // 🔹 Helper para resetear selects (normal o select2)
+        // Helper para resetear selects (normal o select2)
         function resetSelect(select, isMultiple = false) {
             if (!select) return;
 
@@ -330,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     const artistaId = artistaIdRaw ? Number(artistaIdRaw) : null;
 
-                    // cancionesIds OPCIONAL para editar
+                    // cancionesIds Opcional para editar
                     let cancionesIds = null;
 
                     // Si existe el select y el usuario ha seleccionado alguna cancion,

@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-        // --------- CREAR CANCION (POST /cancion/archivo) ---------
+        // --------- CREAR CANCION (POST api/admin/cancion/archivo) ---------
         if (formCrear) {
             formCrear.addEventListener("submit", async (e) => {
                 e.preventDefault();
@@ -332,7 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // --------- EDITAR CANCION (PUT /cancion/{id}) ---------
+        // ========= EDITAR CANCION (PUT /api/admin/cancion/{id}) =========
         if (formEditar && selCancionEditar) {
             formEditar.addEventListener("submit", async (e) => {
                 e.preventDefault();
@@ -427,7 +427,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // --------- ELIMINAR CANCION (DELETE /cancion/{id}) ---------
+        // ========= ELIMINAR CANICON (DELETE /api/admin/cancion/{id}) =========
         if (formEliminar && selCancionEliminar) {
             formEliminar.addEventListener("submit", async (e) => {
                 e.preventDefault();

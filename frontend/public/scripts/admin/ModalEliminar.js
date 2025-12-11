@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
         closeModal();
     });
 
-    // ---- Enganchar todos los formularios de eliminar ----
+    // Enganchar todos los formularios de eliminar 
     const eliminarPanels = document.querySelectorAll('[data-panel="eliminar"]');
 
     eliminarPanels.forEach((panel) => {
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!option || !option.value) {
                 if (msgEl) {
-                    msgEl.style.color = "";           
+                    msgEl.style.color = "";
                     msgEl.textContent = `Selecciona un ${tipo} primero.`;
                     msgEl.classList.remove("text-gray-300");
                     msgEl.classList.add("text-red-400");
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (msgEl) {
                 msgEl.textContent = "";
-                msgEl.style.color = "";           
+                msgEl.style.color = "";
                 msgEl.classList.remove("text-red-400");
             }
 

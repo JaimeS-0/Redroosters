@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!valido) return
 
-            // Aqui ya se registra el usuario
+            // Aqui se registra el usuario
             try {
                 const res = await fetch("/api/auth/register", {
                     method: "POST",
