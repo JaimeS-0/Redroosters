@@ -43,12 +43,57 @@ cd redroosters
 ```
 cp .env.example .env
 ```
+Este archivo contiene TODAS las variables necesarias:
+puertos - Base de datos - Credenciales del admin - URLs internas/externas del backend
+
+⚠️ IMPORTANTE:
+Si usas el proyecto solo en local, no tienes que cambiar nada del .env.
+
 4. Ejecuta la app con Docker:
 ```
 docker compose up --build -d 
 ```
 
+## Esto levantara:
+
+<table>
+  <thead>
+    <tr>
+      <th>Servicio</th>
+      <th>Puerto local</th>
+      <th>Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Frontend (Astro)</td>
+      <td><a href="http://localhost" target="_blank">http://localhost</a></td>
+      <td>Sirve toda la web</td>
+    </tr>
+    <tr>
+      <td>Backend (Spring Boot)</td>
+      <td><a href="http://localhost:9000" target="_blank">http://localhost:9000</a></td>
+      <td>API + Swagger</td>
+    </tr>
+    <tr>
+      <td>PostgreSQL</td>
+      <td>localhost:5432</td>
+      <td>Base de datos</td>
+    </tr>
+    <tr>
+      <td>NGINX</td>
+      <td>puerto 80</td>
+      <td>Reverse proxy para front + API</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
 #### 📋 La documentacion de todo el proyecto la tengo por separada en Notion. (me falta ajustar muchas cosas nuevas)
+
 
 
 
