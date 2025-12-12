@@ -404,6 +404,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (selCancionEliminar) $(selCancionEliminar).select2();
                     }
 
+                    formEditar.reset();
+
                     setMsg(msgEditar, true, "Cancion editada correctamente ✅");
                     await recargarSelectCanciones();
 

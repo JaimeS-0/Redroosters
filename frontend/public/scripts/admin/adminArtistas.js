@@ -291,11 +291,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         body: fd,
                     });
 
+                    if (window.jQuery && $.fn.select2) {
+                        if (selArtistaEditar) $(selArtistaEditar).select2();
+
+                    }
+
                     formEditar.reset();
+
+                    resetSelect(selArtistaEditar);
 
                     setMsg(msgEditar, true, "Artista editado correctamente ✅");
 
-                    document.dispatchEvent(new CustomEvent("artistas-actualizados"));
                 } catch (err) {
                     if (String(err.message).includes("401")) {
                         setMsg(
