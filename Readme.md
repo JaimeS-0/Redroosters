@@ -43,7 +43,7 @@ cd redroosters
 ```
 cp .env.example .env
 ```
-Este archivo contiene TODAS las variables necesarias:
+- Este archivo contiene TODAS las variables necesarias:
 puertos - Base de datos - Credenciales del admin - URLs internas/externas del backend
 
 4. Ejecuta la app con Docker:
@@ -97,6 +97,7 @@ ADMIN_PASSWORD=12345678910
 ### Tengo pendite crear una rama prod para poder desplegar la app sin errores y tener una rama en locar y otra en produccion.
 
 #### 📋 La documentacion de todo el proyecto la tengo por separada en Notion. (me falta ajustar muchas cosas nuevas)
+
 
 
 
