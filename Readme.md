@@ -39,15 +39,12 @@ https://github.com/JaimeS-0/Redroosters.git
 cd redroosters
 ```
 3. Crea un archivo `.env` -> Mirar el `.env.example` para guia
-### (ejecuta este comando para renombrarlo a .env)
+(ejecuta este comando para renombrarlo a .env)
 ```
 cp .env.example .env
 ```
 Este archivo contiene TODAS las variables necesarias:
 puertos - Base de datos - Credenciales del admin - URLs internas/externas del backend
-
-⚠️ IMPORTANTE:
-Si usas el proyecto solo en local, no tienes que cambiar nada del .env.
 
 4. Ejecuta la app con Docker:
 ```
@@ -88,7 +85,7 @@ docker compose up --build -d
   </tbody>
 </table>
 
-## Algunas funciones de la plataforma solo están disponibles para *administradores*.
+## ⚠️ Algunas funciones de la plataforma solo están disponibles para ==administradores==.
 Para tener todas las funcionalidades de la app, inicia sesión con las credenciales definidas en tu archivo .env, 
 * por defecto son:
 ```
@@ -97,8 +94,10 @@ ADMIN_PASSWORD=12345678910
 
 ```
 
+### Tengo pendite crear una rama prod para poder desplegar la app sin errores y tener una rama en locar y otra en produccion.
 
 #### 📋 La documentacion de todo el proyecto la tengo por separada en Notion. (me falta ajustar muchas cosas nuevas)
+
 
 
 
