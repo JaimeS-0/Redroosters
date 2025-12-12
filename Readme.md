@@ -85,7 +85,7 @@ docker compose up --build -d
   </tbody>
 </table>
 
-## ⚠️ Algunas funciones de la plataforma solo están disponibles para ==administradores==.
+## ⚠️ Algunas funciones de la plataforma solo están disponibles para ***administradores***.
 Para tener todas las funcionalidades de la app, inicia sesión con las credenciales definidas en tu archivo .env, 
 * por defecto son:
 ```
@@ -97,6 +97,7 @@ ADMIN_PASSWORD=12345678910
 ### Tengo pendite crear una rama prod para poder desplegar la app sin errores y tener una rama en locar y otra en produccion.
 
 #### 📋 La documentacion de todo el proyecto la tengo por separada en Notion. (me falta ajustar muchas cosas nuevas)
+
 
 
 
