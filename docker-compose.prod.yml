@@ -40,6 +40,7 @@ services:
   frontend:
     build:
       context: ./frontend
+      target: prod
     container_name: frontend
     environment:
       PUBLIC_API_URL: "/api"
