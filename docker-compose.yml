@@ -12,17 +12,20 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - redroosters_audio:/app/uploads/audio
       - redroosters_portadas:/app/uploads/portadas
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   backend:
     build:
       context: ./backend
     container_name: backend
     environment:
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/redroosters
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       BACK_PORT: ${BACK_PORT}
       JWT_SECRET: ${JWT_SECRET}
       ADMIN_USERNAME: ${ADMIN_USERNAME}
@@ -30,14 +33,17 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       AUDIO_DIR: /app/uploads/audio
       TZ: Europe/Madrid
-      JAVA_TOOL_OPTIONS: -Duser.timezone=Europe/Madrid # Para detectar la hora correcta
+      JAVA_TOOL_OPTIONS: -Duser.timezone=Europe/Madrid
     ports:
       - "${BACK_PORT}:${BACK_PORT}"
     volumes:
       - redroosters_audio:/app/uploads/audio
       - redroosters_portadas:/app/uploads/portadas
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
 
   frontend:
     build:

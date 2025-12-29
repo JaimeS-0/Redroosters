@@ -5,8 +5,12 @@ import { PUBLIC_BACKEND_URL } from "../config/backend";
 
 <Layout title="Contactanos">
     <main
-        class="min-h-screen flex flex-col items-center justify-center bg-gray-950 pt-20 gap-10"
-        style="padding-top: 40px;"
+        class="min-h-screen flex flex-col items-center bg-gray-950 gap-10"
+        style="
+    padding-top: 140px;       /* empuja hacia abajo SIEMPRE */
+    padding-bottom: 40px;
+    box-sizing: border-box;
+  "
     >
         <form
             id="formContacto"
