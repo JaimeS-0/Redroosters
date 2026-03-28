@@ -33,12 +33,13 @@ COPY . .
 RUN npm run build
 
 
-# --- PROD: versión final que sirve los archivos estáticos con Nginx ---
+# --- PROD: Node sirve la app SSR de Astro ---
 
-FROM nginx:1.27-alpine
-
-# Copio el resultado del build a la carpeta que Nginx usa por defecto
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Expongo el puerto 80, donde escuchará Nginx
-EXPOSE 80
+FROM node:20-alpine AS prod
+WORKDIR /app
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/package-lock.json ./package-lock.json
+RUN npm ci --omit=dev
+COPY --from=build /app/dist ./dist
+EXPOSE 4321
+CMD ["node", "./dist/server/entry.mjs"]
