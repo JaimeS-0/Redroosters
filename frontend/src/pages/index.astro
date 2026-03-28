@@ -28,7 +28,6 @@ try {
 // ORDENAMOS: por id ascendente (el 1º que creaste tiene el id mas bajo)
 artistas.sort((a, b) => a.id - b.id);
 
-
 // Placeholder (relleno)
 const placeholder: Artista = {
   id: -1,
@@ -37,7 +36,6 @@ const placeholder: Artista = {
   portadaUrl: "",
   destacado: false,
 };
-
 
 if (artistas.length === 0) {
   // No hay artistas destacados
@@ -54,15 +52,14 @@ if (artistas.length === 0) {
   // Nos quedamos solo con los 3 primeros
   artistas = artistas.slice(0, 3);
 }
-
 ---
 
 <Layout title="home" headerVerLogo={false} headerFondoNegro={false}>
-  <main>
+  <main class="w-full overflow-x-hidden">
     <HomeHero />
 
     <section
-      class="w-full min-h-dvh bg-cover bg-center bg-no-repeat flex flex-col items-center bg-black gap-10"
+      class="w-full min-h-dvh bg-cover bg-center bg-no-repeat flex flex-col items-center bg-black gap-10 overflow-x-hidden"
       style="background-image: url('/img/Home/FondoMain.webp');"
     >
       <!-- clamp(min, ideal, max): fija un tamaño que crece de forma fluida entre un mínimo y un máximo -->
@@ -74,23 +71,23 @@ if (artistas.length === 0) {
       </h1>
 
       <div
-        class="flex flex-col md:flex-row justify-center items-center gap-12 w-full max-w-8xl px-4"
+        class="flex flex-col md:flex-row justify-center items-center gap-12 w-full max-w-8xl px-4 overflow-x-hidden"
       >
         {
           artistas.map((artista, index) => {
             const classesBase = `
-        bg-slate-100 rounded-xl shadow-xl overflow-hidden
-        transition-transform duration-300 hover:shadow-2xl
-      `;
+          bg-slate-100 rounded-xl shadow-xl overflow-hidden
+          transition-transform duration-300 hover:shadow-2xl max-w-full
+        `;
             const widthClasses =
               index === 1
-                ? "w-[550px] hover:scale-110" // central
-                : "w-[450px] hover:scale-105"; // laterales
+                ? "w-full md:w-[550px] hover:scale-110" // central
+                : "w-full md:w-[450px] hover:scale-105"; // laterales
 
             const card = (
               <article class={`${classesBase} ${widthClasses}`}>
                 {/* imagen */}
-                <div class="h-[500px] overflow-hidden">
+                <div class="h-[300px] md:h-[500px] overflow-hidden">
                   {artista.portadaUrl && artista.id !== -1 ? (
                     <img
                       src={artista.portadaUrl}

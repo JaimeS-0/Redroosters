@@ -13,13 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
         botonVerContrasena.addEventListener("click", () => {
             const esOculta = inputContrasena.type === "password";
 
-            // Cambiar tipo
             inputContrasena.type = esOculta ? "text" : "password";
 
-            // Cambiar icono
-            botonVerContrasena.textContent = esOculta
+            botonVerContrasena.innerHTML = esOculta
                 ? `
-          <!-- ojo normal -->
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                stroke-width="1.8" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -29,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
           </svg>
         `
                 : `
-          <!-- ojo tachado -->
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                stroke-width="1.8" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -37,10 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
           </svg>
         `;
 
-            // Actualizar título dejando el raton por encima
             botonVerContrasena.title = esOculta
                 ? "Ocultar contraseña"
                 : "Ver contraseña";
+
             botonVerContrasena.setAttribute(
                 "aria-label",
                 esOculta ? "Ocultar contraseña" : "Ver contraseña"
