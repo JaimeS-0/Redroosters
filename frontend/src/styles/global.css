@@ -266,3 +266,11 @@ body {
 #tabsDiscografia .tab-disc {
     transition: color 0.25s ease;
 }
+
+/*
+@media (max-width: 640px) {
+    .hot-proximamente {
+        display: none;
+    }
+}
+*/

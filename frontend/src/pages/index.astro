@@ -59,7 +59,7 @@ if (artistas.length === 0) {
     <HomeHero />
 
     <section
-      class="w-full min-h-dvh bg-cover bg-center bg-no-repeat flex flex-col items-center bg-black gap-10 overflow-x-hidden"
+      class="w-full min-h-dvh bg-cover bg-center bg-no-repeat flex flex-col items-center bg-black gap-10 overflow-hidden"
       style="background-image: url('/img/Home/FondoMain.webp');"
     >
       <!-- clamp(min, ideal, max): fija un tamaño que crece de forma fluida entre un mínimo y un máximo -->
@@ -81,8 +81,8 @@ if (artistas.length === 0) {
         `;
             const widthClasses =
               index === 1
-                ? "w-full md:w-[550px] hover:scale-110" // central
-                : "w-full md:w-[450px] hover:scale-105"; // laterales
+                ? `w-full md:w-[550px] ${artista.id !== -1 ? "hover:scale-110" : ""}` // Central
+                : `w-full md:w-[450px] ${artista.id !== -1 ? "hover:scale-105" : ""}`; // Laterales
 
             const card = (
               <article class={`${classesBase} ${widthClasses}`}>
