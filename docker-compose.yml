@@ -75,12 +75,22 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
 
       # Volúmenes para servir audios y portadas
+      - ./certbot/www:/var/www/certbot:ro
       - redroosters_audio:/app/uploads/audio:ro
       - redroosters_portadas:/app/uploads/portadas:ro
 
     depends_on:
       - frontend
       - backend
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+      # Mantiene certbot en bucle para renovar automáticamente cada 12h
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
 volumes:
   postgres_data:
