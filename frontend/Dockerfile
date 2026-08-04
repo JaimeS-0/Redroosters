@@ -42,5 +42,3 @@ COPY --from=build /app/dist /usr/share/nginx/html
 
 # Expongo el puerto 80, donde escuchará Nginx
 EXPOSE 80
-
-CMD ["node", "./dist/server/entry.mjs"]
