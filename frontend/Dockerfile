@@ -36,10 +36,10 @@ FROM nginx:1.27-alpine
 # Limpia los archivos por defecto de Nginx
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copia el resultado del build a la carpeta de Nginx
-COPY --from=build /app/dist /usr/share/nginx/html
+# COPIA SOLO LA CARPETA CLIENT DONDE ESTÁN LOS ESTÁTICOS REALES
+COPY --from=build /app/dist/client /usr/share/nginx/html
 
-# Otorga permisos globales de lectura para que Nginx no dé 403
+# Asegura permisos globales de lectura
 RUN chmod -R 755 /usr/share/nginx/html
 
 EXPOSE 80
