@@ -21,7 +21,7 @@ EXPOSE 3000
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
 
 
-# --- BUILD: Compilo Astro para producción ---
+# --- BUILD: Compilo Astro a estático ---
 FROM node:20-alpine AS build
 WORKDIR /app
 
@@ -30,16 +30,16 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# --- PROD: versión final que sirve los archivos estáticos con Nginx ---
+# --- PROD: Servidor Nginx que sirve los estáticos ---
 FROM nginx:1.27-alpine
 
 # Limpia los archivos por defecto de Nginx
 RUN rm -rf /usr/share/nginx/html/*
 
-# COPIA SOLO LA CARPETA CLIENT DONDE ESTÁN LOS ESTÁTICOS REALES
-COPY --from=build /app/dist/client /usr/share/nginx/html
+# Copia los archivos estáticos desde /app/dist (NO desde /dist/client)
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Asegura permisos globales de lectura
+# Asegura permisos de lectura
 RUN chmod -R 755 /usr/share/nginx/html
 
 EXPOSE 80
