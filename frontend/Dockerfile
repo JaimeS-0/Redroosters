@@ -37,6 +37,9 @@ RUN npm run build
 
 FROM nginx:1.27-alpine
 
+# Limpia los archivos por defecto de Nginx
+RUN rm -rf /usr/share/nginx/html/*
+
 # Copio el resultado del build a la carpeta que Nginx usa por defecto
 COPY --from=build /app/dist /usr/share/nginx/html
 
