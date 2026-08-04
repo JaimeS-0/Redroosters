@@ -22,26 +22,24 @@ CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
 
 
 # --- BUILD: Compilo Astro para producción ---
-
 FROM node:20-alpine AS build
 WORKDIR /app
 
-# Instalo dependencias y compilo el proyecto
 COPY package*.json ./
 RUN npm install 
 COPY . .
 RUN npm run build
 
-
 # --- PROD: versión final que sirve los archivos estáticos con Nginx ---
-
 FROM nginx:1.27-alpine
 
 # Limpia los archivos por defecto de Nginx
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copio el resultado del build a la carpeta que Nginx usa por defecto
+# Copia el resultado del build a la carpeta de Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expongo el puerto 80, donde escuchará Nginx
+# Otorga permisos globales de lectura para que Nginx no dé 403
+RUN chmod -R 755 /usr/share/nginx/html
+
 EXPOSE 80
