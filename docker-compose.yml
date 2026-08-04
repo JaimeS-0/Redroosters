@@ -75,7 +75,7 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
 
       # Volúmenes para servir audios y portadas
-      - ./certbot/www:/var/www/certbot:ro
+      - ./certbot/www:/var/www/certbot
       - redroosters_audio:/app/uploads/audio:ro
       - redroosters_portadas:/app/uploads/portadas:ro
 
