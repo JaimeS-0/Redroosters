@@ -1,12 +1,12 @@
-
 import { defineConfig } from 'astro/config';
 import tailwind from "@astrojs/tailwind";
-
-// Proxy para desarrollo
-// comentar para produccion
+import node from "@astrojs/node";
 
 export default defineConfig({
-  output: "static",
+  output: "hybrid",
+  adapter: node({
+    mode: "standalone",
+  }),
   integrations: [
     tailwind(),
   ],
