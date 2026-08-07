@@ -3,12 +3,12 @@ import tailwind from "@astrojs/tailwind";
 import node from "@astrojs/node";
 
 export default defineConfig({
-  output: "hybrid",
+  output: "server",
   adapter: node({
-    mode: "standalone",
+    mode: "standalone"
   }),
   integrations: [
-    tailwind(),
+    tailwind()
   ],
   vite: {
     server: {
@@ -21,6 +21,3 @@ export default defineConfig({
     },
   },
 });
-
-
-
