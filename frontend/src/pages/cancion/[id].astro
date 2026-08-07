@@ -89,8 +89,10 @@ function getPortadaCancion(url?: string): string {
                         <audio
                             id="audio-source"
                             src={
-                                cancion.urlAudio.startsWith('/uploads/') 
-                                    ? cancion.urlAudio 
+                                cancion.urlAudio.startsWith('/media/audio/')
+                                    ? cancion.urlAudio.replace('/media/audio/', '/uploads/audio/')
+                                    : cancion.urlAudio.startsWith('/uploads/')
+                                    ? cancion.urlAudio
                                     : `/uploads/audio/${cancion.urlAudio}`
                             }
                             class="hidden"
