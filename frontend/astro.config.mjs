@@ -1,16 +1,16 @@
 import { defineConfig } from 'astro/config';
-import tailwind from "@astrojs/tailwind";
 import node from "@astrojs/node";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   output: "server",
   adapter: node({
     mode: "standalone"
   }),
-  integrations: [
-    tailwind()
-  ],
   vite: {
+    plugins: [
+      tailwindcss()
+    ],
     server: {
       proxy: {
         '/api/': {
