@@ -78,7 +78,7 @@ function getPortadaCancion(url?: string): string {
                     <div
                         id="custom-audio-player"
                         style="padding-left: 20px; padding-right: 20px; padding-top: 20px;"
-                        class="w-full mt-6 bg-white/5 px-8 py-6 pb-8 rounded-xl shadow-lg border border-white/10 flex flex-col gap-4"
+                        class="w-full mt-6 bg-white/5 px-8 py-6 rounded-xl shadow-lg border border-white/10 flex flex-col gap-4"
                         data-backend-url={PUBLIC_BACKEND_URL}  
                         data-cancion-id={cancion.id}  
                         data-prev-id={cancion.anteriorId ?? ""}    
@@ -277,24 +277,26 @@ function getPortadaCancion(url?: string): string {
                         </div>
 
 
-                        <a
-                            href={`/artista/${cancion.artistaId}`}
-                            class="mt-6 inline-block px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition text-center"
+                        <div class="flex flex-col sm:flex-row gap-3 mt-4 mb-2">
+                            <a
+                                href={`/artista/${cancion.artistaId}`}
+                                class="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition text-center"
                             >
-                            Ir al artista
-                        </a>
-                        {
-                            cancion.albumId && (
-                                <a
-                                    href={`/album/${cancion.albumId}`}
-                                    class="mt-6 inline-block px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition text-center"
-                                >
-                                    Ir al álbum
-                                </a>
-                            )
-                        }
+                                Ir al artista
+                            </a>
+                            {
+                                cancion.albumId && (
+                                    <a
+                                        href={`/album/${cancion.albumId}`}
+                                        class="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition text-center"
+                                    >
+                                        Ir al álbum
+                                    </a>
+                                )
+                            }
+                        </div>
                     </div>
-
+                    
                     <script type="module">
 
                         async function registrarEscucha(BACKEND_URL, cancionId, token, marcado) {
