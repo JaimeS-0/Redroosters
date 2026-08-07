@@ -35,6 +35,11 @@ try {
 } catch (err) {
     //console.error("[CancionDetalle] Error cargando cancion:", err);
 }
+
+function getPortadaCancion(url?: string): string {
+    if (!url) return "";
+    return url.startsWith('/uploads/') ? url : `/uploads/portadas/${url}`;
+}
 ---
 
 <Layout title={cancion ? cancion.titulo : "Cancion"}>
@@ -44,7 +49,7 @@ try {
                 <section class="w-full max-w-3xl px-4 py-8 flex flex-col gap-6">
                     <div class="flex gap-6 items-center">
                         <img
-                            src={cancion.portada}
+                            src={getPortadaCancion(cancion.portada)}
                             alt={cancion.titulo}
                             class="w-40 h-40 rounded-2xl object-cover border border-white/10"
                         />
@@ -80,9 +85,14 @@ try {
                         data-next-id={cancion.siguienteId ?? ""}
                     >
                         {/* Audio real controlado por el player */}
+                        <!-- En la etiqueta <audio> -->
                         <audio
                             id="audio-source"
-                            src={`${PUBLIC_BACKEND_URL}${cancion.urlAudio}`}
+                            src={
+                                cancion.urlAudio.startsWith('/uploads/') 
+                                    ? cancion.urlAudio 
+                                    : `/uploads/audio/${cancion.urlAudio}`
+                            }
                             class="hidden"
                         ></audio>
 

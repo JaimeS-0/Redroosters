@@ -38,7 +38,10 @@ try {
 }
 
 function getPortadaUrl(a: Album): string {
-    return a.portadaUrl ?? "";
+    if (!a.portadaUrl) return "";
+    return a.portadaUrl.startsWith('/uploads/') 
+        ? a.portadaUrl 
+        : `/uploads/portadas/${a.portadaUrl}`;
 }
 ---
 

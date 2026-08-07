@@ -31,6 +31,11 @@ try {
 } catch (err) {
     //console.error("Error cargando artista", err);
 }
+
+function getPortadaArtista(url?: string): string {
+    if (!url) return "";
+    return url.startsWith("/uploads/") ? url : `/uploads/portadas/${url}`;
+}
 ---
 
 <Layout title={artista?.nombre ?? "Artista"}>
@@ -51,7 +56,7 @@ try {
              shadow-[0_0_50px_rgba(255,0,0,0.25)] hover:scale-110"
                 >
                     <img
-                        src={artista?.portadaUrl}
+                        src={getPortadaArtista(artista?.portadaUrl)}
                         alt={artista?.nombre}
                         class="w-full h-full object-cover"
                         loading="lazy"
