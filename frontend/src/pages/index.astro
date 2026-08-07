@@ -28,7 +28,6 @@ try {
 // ORDENAMOS: por id ascendente (el 1º que creaste tiene el id mas bajo)
 artistas.sort((a, b) => a.id - b.id);
 
-
 // Placeholder (relleno)
 const placeholder: Artista = {
   id: -1,
@@ -37,7 +36,6 @@ const placeholder: Artista = {
   portadaUrl: "",
   destacado: false,
 };
-
 
 if (artistas.length === 0) {
   // No hay artistas destacados
@@ -54,7 +52,6 @@ if (artistas.length === 0) {
   // Nos quedamos solo con los 3 primeros
   artistas = artistas.slice(0, 3);
 }
-
 ---
 
 <Layout title="home" headerVerLogo={false} headerFondoNegro={false}>
@@ -103,9 +100,6 @@ if (artistas.length === 0) {
                 <div class="p-6 text-center space-y-3">
                   <p class="font-semibold text-gray-900 text-xl tracking-wide">
                     {artista.nombre}
-                  </p>
-                  <p class="text-sm text-gray-600 leading-relaxed">
-                    {artista.descripcion}
                   </p>
                 </div>
               </article>
