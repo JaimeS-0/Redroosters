@@ -81,13 +81,13 @@ if (artistas.length === 0) {
       `;
             const widthClasses =
               index === 1
-                ? "w-[550px] over:scale-105 md:hover:scale-110" // central
-                : "w-[450px] hover:scale-105"; // laterales
+                ? "w-full max-w-[550px] hover:scale-105 md:hover:scale-110" // central
+                : "w-full max-w-[450px] hover:scale-105"; // laterales
 
             const card = (
-              <article class={`${classesBase} ${widthClasses}`}>
+              <article class={`${classesBase} ${widthClasses} box-border`}>
                 {/* imagen */}
-                <div class="h-[500px] overflow-hidden">
+                <div class="h-[350px] sm:h-[500px] overflow-hidden">
                   {artista.portadaUrl && artista.id !== -1 ? (
                     <img
                       src={artista.portadaUrl}
