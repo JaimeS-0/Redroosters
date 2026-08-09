@@ -81,7 +81,7 @@ if (artistas.length === 0) {
       `;
             const widthClasses =
               index === 1
-                ? "w-[550px] hover:scale-110" // central
+                ? "w-[550px] over:scale-105 md:hover:scale-110" // central
                 : "w-[450px] hover:scale-105"; // laterales
 
             const card = (
@@ -107,12 +107,14 @@ if (artistas.length === 0) {
 
             // Si es placeholder (id = -1), NO hay enlace
             if (artista.id === -1) {
-              return card;
+              return <div class="w-full flex justify-center">{card}</div>;
             }
 
-            // Artista real → lo envolvemos en <a> dinámico
             return (
-              <a href={`/artista/${artista.id}`} class="block cursor-pointer">
+              <a
+                href={`/artista/${artista.id}`}
+                class="w-full flex justify-center cursor-pointer"
+              >
                 {card}
               </a>
             );
