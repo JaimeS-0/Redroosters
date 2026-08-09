@@ -30,7 +30,12 @@ const {
         /><link rel="icon" type="image/jpg" href="/img/Logo.jpg" /><meta
             name="generator"
             content={Astro.generator}
-        /><title>Red Roosters TV</title><meta
+        />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="upgrade-insecure-requests"
+        />
+        <title>Red Roosters TV</title><meta
             name="description"
             content="Plataforma musical moderna para escuchar canciones, descubrir artistas y disfrutar de una experiencia rapida y sencilla apoyando a talentos emergentes."
         /><script is:inline src="https://code.jquery.com/jquery-3.6.0.min.js"
