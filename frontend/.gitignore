@@ -26,4 +26,6 @@ pnpm-debug.log*
 .git
 *.log
 
+# Certificados en local
 certs/
+*.pem
