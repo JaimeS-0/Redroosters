@@ -72,10 +72,10 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
 
       # Certificados de Let's Encrypt Produccion
-      #- /etc/letsencrypt:/etc/letsencrypt:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
       # Solo para local, (en local comentar la linea de arriba y en produccion comentar esta linea)
-      - ./certs:/etc/letsencrypt:ro
+      #- ./certs:/etc/letsencrypt:ro
 
 
       # Volúmenes para servir audios y portadas
