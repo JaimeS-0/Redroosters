@@ -42,3 +42,7 @@ frontend/dist/
 
 # Base de datos local
 postgres_data/
+
+# Certificados en local
+certs/
+*.pem
