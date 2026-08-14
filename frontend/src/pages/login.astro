@@ -32,13 +32,13 @@ import Registro from "../components/login/Registro.astro";
     </div>
 
     <main
-        class="min-h-screen flex flex-col justify-center bg-transparent pt-12 pb-30 md:pt-16 md:pb-35 xl:pb-40"
+        class="min-h-dvh flex flex-col justify-center bg-transparent px-4 sm:px-6 pt-[112px] pb-20 sm:pt-[120px] sm:pb-30 md:pt-[130px] md:pb-35 xl:pb-40"
     >
         <!-- Contenedor -->
-        <div class="w-full flex flex-col items-center gap-8">
+        <div class="w-full flex flex-col items-center gap-6 sm:gap-8">
             <h1
                 id="tituloLogin"
-                class="text-1xl md:text-2xl text-center text-black"
+                class="text-lg sm:text-1xl md:text-2xl text-center text-black leading-snug px-2"
             >
                 👋🏻 Regístrate para guardar tus canciones favoritas y aumentar
                 las escuchas del artista
@@ -47,7 +47,7 @@ import Registro from "../components/login/Registro.astro";
             <input id="authToggle" type="checkbox" class="sr-only peer" />
 
             <div
-                class="selector-row relative flex items-center gap-4 text-lg font-semibold text-black"
+                class="selector-row relative flex items-center gap-2 sm:gap-4 text-base sm:text-lg font-semibold text-black"
             >
                 <span class="login-label transition-all duration-300">
                     Iniciar sesión
@@ -78,14 +78,15 @@ import Registro from "../components/login/Registro.astro";
                 </span>
 
                 <span
-                    class="underline-slide absolute bottom-[-8px] left-0 h-[3px] w-[110px] bg-red-500 rounded-full transition-all duration-500"
+                    class="underline-slide absolute bottom-[-8px] left-0 h-[3px] w-[90px] sm:w-[110px] bg-red-500 rounded-full transition-all duration-500"
                 ></span>
             </div>
 
             <!-- Tarjeta que gira -->
             <div
-                class="flip-card relative w-full max-w-xl min-h-[520px]
-               mt-6 mb-40
+                class="flip-card relative w-full max-w-xl min-h-[480px] sm:min-h-[500px] md:min-h-[520px]
+               mx-auto px-1 sm:px-0
+               mt-4 sm:mt-6 mb-24 sm:mb-32 md:mb-40
                transition-transform duration-1000
                [transform-style:preserve-3d]
                peer-checked:[transform:rotateY(180deg)]"

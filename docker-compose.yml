@@ -70,8 +70,14 @@ services:
     volumes:
       # Config de Nginx
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      # Certificados de Let's Encrypt
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+
+      # Certificados de Let's Encrypt Produccion
+      #- /etc/letsencrypt:/etc/letsencrypt:ro
+
+      # Solo para local, (en local comentar la linea de arriba y en produccion comentar esta linea)
+      - ./certs:/etc/letsencrypt:ro
+
+
       # Volúmenes para servir audios y portadas
       - ./certbot/www:/var/www/certbot
       - redroosters_audio:/app/uploads/audio:ro
