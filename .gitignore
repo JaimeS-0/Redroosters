@@ -43,6 +43,9 @@ frontend/dist/
 # Base de datos local
 postgres_data/
 
-# Certificados en local
+# Certificados autofirmados generados localmente para desarrollo
 certs/
-*.pem
+
+# Directorio de validación de Certbot para retos ACME (se conserva solo el .gitkeep)
+certbot/www/*
+!certbot/www/.gitkeep
