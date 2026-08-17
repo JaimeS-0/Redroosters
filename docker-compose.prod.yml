@@ -1,3 +1,7 @@
+
+
+# Configuración exclusiva para producción en el VPS (usar: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d)
+
 services:
   frontend:
     build:
